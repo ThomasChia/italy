@@ -27,7 +27,7 @@ train_df = df.sample(frac=0.8, random_state=1)
 test_df = df.drop(train_df.index)
 
 # Define the Dixon-Coles model
-poisson_model = sm.Poisson(train_df['home_goals'], train_df[['home_strength', 'away_strength', 'home']])
+poisson_model = sm.Poisson(train_df['home_goals_scored'], train_df[['home_strength', 'away_strength', 'home']])
 
 # Fit the model to the training data
 poisson_model_fit = poisson_model.fit()
