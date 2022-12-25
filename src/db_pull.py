@@ -1,15 +1,10 @@
+import log_in
 import numpy as np
 import pandas as pd
 
 
-LEAGUES = [
-    'Berlusconi Trophy',
-    'Campionato Primavera 1',
-    'Campionato Primavera 2, Girone A',
-    'Campionato Primavera 2, Girone B',
-    'Campionato Primavera 2, Supercoppa',
-    'Campionato Primavera, Playoffs',
-    'Coppa Italia',
+LEAGUES = '''
+    ('Coppa Italia',
     'Coppa Italia Serie C, Girone A',
     'Coppa Italia Serie C, Girone B',
     'Coppa Italia Serie C, Girone C',
@@ -64,5 +59,13 @@ LEAGUES = [
     'Serie D, Poule Scudetto, Group 3',
     'Serie D, Poule Scudetto, Knockout stage',
     'Supercoppa',
-    'Supercoppa Serie C',
-]
+    'Supercoppa Serie')
+'''
+
+
+query = f' SELECT * FROM football_matches WHERE league IN {LEAGUES}'
+
+TABLE_NAME_PRED = "football_matches"
+
+data = log_in.get_session(query)
+print(data.head())
