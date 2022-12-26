@@ -69,3 +69,6 @@ TABLE_NAME_PRED = "football_matches"
 
 data = log_in.get_session(query)
 print(data.head())
+print(data.shape)
+
+data.to_csv('../data/football_matches.csv')
