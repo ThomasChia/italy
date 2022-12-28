@@ -252,7 +252,7 @@ if __name__ == "__main__":
     data_matches_avg.reset_index(inplace=True, drop=True)
     data_matches_avg.drop(['id', 'row_num'], axis=1, inplace=True)
 
-    data_matches_avg.to_csv('../../data/test_goals.csv')
+    data_matches_avg.to_csv('../../data/goals_matches.csv')
 
     finish = time.time()
     print('time taken to calc lambda:', str(finish - start))
