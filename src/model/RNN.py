@@ -3,10 +3,10 @@ import torch
 import torch.functional as F
 
 
-class RNN(nn.Module):
+class RNN(torch.nn.Module):
 
     def __init__(self, input_size, output_size, hidden_dim, n_layers):
-        super(Model, self).__init__()
+        super(torch.nn.Model, self).__init__()
 
         # Defining some parameters
         self.hidden_dim = hidden_dim
@@ -14,9 +14,9 @@ class RNN(nn.Module):
 
         #Defining the layers
         # RNN Layer
-        self.rnn = nn.RNN(input_size, hidden_dim, n_layers, batch_first=True)   
+        self.rnn = torch.nn.RNN(input_size, hidden_dim, n_layers, batch_first=True)   
         # Fully connected layer
-        self.fc = nn.Linear(hidden_dim, output_size)
+        self.fc = torch.nn.Linear(hidden_dim, output_size)
 
     def forward(self, x):
 
