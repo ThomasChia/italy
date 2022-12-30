@@ -14,8 +14,25 @@ def clean_data(df):
     df['date'] = df['date'].str[:-6]
     df['date'] = df['date'] + '2023'
 
+    df['league'] = 'Serie C, Girone B'
+
+    df = stand_names(df)
+
+    return df
+
+def stand_names(df):
+    teams = {
+        'entella': 'virtus_entella',
+        'san_donato' :'san_donato_tavarnelle',
+        'torres': 'sassari_torres',
+        'montevarchi': 'aquila_montevarchi',
+    }
+
     df['pt1'] = df['pt1'].replace(' ', '_', regex=True).str.lower()
     df['pt2'] = df['pt2'].replace(' ', '_', regex=True).str.lower()
+
+    df['pt1'] = df['pt1'].replace(teams)
+    df['pt2'] = df['pt2'].replace(teams)
 
     return df
 

@@ -18,14 +18,14 @@ class Loader:
         return df_join
 
     def load_past_matches(self, file):
-        df = pd.read_csv(f'../../data/{file}')
+        df = pd.read_csv(f'../../data/{file}', parse_dates=['date'], dayfirst=False)
         df.drop('Unnamed: 0', axis=1, inplace=True)
-        df['date'] = pd.to_datetime(df['date'], utc = True)
+        df['date'] = pd.to_datetime(df['date']).dt.date
 
         return df
 
     def join_data(self, df1, df2):
-        df = pd.merge(df1, df2,  how='left',
+        df = pd.merge(df1, df2,  how='inner',
             left_on=['league', 'date','team', 'opponent', 'home'],
             right_on=['league', 'date','team', 'opponent', 'home'])
         df.sort_values(by=['date', 'league', 'team', 'opponent'], inplace=True)
@@ -39,5 +39,6 @@ data = loader.get_data()
 # goals = load_past_matches("goals_matches.csv")
 # data = join_data(elos, goals)
 
+data.to_csv('../../data/joined_matches.csv')
 print(data.shape)
 print(data.tail())
