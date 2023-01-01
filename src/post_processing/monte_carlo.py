@@ -48,7 +48,6 @@ def get_finishing_positions(df, simulations):
     df_finishing_positions = df.groupby(['league', 'team']).sum(numeric_only=True)
     df_finishing_positions.reset_index(inplace=True)
     # The df above is a df of each simulated season and the number of points each team got.
-    # div = df_finishing_positions['div'].unique()
     column_names = get_season_names(simulations)
     no_teams = len(df_finishing_positions)
     ranking = pd.DataFrame(range(0, no_teams), columns=['Lineup'])
@@ -65,7 +64,6 @@ def get_finishing_positions_importance(df, column_names):
     df_finishing_positions = df.groupby(['league', 'team']).sum(numeric_only=True)
     df_finishing_positions.reset_index(inplace=True)
     # The df above is a df of each simulated season and the number of points each team got.
-    # div = df_finishing_positions['div'].unique() 
     # column_names = get_season_names(simulations)
     no_teams = len(df_finishing_positions)
     ranking = pd.DataFrame(range(0, no_teams), columns=['Lineup'])
@@ -428,7 +426,7 @@ data_match_importance_all_divs = pd.DataFrame(columns=[
                                                         'Low Midtable - Loss',
                                                         'At Risk - Loss',
                                                         'Relegation - Loss',
-                                                        'div'
+                                                        'league'
                                                             ])
 
 for div in divs:
@@ -461,5 +459,5 @@ for div in divs:
 [data_match_importance_all_divs.columns.tolist()]
 finishing_positions_combined.drop(0, axis=1, inplace=True)
 
-data_match_importance_all_divs.to_csv("../../data/test_match_importance.csv")
-finishing_positions_combined.to_csv('../../data/test_simulated_season.csv')
+data_match_importance_all_divs.to_csv("../../data/match_importance.csv")
+finishing_positions_combined.to_csv('../../data/simulated_season.csv')
