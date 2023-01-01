@@ -4,6 +4,7 @@ This file transforms the existing data for upload into the dashboard.
 
 
 import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 
 
 def add_features_to_future(df_future, df_features):
@@ -20,14 +21,12 @@ def add_features_to_future(df_future, df_features):
 
 
 def check_fixtures(df_past, df_future, df_all):
-    df_past['div'] = df_past['div'].str.lower()
+    df_past['league'] = df_past['league'].str.lower()
     df_past = df_past[df_future.iloc[:, :5].columns]
-    df_scraped = df_past.append(df_future, sort=True)[['team', 'opponent', 'div', 'home']]
+    df_scraped = pd.concat([df_past, df_future])[['team', 'opponent', 'league', 'home']]
 
-    scraped_list = df_scraped[['team', 'opponent', 'div', 'home']].values.tolist()
+    scraped_list = df_scraped[['team', 'opponent', 'league', 'home']].values.tolist()
     all_list = df_all.values.tolist()
-    # print(len(scraped_list))
-    # print(len(all_list))
 
     first_set = set(map(tuple, all_list))
     second_set = set(map(tuple, scraped_list))
@@ -37,11 +36,8 @@ def check_fixtures(df_past, df_future, df_all):
                                                                       'league', 'home'])
     df_missing_matches['date'] = '2023-05-06'
 
-    df_future = df_future.append(df_missing_matches, sort=False).reset_index()
+    df_future = pd.concat([df_future, df_missing_matches]).reset_index()
     df_future.drop(['index'], axis=1, inplace=True)
-    # print('df_past length:', df_past.shape[0])
-    # print('df_future length:', df_future.shape[0])
-
 
     return df_future
 
@@ -63,21 +59,22 @@ def get_final_entry(df, team_or_opponent):
 
 
 def transform_to_home_and_away(df):
+    df['date'] = pd.to_datetime(df['date'])
     df_home = df[df['home'] == 1]
     df_away = df[df['home'] == 0]
-    if 'FTR' in df_away.columns:
-        df_away.drop('FTR', axis=1, inplace=True)
+    if 'result' in df_away.columns:
+        df_away.drop('result', axis=1, inplace=True)
 
     df_home.rename(columns={'team': 'home_team', 'opponent': 'away_team', 'elo_team': 'elo_home', 'elo_opponent': 'elo_away',
                             '0': 'A', '1': 'D', '2': 'H'}, inplace=True)
     df_away.rename(columns={'team': 'away_team', 'opponent': 'home_team', 'elo_team': 'elo_away', 'elo_opponent': 'elo_home',
                             '0': 'H', '1': 'D', '2': 'A'}, inplace=True)
 
-    df_combined = df_home.append(df_away, sort=False)
+    df_combined = pd.concat([df_home, df_away])
     df_combined = df_combined.groupby(['league', 'date', 'home_team', 'away_team', 'elo_home', 'elo_away']).mean()
     df_combined.reset_index(inplace=True, drop=False)
-    if 'FTR' in df_combined.columns:
-        df_combined.drop(['FTR'], axis=1, inplace=True)
+    if 'result' in df_combined.columns:
+        df_combined.drop(['result'], axis=1, inplace=True)
     df_combined['elo_diff'] = df_combined['elo_home'] - df_combined['elo_away']
 
     if 'team_goals_scored' not in df_home.columns:
@@ -104,7 +101,7 @@ def duplicate_data(df):
                 'A',
                 'D',
                 'H',
-                'FTR',
+                'result',
                 ]]
 
     df_away = df_home.copy()
@@ -132,9 +129,9 @@ def duplicate_data(df):
 
     df_combined = pd.concat([df_home, df_away])
 
-    df_combined.loc[df['FTR'] == 0, ['FTR']] = 'A'
-    df_combined.loc[df['FTR'] == 0.5, ['FTR']] = 'D'
-    df_combined.loc[df['FTR'] == 1, ['FTR']] = 'H'
+    df_combined.loc[df['result'] == 0, ['result']] = 'A'
+    df_combined.loc[df['result'] == 0.5, ['result']] = 'D'
+    df_combined.loc[df['result'] == 1, ['result']] = 'H'
 
     return df_combined
 
@@ -176,14 +173,14 @@ def limit_to_recent(df, matches_limit):
     return df
 
 def combine_home_and_away_and_goals(df_home_and_away, df_goals):
-    df_home_and_away.loc[df_home_and_away['FTR'] == 0, ['FTR']] = 'A'
-    df_home_and_away.loc[df_home_and_away['FTR'] == 0.5, ['FTR']] = 'D'
-    df_home_and_away.loc[df_home_and_away['FTR'] == 1, ['FTR']] = 'H'
+    df_home_and_away.loc[df_home_and_away['result'] == 0, ['result']] = 'A'
+    df_home_and_away.loc[df_home_and_away['result'] == 0.5, ['result']] = 'D'
+    df_home_and_away.loc[df_home_and_away['result'] == 1, ['result']] = 'H'
     
     df_goals = df_goals[df_goals['home'] == 1]
     df_goals.drop('home', axis=1, inplace=True)
     df_goals.rename(columns={'team': 'home_team', 'opponent': 'away_team'}, inplace=True)
-    df_home_and_away_goals = pd.merge(df_home_and_away, df_goals, on=['div',
+    df_home_and_away_goals = pd.merge(df_home_and_away, df_goals, on=['league',
                                                                     'date',
                                                                     'home_team',
                                                                     'away_team'],
@@ -192,10 +189,82 @@ def combine_home_and_away_and_goals(df_home_and_away, df_goals):
     return df_home_and_away_goals
 
 
-predictions = pd.read_csv("../../data/future_predictions.csv", index_col=0)
-elos = pd.read_csv("../../data/elos_matches.csv", index_col=0)
-goals = pd.read_csv("../../data/goals_matches.csv", index_col=0)
+def limit_to_league(df, league, date=True):
+    df = df[df['league'] == league]
+    df.loc[:, 'league'] = df.loc[:, 'league'].str.lower()
+
+    if date:
+        start_date = pd.to_datetime("2022-07-30")
+        df['date'] = df['date'].dt.date
+        df = df[df['date'] >= start_date]
+
+    return df
+
+
+all_matches = pd.read_csv("../../data/all_match_combinations.csv", index_col=0)
+predictions = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+elos = pd.read_csv("../../data/elos_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 simulations = pd.read_csv("../../data/simulated_season.csv", index_col=0)
 match_importance = pd.read_csv("../../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
 
-elos['league'] = elos['league'].str.lower()
+all_matches = limit_to_league(all_matches, 'Serie C, Girone B', date=False)
+predictions = limit_to_league(predictions, 'Serie C, Girone B')
+elos = limit_to_league(elos, 'Serie C, Girone B')
+goals = limit_to_league(goals, 'Serie C, Girone B')
+simulations = limit_to_league(simulations, 'Serie C, Girone B', date=False)
+match_importance = limit_to_league(match_importance, 'Serie C, Girone B', date=False)
+
+data_future = check_fixtures(elos, predictions, all_matches)
+data_future = add_features_to_future(data_future, elos)
+
+data_predictions_combined = pd.concat([elos, data_future])
+data_predictions_combined.reset_index(inplace=True, drop=True)
+data_predictions_home_and_away = transform_to_home_and_away(data_predictions_combined)
+
+data_predictions_team_and_opponent = duplicate_data(data_predictions_home_and_away)
+data_predictions_team_and_opponent_days = create_rest_days(data_predictions_team_and_opponent)
+
+data_predictions_team_and_opponent_days = data_predictions_team_and_opponent_days[['league',
+                                                                                  'date',
+                                                                                  'team',
+                                                                                  'opponent',
+                                                                                  'elo_team',
+                                                                                  'elo_opponent',
+                                                                                  'loss',
+                                                                                  'draw',
+                                                                                  'win',
+                                                                                  'home',
+                                                                                  'rest_days',
+                                                                                  'result',
+                                                                                  ]]
+
+data_goals_existing = goals.copy()
+data_goals_existing = limit_to_recent(data_goals_existing, 10000)
+data_goals_added_stats_removed = goals[['league',
+                                        'date',
+                                        'team', 
+                                        'opponent',
+                                        'team_goals_scored',
+                                        'opponent_goals_scored',
+                                        'home'
+                                        ]]
+data_goals_added_stats_removed['league'] = data_goals_added_stats_removed['league'].str.lower()
+
+data_predictions_team_and_opponent_days['date'] = pd.to_datetime(data_predictions_team_and_opponent_days['date'])
+data_goals_added_stats_removed['date'] = pd.to_datetime(data_goals_added_stats_removed['date'])
+data_predictions_team_and_opponent_days_goals = data_predictions_team_and_opponent_days.merge(data_goals_added_stats_removed,
+                                                                                                on=['league',
+                                                                                                    'date',
+                                                                                                    'team', 
+                                                                                                    'opponent',
+                                                                                                    'home'],
+                                                                                                how='left').sort_values(by=['date', 'team', 'opponent'])
+
+data_predictions_home_and_away_goals = combine_home_and_away_and_goals(data_predictions_home_and_away, data_goals_added_stats_removed)
+
+# data_list_elos.to_csv('../../data/dashboard_output/list_elos.csv')
+simulations.to_csv('../../data/dashboard_output/simulations.csv')
+match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
+data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
+data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
