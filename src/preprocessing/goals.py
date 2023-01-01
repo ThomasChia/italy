@@ -251,10 +251,11 @@ if __name__ == "__main__":
     data_matches_avg = calc_lambda(data_matches_avg)
     data_matches_avg.reset_index(inplace=True, drop=True)
     data_matches_avg.drop(['id', 'row_num',
-                            'team_goals_scored',
-                            'team_goals_conceded',
-                            'opponent_goals_scored',
-                            'opponent_goals_conceded'], axis=1, inplace=True)
+                            # 'team_goals_scored',
+                            # 'team_goals_conceded',
+                            # 'opponent_goals_scored',
+                            # 'opponent_goals_conceded'
+                            ], axis=1, inplace=True)
 
     data_matches_avg.to_csv('../../data/goals_matches.csv')
 

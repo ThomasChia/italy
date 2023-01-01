@@ -7,7 +7,12 @@ import pandas as pd
 
 def load_past_stats():
     df = pd.read_csv('../../data/joined_matches.csv', parse_dates=True, dayfirst=True)
-    df.drop('Unnamed: 0', axis=1, inplace=True)
+    df.drop(['Unnamed: 0',
+            'team_goals_scored',
+            'team_goals_conceded',
+            'opponent_goals_scored',
+            'opponent_goals_conceded'
+            ], axis=1, inplace=True)
     df['date'] = pd.to_datetime(df['date']).dt.date
     return df
 
