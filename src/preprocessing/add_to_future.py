@@ -38,7 +38,7 @@ def get_final_entry(df, team_or_opponent):
     df.sort_values(by='date', inplace=True)
     df.reset_index(inplace=True, drop=True)
     df.drop_duplicates(subset=team_or_opponent, keep='last', inplace=True)
-    df = df.loc[:, df.columns.str.contains(team_or_opponent)]
+    df = df.loc[:, df.columns.str.contains(team_or_opponent) | df.columns.str.contains('league_')]
 
     return df
 
@@ -61,6 +61,7 @@ def duplicate_to_team_and_opponent(df_matches):
 
 def team_to_opponent(df):
     df_opponent = df.copy()
+    df_opponent = df_opponent.loc[:, df_opponent.columns.str.contains("team")]
     df_opponent.columns = df_opponent.columns.str.replace("team", "opponent")
 
     return df_opponent
