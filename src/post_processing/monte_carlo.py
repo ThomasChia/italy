@@ -62,7 +62,7 @@ def get_finishing_positions(df, simulations):
 
 
 def get_finishing_positions_importance(df, column_names):
-    df_finishing_positions = df.groupby(['league', 'team']).sum()
+    df_finishing_positions = df.groupby(['league', 'team']).sum(numeric_only=True)
     df_finishing_positions.reset_index(inplace=True)
     # The df above is a df of each simulated season and the number of points each team got.
     # div = df_finishing_positions['div'].unique() 
@@ -264,7 +264,7 @@ def result_importance(next_match, df_sim, team, result, simulations):
     df_sim_team = df_sim[(df_sim['team'] == team)]
     df_sim_next_match = df_sim_team[(df_sim_team['date'] == next_match)]
     df_sim_match = df_sim_team[['league', 'date', 'team', 'opponent']]
-    df_sim_team.drop(['league', 'date', 'team', 'opponent'], axis=1, inplace=True)
+    df_sim_team = df_sim_team.drop(['league', 'date', 'team', 'opponent'], axis=1)
     df_sim_team = df_sim_team.loc[:, (df_sim_next_match == result).any()]
     columns = df_sim_team.columns
     df_sim_team = pd.concat([df_sim_match, df_sim_team], axis=1)
@@ -304,7 +304,7 @@ def get_match_importance(df_sim, df_future, team, simulations):
 
 def get_groupings(df, league):
     df.fillna(0, inplace=True)
-    total_simulations = df.sum(axis=1)
+    total_simulations = df.sum(axis=1, numeric_only=True)
 
     if league == 'Serie C, Girone B':
         winning_chances = ((df.loc[:][1]) / total_simulations)
@@ -445,5 +445,21 @@ for div in divs:
     data_future_div = split_to_team_and_opponent(data_future_div)
     data_div = combined_past_and_future(data_past_div, data_future_div)
     data_finishing_positions = get_finishing_positions(data_div, no_simulations)
-    print(data_finishing_positions)
-    # finishing_positions_combined = finishing_positions_combined.append(data_finishing_positions, sort=True)
+    finishing_positions_combined = pd.concat([finishing_positions_combined, data_finishing_positions])
+
+    data_match_importance_all = []
+    teams = data_div['team'].unique()
+    teams.sort()
+    for team in teams:
+        data_match_importance = get_match_importance(data_div, data_future, team, no_simulations)
+        data_match_importance_all.append(data_match_importance)
+
+    data_match_importance_all_teams = lists_of_positions_to_df(data_match_importance_all, div)
+    data_match_importance_all_teams['league'] = div
+    data_match_importance_all_divs = pd.concat([data_match_importance_all_divs, data_match_importance_all_teams])
+
+[data_match_importance_all_divs.columns.tolist()]
+finishing_positions_combined.drop(0, axis=1, inplace=True)
+
+data_match_importance_all_divs.to_csv("../../data/test_match_importance.csv")
+finishing_positions_combined.to_csv('../../data/test_simulated_season.csv')
