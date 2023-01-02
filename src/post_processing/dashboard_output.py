@@ -203,7 +203,7 @@ def limit_to_league(df, league, date=True):
 
 
 def write_df_to_gsheets(gsheet_name, tab_name, df):
-    gc = gspread.service_account(filename='../../tools/gsheet_creds/football-373419-fe3d09a53ac9.json')
+    gc = gspread.service_account(filename='../../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
     sh = gc.open(gsheet_name) 
     worksheet = sh.worksheet(tab_name)
     set_with_dataframe(worksheet, df)
@@ -282,4 +282,4 @@ data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent
 tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season']
 
 for i in range(len(data)):
-    write_df_to_gsheets('serie_c_girone_b', tabs[i], data[i])
+    write_df_to_gsheets('serie_c_girone_b_data', tabs[i], data[i])

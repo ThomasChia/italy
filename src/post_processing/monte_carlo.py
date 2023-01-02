@@ -306,20 +306,19 @@ def get_groupings(df, league):
 
     if league == 'Serie C, Girone B':
         winning_chances = ((df.loc[:][1]) / total_simulations)
-        champions_league = ((df.loc[:][1]) +
-                            (df.loc[:][2]) +
-                            (df.loc[:][3]) +
-                            (df.loc[:][4]) ) / total_simulations
-        europa_league = (df.loc[:][5]) / total_simulations
-        midtable = ((df.loc[:][6]) +
-                    (df.loc[:][7]) +
-                    (df.loc[:][8]) +
-                    (df.loc[:][9]) +
-                    (df.loc[:][10]) +
-                    (df.loc[:][11]) +
-                    (df.loc[:][12]) +
-                    (df.loc[:][13]) +
-                    (df.loc[:][14])) / total_simulations
+        second_fifth = ((df.loc[:][2]) +
+                        (df.loc[:][3]) +
+                        (df.loc[:][4]) +
+                        (df.loc[:][5]) ) / total_simulations
+        sixth_ninth = ((df.loc[:][6]) +
+                       (df.loc[:][7]) +
+                       (df.loc[:][8]) +
+                       (df.loc[:][9]) ) / total_simulations
+        tenth_fourteenth = ((df.loc[:][10]) +
+                            (df.loc[:][11]) +
+                            (df.loc[:][12]) +
+                            (df.loc[:][13]) +
+                            (df.loc[:][14]) ) / total_simulations
         at_risk = ((df.loc[:][15]) +
                     (df.loc[:][16]) +
                     (df.loc[:][17])) / total_simulations
@@ -327,7 +326,7 @@ def get_groupings(df, league):
                     (df.loc[:][19]) +
                     (df.loc[:][20])) / total_simulations
 
-        return [winning_chances.values[0], champions_league.values[0], europa_league.values[0], midtable.values[0], at_risk.values[0], relegation.values[0]]
+        return [winning_chances.values[0], second_fifth.values[0], sixth_ninth.values[0], tenth_fourteenth.values[0], at_risk.values[0], relegation.values[0]]
 
     else:
         print("Error, league name incorrect.")
@@ -363,12 +362,12 @@ def lists_of_positions_to_df(lists_of_positions, league):
     if league == 'Serie C, Girone B':
         df_all_positions = pd.DataFrame(lists_of_positions,
                                         columns=['Team',
-                                                 'Winner - Win', 'Champions League - Win', 'Europa League - Win',
-                                                 'Midtable - Win', 'At Risk - Win', 'Relegation - Win',
-                                                 'Winner - Draw', 'Champions League - Draw', 'Europa League - Draw',
-                                                 'Midtable - Draw', 'At Risk - Draw', 'Relegation - Draw',
-                                                 'Winner - Loss', 'Champions League - Loss', 'Europa League - Loss',
-                                                 'Midtable - Loss', 'At Risk - Loss', 'Relegation - Loss'])
+                                                 'Winner - Win', 'Second:Fifth - Win', 'Sixth:Ninth - Win',
+                                                 'Tenth:Fourteenth - Win', 'At Risk - Win', 'Relegation - Win',
+                                                 'Winner - Draw', 'Second:Fifth - Draw', 'Sixth:Ninth - Draw',
+                                                 'Tenth:Fourteenth - Draw', 'At Risk - Draw', 'Relegation - Draw',
+                                                 'Winner - Loss', 'Second:Fifth - Loss', 'Sixth:Ninth - Loss',
+                                                 'Tenth:Fourteenth - Loss', 'At Risk - Loss', 'Relegation - Loss'])
     else:
         print("Error, league name incorrect for finishing positions.")
         # df_all_positions = pd.DataFrame(lists_of_positions,
@@ -397,36 +396,24 @@ finishing_positions_combined = pd.DataFrame(columns=['league', 'team'] + positio
 data_match_importance_all_divs = pd.DataFrame(columns=[
                                                         'Team',
                                                         'Winner - Win',
-                                                        'Champions League - Win',
-                                                        'Europa League - Win',
-                                                        'Midtable - Win',
-                                                        'Promotion - Win',
-                                                        'Playoffs - Win',
-                                                        'High Midtable - Win',
-                                                        'Low Midtable - Win',
+                                                        'Second:Fifth - Win',
+                                                        'Sixth:Ninth - Win',
+                                                        'Tenth:Fourteenth - Win',
                                                         'At Risk - Win',
                                                         'Relegation - Win',
                                                         'Winner - Draw',
-                                                        'Champions League - Draw',
-                                                        'Europa League - Draw',
-                                                        'Midtable - Draw',
-                                                        'Promotion - Draw',
-                                                        'Playoffs - Draw',
-                                                        'High Midtable - Draw',
-                                                        'Low Midtable - Draw',
+                                                        'Second:Fifth - Draw',
+                                                        'Sixth:Ninth - Draw',
+                                                        'Tenth:Fourteenth - Draw',
                                                         'At Risk - Draw',
                                                         'Relegation - Draw',
                                                         'Winner - Loss',
-                                                        'Champions League - Loss',
-                                                        'Europa League - Loss',
-                                                        'Midtable - Loss',
-                                                        'Promotion - Loss',
-                                                        'Playoffs - Loss',
-                                                        'High Midtable - Loss',
-                                                        'Low Midtable - Loss',
+                                                        'Second:Fifth - Loss',
+                                                        'Sixth:Ninth - Loss',
+                                                        'Tenth:Fourteenth - Loss',
                                                         'At Risk - Loss',
                                                         'Relegation - Loss',
-                                                        'league'
+                                                        'League'
                                                             ])
 
 for div in divs:
