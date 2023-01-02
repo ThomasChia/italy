@@ -270,45 +270,6 @@ def load_past_matches():
     return df
 
 
-def save_elos_to_db(df):
-    df.reset_index(inplace=True, drop=False)
-    print(df)
-    conn = sqlite3.connect('../../data/football_data.db')
-    cursor = conn.cursor()
-
-    cursor.execute('''CREATE TABLE IF NOT EXISTS elos (team string PRIMARY KEY,
-                                                        pts float,
-                                                        last_played string, 
-                                                        div string
-                                                        ); ''')
-    conn.commit()
-
-    df.to_sql('elos', conn, if_exists='replace', index = False)
-    conn.close()
-
-
-def save_past_matches_to_db(df):
-    df.reset_index(inplace=True, drop=True)
-    # df.drop(['prediction', 'correct'], inplace=True, axis=1)
-    conn = sqlite3.connect('../../data/football_data.db')
-    cursor = conn.cursor()
-    cursor.execute('''CREATE TABLE IF NOT EXISTS past_matches_elo (div string,
-                                                                    date string,
-                                                                    team string,
-                                                                    opponent string, 
-                                                                    FTR integer,
-                                                                    elo_team float,
-                                                                    elo_opponent float,
-                                                                    elo_diff float,
-                                                                    home integer
-
-                                                                    ); ''')
-    conn.commit()
-
-    df.to_sql('past_matches_elo', conn, if_exists='replace', index = False)
-    conn.close()
-
-
 data = load_past_matches()
 data = set_up_data(data)
 data['result'] = data.apply(lambda x: get_result(x), axis=1)
@@ -335,5 +296,6 @@ data = duplicate_to_team_and_opponent(data)
 # save_past_matches_to_db(data)
 # print(data.tail())
 data.to_csv('../../data/elos_matches.csv')
+teams.to_csv('../../data/elos_list.csv')
 
 # # To update the elos daily and much faster, we can compare the date of the match to the 'last played' date and only update if the match is after the last_played value.

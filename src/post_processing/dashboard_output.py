@@ -2,8 +2,9 @@
 This file transforms the existing data for upload into the dashboard.
 """
 
-
+import gspread
 import pandas as pd
+from gspread_dataframe import set_with_dataframe
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
@@ -201,6 +202,13 @@ def limit_to_league(df, league, date=True):
     return df
 
 
+def write_df_to_gsheets(gsheet_name, tab_name, df):
+    gc = gspread.service_account(filename='../../tools/gsheet_creds/football-373419-fe3d09a53ac9.json')
+    sh = gc.open(gsheet_name) 
+    worksheet = sh.worksheet(tab_name)
+    set_with_dataframe(worksheet, df)
+
+
 all_matches = pd.read_csv("../../data/all_match_combinations.csv", index_col=0)
 predictions = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 elos = pd.read_csv("../../data/elos_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
@@ -263,8 +271,15 @@ data_predictions_team_and_opponent_days_goals = data_predictions_team_and_oppone
 
 data_predictions_home_and_away_goals = combine_home_and_away_and_goals(data_predictions_home_and_away, data_goals_added_stats_removed)
 
-# data_list_elos.to_csv('../../data/dashboard_output/list_elos.csv')
+elos_list = pd.read_csv('../../data/elos_list.csv')
+
+elos_list.to_csv('../../data/dashboard_output/list_elos.csv')
 simulations.to_csv('../../data/dashboard_output/simulations.csv')
 match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
 data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
 data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
+data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations]
+tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season']
+
+for i in range(len(data)):
+    write_df_to_gsheets('serie_c_girone_b', tabs[i], data[i])
