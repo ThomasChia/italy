@@ -7,8 +7,9 @@ import pandas as pd
 
 
 def update_names(df):
-    df['pt1'] = df['pt1'].replace({'us_ancona': 'ancona'})
-    df['pt2'] = df['pt2'].replace({'us_ancona': 'ancona'})
+    df['pt1'] = df['pt1'].replace({'us_ancona': 'ancona', 'Inter Milan': 'inter_milan'})
+    df['pt2'] = df['pt2'].replace({'us_ancona': 'ancona', 'Inter Milan': 'inter_milan'})
+    
 
     return df
 
