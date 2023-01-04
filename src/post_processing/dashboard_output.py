@@ -215,6 +215,7 @@ elos = pd.read_csv("../../data/elos_matches.csv", index_col=0, parse_dates=['dat
 goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 simulations = pd.read_csv("../../data/simulated_season.csv", index_col=0)
 match_importance = pd.read_csv("../../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
+streaks = pd.read_csv("../../data/dashboard_output/streaks.csv", index_col=0)
 
 all_matches = limit_to_league(all_matches, 'Serie C, Girone B', date=False)
 predictions = limit_to_league(predictions, 'Serie C, Girone B')
@@ -278,8 +279,8 @@ simulations.to_csv('../../data/dashboard_output/simulations.csv')
 match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
 data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
 data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
-data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations]
-tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season']
+data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
+tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season', 'streaks']
 
 for i in range(len(data)):
     write_df_to_gsheets('serie_c_girone_b_data', tabs[i], data[i])

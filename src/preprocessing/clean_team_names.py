@@ -16,4 +16,6 @@ def update_names(df):
 
 data = pd.read_csv("../../data/football_matches.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
 data = update_names(data)
+# print(data.head())
+# print(data.shape)
 data.to_csv("../../data/football_matches.csv")
