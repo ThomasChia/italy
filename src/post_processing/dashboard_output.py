@@ -210,6 +210,8 @@ def write_df_to_gsheets(gsheet_name, tab_name, df):
 
 
 all_matches = pd.read_csv("../../data/all_match_combinations.csv", index_col=0)
+past_predictions = pd.read_csv("../../data/past_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+print(past_predictions.head())
 predictions = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 elos = pd.read_csv("../../data/elos_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
@@ -223,13 +225,21 @@ elos = limit_to_league(elos, 'Serie C, Girone B')
 goals = limit_to_league(goals, 'Serie C, Girone B')
 simulations = limit_to_league(simulations, 'Serie C, Girone B', date=False)
 match_importance = limit_to_league(match_importance, 'Serie C, Girone B', date=False)
+past_predictions = limit_to_league(past_predictions, 'Serie C, Girone B')
 
 data_future = check_fixtures(elos, predictions, all_matches)
 data_future = add_features_to_future(data_future, elos)
 
-data_predictions_combined = pd.concat([elos, data_future])
-data_predictions_combined.reset_index(inplace=True, drop=True)
+print(past_predictions.head())
+elos_preds = pd.concat([elos.set_index(['league', 'date', 'team', 'opponent', 'result', 'home']),
+                        past_predictions.set_index(['league', 'date', 'team', 'opponent', 'result', 'home'])],
+                        axis=1,
+                        ).reset_index()
+print(elos_preds.head())
+data_predictions_combined = pd.concat([elos_preds, data_future]).reset_index(drop=True)
+print(data_predictions_combined)
 data_predictions_home_and_away = transform_to_home_and_away(data_predictions_combined)
+print(data_predictions_home_and_away)
 
 data_predictions_team_and_opponent = duplicate_data(data_predictions_home_and_away)
 data_predictions_team_and_opponent_days = create_rest_days(data_predictions_team_and_opponent)
