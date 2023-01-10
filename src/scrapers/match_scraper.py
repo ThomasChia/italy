@@ -3,6 +3,13 @@ import pandas as pd
 import datetime
 import sqlite3
 
+
+def update_names(df, team_names):
+    for old_team in team_names:
+        df['pt1'] = df['pt1'].str.replace(old_team, team_names[old_team], regex=True)
+        df['pt2'] = df['pt2'].str.replace(old_team, team_names[old_team], regex=True)
+
+
 print((datetime.datetime.today() - datetime.timedelta(days=1)).strftime('%Y-%m-%d'))
 date = "2022-09-01"
 today = str((datetime.datetime.today()).strftime('%Y-%m-%d'))
@@ -17,9 +24,9 @@ for date in dates:
 
     rows = []
     for stage in jsonData['Stages']:
-        competition = stage['Scd']
-        if competition == 'serie-c-group-b':
-            country = stage['Cnm']
+        country = stage['Cnm']
+        if country == 'Italy':
+            competition = stage['Scd']
             events = stage['Events']
             for event in events:
                 try:
@@ -37,11 +44,11 @@ for date in dates:
 
                         row = {
                             'event_id': eid,
-                            'home': homeTeam,
-                            'home_score': homeScore,
-                            'away': awayTeam,
-                            'away_score': awayScore,
-                            'competition': competition,
+                            'pt1': homeTeam,
+                            'score_pt1': homeScore,
+                            'pt2': awayTeam,
+                            'score_pt2': awayScore,
+                            'league': competition,
                             'country': country,
                             'date': date
                         }
@@ -56,17 +63,17 @@ for date in dates:
     print('Scraped matches.')
     new_data = pd.DataFrame(rows)
     numeric_columns = [
-                    'home_score',
-                    'away_score',
+                    'score_pt1',
+                    'score_pt2',
                     ]
     string_columns = [
-                    'home',
-                    'away',
-                    'competition',
+                    'pt1',
+                    'pt2',
+                    'league',
                     'country',
                     'date'
     ]
-    print(new_data)
+    # print(new_data)
     if not new_data.empty:
         new_data['event_id'] = new_data['event_id'].astype('int64')
         for column in numeric_columns:
@@ -75,5 +82,31 @@ for date in dates:
             new_data[column] = new_data[column].astype('str')
         matches.append(new_data)
 
+
+TEAM_NAMES = {
+    "AC Reggiana":"reggiana",
+    "Alessandria": "alessandria",
+    "Aquila Montevarchi": "aquila_montevarchi",
+    "Carrarese": "carrarese",
+    "Cesena FC": "cesena",
+    "Fermana": "fermana",
+    "Fiorenzuola": "fiorenzuola",
+    "Gubbio": "gubbio",
+    "Imolese Calcio": "imolese",
+    "Lucchese": "lucchese",
+    "Olbia": "olbia",
+    "Pontedera": "pontedera",
+    "Recanatese": "recanatese",
+    "Rimini": "rimini",
+    "Robur Siena": "siena",
+    "San Donato": "san_donato_tavarnelle",
+    "Torres": "sassari_torres",
+    "U.S. Ancona": "ancona",
+    "Virtus Entella": "virtus_entella",
+    "Vis Pesaro": "vis_pesaro"
+}
+
 matches = pd.concat(matches)
+update_names(matches, TEAM_NAMES)
+matches.reset_index(inplace=True, drop=True)
 matches.to_csv("../../data/past_matches.csv")
