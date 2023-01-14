@@ -52,6 +52,7 @@ def preds_to_matches(preds, matches):
 
 PATH = "trained_models/3_linear_layer.pt"
 model = load_model(PATH)
+model.train()
 future, matches = load_future_matches()
 predictions = predict(future)
 future = preds_to_matches(predictions, matches)
