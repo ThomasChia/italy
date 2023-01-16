@@ -28,10 +28,13 @@ LEAGUES = '''
     'Serie B, Promotion Playoffs',
     'Serie B, Relegation Playoffs',
     'Serie C, Girone A',
+    'Serie C Grp. A',
     'Serie C, Girone A, Relegation Playoffs',
     'Serie C, Girone B',
+    'Serie C Grp. B',
     'Serie C, Girone B, Relegation Playoffs',
     'Serie C, Girone C',
+    'Serie C Grp. C',
     'Serie C, Girone C, Relegation Playoffs',
     'Serie C, Promotion Playoffs',
     'Serie C, Relegation Playoffs',
@@ -71,4 +74,4 @@ data = log_in.get_session(query)
 print(data.head())
 print(data.shape)
 
-data.to_csv('../data/football_matches.csv')
+data.to_csv('../data/football_matches_3.csv')

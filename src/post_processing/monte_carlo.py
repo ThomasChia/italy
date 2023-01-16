@@ -245,6 +245,13 @@ def max_teams(df_future, df_past):
             current_teams = len(df_future[df_future['league']==div]['team'].unique())
             if current_teams > max_teams:
                 max_teams = current_teams
+    else:
+        divs = sorted(df_past['league'].unique())
+        max_teams = 0
+        for div in divs:
+            current_teams = len(df_past[df_past['league']==div]['team'].unique())
+            if current_teams > max_teams:
+                max_teams = current_teams
 
     return max_teams
 

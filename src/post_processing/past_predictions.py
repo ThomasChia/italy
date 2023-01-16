@@ -53,7 +53,7 @@ def update_result(df):
     return df
 
 
-predictions = read_df_from_gsheets('serie_c_girone_b_data', 'preds_team_opp')
+predictions = read_df_from_gsheets('serie_c_data', 'preds_team_opp')
 past_predictions = limit_to_past(predictions)
 past_predictions = cut_to_preds(past_predictions)
 past_predictions = update_result(past_predictions)

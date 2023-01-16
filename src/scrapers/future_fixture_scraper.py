@@ -15,6 +15,7 @@ def clean_data(df):
     df['date'] = df['date'] + '2023'
 
     df['league'] = 'Serie C, Girone B'
+    # df['league'] = 'Serie B'
 
     df = stand_names(df)
 
@@ -24,7 +25,7 @@ def stand_names(df):
     teams = {
         'entella': 'virtus_entella',
         'san_donato' :'san_donato_tavarnelle',
-        'torres': 'sassari_torres',
+        'sassari_torres': 'torres',
         'montevarchi': 'aquila_montevarchi',
     }
 
@@ -37,6 +38,8 @@ def stand_names(df):
     return df
 
 url = 'https://www.flashscore.com/football/italy/serie-c-group-b/fixtures/'
+# url = 'https://www.flashscore.com/football/italy/serie-b/fixtures/'
+# url = 'https://www.flashscore.com/football/italy/serie-a/fixtures/'
 
 PATH = '../../tools/chromedriver'
 driver = webdriver.Chrome(PATH)
@@ -65,6 +68,7 @@ for ind in range(len(times)):
 df_res = pd.DataFrame(dict_res)
 df_res = clean_data(df_res)
 
+# df_res.to_csv("../../data/future_matches_serie_b.csv")
 df_res.to_csv("../../data/future_matches.csv")
 print(df_res)
 

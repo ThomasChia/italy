@@ -196,6 +196,7 @@ def limit_to_league(df, league, date=True):
 
     if date:
         start_date = pd.to_datetime("2022-07-30")
+        df['date'] = pd.to_datetime(df['date'])
         df['date'] = df['date'].dt.date
         df = df[df['date'] >= start_date]
 
@@ -288,4 +289,4 @@ data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent
 tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season', 'streaks']
 
 for i in range(len(data)):
-    write_df_to_gsheets('serie_c_girone_b_data', tabs[i], data[i])
+    write_df_to_gsheets('serie_c_data', tabs[i], data[i])

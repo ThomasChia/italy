@@ -114,7 +114,7 @@ sc = ['alessandria',
       'reggiana',
       'rimini',
       'san_donato_tavarnelle',
-      'sassari_torres',
+      'torres',
       'siena',
       'virtus_entella',
       'vis_pesaro'
