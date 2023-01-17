@@ -204,6 +204,9 @@ def limit_to_league(df, league, date=True):
 
 
 def write_df_to_gsheets(gsheet_name, tab_name, df):
+    df = df.apply(lambda x: x.astype(str).str.title())
+    df = df.apply(lambda x: x.astype(str).str.replace('_', ' '))
+    df = df.apply(lambda x: x.astype(str).str.replace('Nan', ''))
     gc = gspread.service_account(filename='../../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
     sh = gc.open(gsheet_name) 
     worksheet = sh.worksheet(tab_name)
