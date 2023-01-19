@@ -26,11 +26,14 @@ def duplicate_to_team_and_opponent(df_matches):
 
 def load_past_matches():
     df = pd.read_csv('../../data/football_matches.csv', dtype={'manager_pt1': str, 'manager_pt2': str})
+    df['date'] = pd.to_datetime(df['date'], dayfirst=True)
+    df['date'] = df['date'].dt.date
     df.drop('Unnamed: 0', axis=1, inplace=True)
 
     return df
 
 def get_first_match(df):
+    # df['future'] = 1
     df.drop_duplicates(subset=['team'], keep='first', inplace=True)
     df_combined = compress_home_away(df)
     return df_combined
@@ -42,6 +45,7 @@ def compress_home_away(df):
     df_away = df_away.rename(columns={'team': 'pt2', 'opponent': 'pt1'})
 
     df_combined = pd.concat([df_home, df_away])
+    df_combined.drop_duplicates(subset=['pt1'], keep='first', inplace=True)
     df_combined.drop(['home'], axis=1, inplace=True)
     df_combined.reset_index(inplace=True, drop=True)
     return df_combined
@@ -52,5 +56,4 @@ future = load_future_matches()
 data = get_first_match(future)
 joined = pd.concat([past, data]).reset_index(drop=True)
 joined.fillna(0, inplace=True)
-
 joined.to_csv("../../data/football_matches_a.csv")

@@ -15,6 +15,7 @@ def set_up_data(df, past_data=True):
     df['elo_diff'] = 0
     df['prediction'] = 0
     df['date'] = pd.to_datetime(df['date'], dayfirst=True)
+    df['date'] = df['date'].dt.date
     df.sort_values(by='date', inplace=True)
 
     df.reset_index(inplace=True, drop=True)
@@ -89,8 +90,10 @@ def check_div_change(div, team_list, home_team, away_team):
 
 
 def check_and_set_date(date, previous_match, team_list, team, rating):
-    if (date - previous_match).days > 200:
-        team_list.loc[team, 'pts'] = rating
+    # print(date)
+    # print(previous_match)
+    # if (date - previous_match).days > 200:
+    #     team_list.loc[team, 'pts'] = rating
 
     team_list.loc[team, 'last_played'] = date
 
@@ -264,7 +267,7 @@ def update_FTR(row):
 
 
 def load_past_matches():
-    df = pd.read_csv('../../data/football_matches.csv', dtype={'manager_pt1': str, 'manager_pt2': str})
+    df = pd.read_csv('../../data/football_matches_a.csv', dtype={'manager_pt1': str, 'manager_pt2': str}, parse_dates=['date'])
     df.drop('Unnamed: 0', axis=1, inplace=True)
 
     return df

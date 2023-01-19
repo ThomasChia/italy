@@ -221,7 +221,7 @@ def merge_on_common_columns(df1, df2):
 if __name__ == "__main__":
     start = time.time()
 
-    data_matches = pd.read_csv("../../data/football_matches.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
+    data_matches = pd.read_csv("../../data/football_matches_a.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
     data_matches['date'] = pd.to_datetime(data_matches['date'], dayfirst=True)
     data_matches['date'] = data_matches['date'].dt.date
     data_matches.sort_values(by='date', inplace=True)
