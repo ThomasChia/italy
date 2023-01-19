@@ -388,6 +388,23 @@ def lists_of_positions_to_df(lists_of_positions, league):
 
     return df_all_positions
 
+def get_league_targets(df):
+    df_copy = df.copy()
+    df_copy = df_copy.groupby('team').sum(numeric_only=True)
+    df_copy.reset_index(inplace=True)
+    seasons = df_copy.loc[:, df_copy.columns.str.contains('season')].columns
+    df_copy = df_copy.melt(
+                        value_vars = seasons,
+                        value_name = 'points'
+                        )
+    df_copy.sort_values(['variable', 'points'], inplace=True, ascending=False)
+    df_copy.reset_index(inplace=True, drop=True)
+    df_copy['position'] = positions[1:] * no_simulations
+    df_copy = df_copy.groupby('position').mean(numeric_only=True)
+    df_copy.reset_index(inplace=True, drop=True)
+
+    return df_copy
+
 
 data_future = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_past = pd.read_csv("../../data/joined_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
@@ -442,6 +459,7 @@ for div in divs:
     data_match_importance_all = []
     teams = data_div['team'].unique()
     teams.sort()
+    data_targets = get_league_targets(data_div)
     for team in teams:
         data_match_importance = get_match_importance(data_div, data_future, team, no_simulations)
         data_match_importance_all.append(data_match_importance)
@@ -455,3 +473,4 @@ finishing_positions_combined.drop(0, axis=1, inplace=True)
 
 data_match_importance_all_divs.to_csv("../../data/match_importance.csv")
 finishing_positions_combined.to_csv('../../data/simulated_season.csv')
+data_targets.to_csv('../../data/dashboard_output/league_targets.csv')

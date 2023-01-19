@@ -289,7 +289,7 @@ match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
 data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
 data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
 data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
-tabs = ['preds_home_away', 'preds_team_opp', 'elos', 'match_importance', 'sim_season', 'streaks']
+tabs = ['preds_home_away', 'preds_team_opp', 'current_elos', 'match_importance', 'sim_season', 'streaks']
 
-for i in range(len(data)):
-    write_df_to_gsheets('serie_c_data', tabs[i], data[i])
+# for i in range(len(data)):
+#     write_df_to_gsheets('i2_data', tabs[i], data[i])
