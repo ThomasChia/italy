@@ -8,10 +8,10 @@ import pandas as pd
 def load_past_stats():
     df = pd.read_csv('../../data/joined_matches.csv', parse_dates=True, dayfirst=True)
     df.drop(['Unnamed: 0',
-            'team_goals_scored',
-            'team_goals_conceded',
-            'opponent_goals_scored',
-            'opponent_goals_conceded'
+            # 'team_goals_scored',
+            # 'team_goals_conceded',
+            # 'opponent_goals_scored',
+            # 'opponent_goals_conceded'
             ], axis=1, inplace=True)
     df['date'] = pd.to_datetime(df['date']).dt.date
     return df
@@ -25,6 +25,7 @@ def load_future_matches():
 
 
 def add_stats_to_future(stats, future):
+    columns = stats.columns
     stats = get_final_entry(stats, 'team')
     stats_opp = team_to_opponent(stats)
 
@@ -35,6 +36,7 @@ def add_stats_to_future(stats, future):
     df_future['date'] = df_future['date'].dt.date
 
     df_future.sort_values(by='date', inplace=True)
+    df_future = df_future[columns]
 
     return df_future
 

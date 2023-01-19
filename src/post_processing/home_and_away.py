@@ -63,7 +63,5 @@ def combine_team_and_opponent(df):
 
 
 past_predictions = pd.read_csv("../../data/past_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-print(past_predictions)
 home_and_away = combine_team_and_opponent(past_predictions)
 home_and_away.to_csv("../../data/dashboard_output/past_home_and_away_predictions.csv")
-print(home_and_away)

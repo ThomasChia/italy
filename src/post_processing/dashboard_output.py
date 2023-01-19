@@ -221,6 +221,7 @@ goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['d
 simulations = pd.read_csv("../../data/simulated_season.csv", index_col=0)
 match_importance = pd.read_csv("../../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
 streaks = pd.read_csv("../../data/dashboard_output/streaks.csv", index_col=0)
+league_targets = pd.read_csv("../../data/dashboard_output/league_targets.csv", index_col=0)
 
 all_matches = limit_to_league(all_matches, 'Serie C, Girone B', date=False)
 predictions = limit_to_league(predictions, 'Serie C, Girone B')
@@ -228,7 +229,7 @@ elos = limit_to_league(elos, 'Serie C, Girone B')
 goals = limit_to_league(goals, 'Serie C, Girone B')
 simulations = limit_to_league(simulations, 'Serie C, Girone B', date=False)
 match_importance = limit_to_league(match_importance, 'Serie C, Girone B', date=False)
-past_predictions = limit_to_league(past_predictions, 'serie c, girone b')
+past_predictions = limit_to_league(past_predictions, 'Serie C, Girone B')
 
 data_future = check_fixtures(elos, predictions, all_matches)
 data_future = add_features_to_future(data_future, elos)
@@ -288,8 +289,8 @@ simulations.to_csv('../../data/dashboard_output/simulations.csv')
 match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
 data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
 data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
-data = [data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
-tabs = ['preds_home_away', 'preds_team_opp', 'current_elos', 'match_importance', 'sim_season', 'streaks']
+data = [league_targets, data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
+tabs = ['league_targets', 'preds_home_away', 'preds_team_opp', 'current_elos', 'match_importance', 'sim_season', 'streaks']
 
-# for i in range(len(data)):
-#     write_df_to_gsheets('i2_data', tabs[i], data[i])
+for i in range(len(data)):
+    write_df_to_gsheets('i2_data', tabs[i], data[i])

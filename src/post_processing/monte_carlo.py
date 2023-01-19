@@ -269,7 +269,7 @@ def result_importance(next_match, df_sim, team, result, simulations):
     df_sim_team = df_sim[(df_sim['team'] == team)]
     df_sim_next_match = df_sim_team[(df_sim_team['date'] == next_match)]
     df_sim_match = df_sim_team[['league', 'date', 'team', 'opponent']]
-    df_sim_team = df_sim_team.drop(['league', 'date', 'team', 'opponent'], axis=1)
+    df_sim_team = df_sim_team.drop(['league', 'date', 'team', 'opponent', 'home'], axis=1)
     df_sim_team = df_sim_team.loc[:, (df_sim_next_match == result).any()]
     columns = df_sim_team.columns
     df_sim_team = pd.concat([df_sim_match, df_sim_team], axis=1)
@@ -401,14 +401,29 @@ def get_league_targets(df):
     df_copy.reset_index(inplace=True, drop=True)
     df_copy['position'] = positions[1:] * no_simulations
     df_copy = df_copy.groupby('position').mean(numeric_only=True)
-    df_copy.reset_index(inplace=True, drop=True)
+    df_copy.reset_index(inplace=True)
 
     return df_copy
 
+def add_goals(df_past, df_goals):
+    df_goals = df_goals[['league', 'date', 'team', 'opponent',
+                         'team_goals_scored',
+                         'opponent_goals_scored',
+                         'team_goals_conceded',
+                         'opponent_goals_conceded']]
+    df = pd.merge(df_past,
+                  df_goals,
+                  left_on=['league', 'date', 'team', 'opponent'],
+                  right_on=['league', 'date', 'team', 'opponent'],
+                  how='inner')
+    
+    return df
 
+data_goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_future = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_past = pd.read_csv("../../data/joined_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_past = cut_to_current_year_and_league(data_past, '2022', 'Serie C, Girone B')
+data_past = add_goals(data_past, data_goals)
 
 data_future['league'] = 'Serie C, Girone B'
 divs = data_future['league'].unique()

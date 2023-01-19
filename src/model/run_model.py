@@ -18,9 +18,10 @@ def load_model(PATH):
 
 def load_future_matches():
     future = pd.read_csv("../../data/future_matches_processed.csv", index_col=0)
+    future.columns = future.columns.str.split('.').str[0]
     future.reset_index(inplace=True, drop=True)
     matches = store_matches(future)
-    future = future_to_tensor(future)
+    future = build_future_dataset(future)
     return future, matches
 
 
@@ -31,13 +32,30 @@ def future_to_tensor(df):
     return X
 
 
+def build_future_dataset(df):
+    df_copy = df.copy()
+    df_copy.reset_index(inplace=True, drop=True)
+    date = df_copy[['date']].iloc[:,0]
+    df_copy.drop(['league', 'date', 'team', 'opponent'], axis=1, inplace=True)
+    df_copy['date'] = date
+    df_copy.sort_values(by=['date'], inplace=True)
+    df_copy.drop(['date'], axis=1, inplace=True)
+    
+    X = df_copy.drop(['result'], axis=1).to_numpy()
+    X = torch.tensor(X).float()
+    
+    return X
+
+
 def store_matches(df):
     matches = df[['league', 'date', 'team', 'opponent', 'home']]
+    matches = matches.loc[:,~matches.columns.duplicated()].copy()
     return matches
 
 
 @torch.no_grad()
 def predict(x):
+    x = x[:, None, :]
     logits = model(x)
     preds = torch.softmax(logits, dim=1)
     
@@ -50,9 +68,10 @@ def preds_to_matches(preds, matches):
     return future_preds
 
 
-PATH = "trained_models/3_linear_layer.pt"
+# PATH = "trained_models/3_linear_layer.pt"
+PATH = "trained_models/wavenet_3.pt"
 model = load_model(PATH)
-model.train()
+model.eval()
 future, matches = load_future_matches()
 predictions = predict(future)
 future = preds_to_matches(predictions, matches)

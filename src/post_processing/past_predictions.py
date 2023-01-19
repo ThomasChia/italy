@@ -52,8 +52,16 @@ def update_result(df):
     df['result'] = result_num
     return df
 
+def update_names(df):
+    df['team'] = df['team'].str.lower()
+    df['opponent'] = df['opponent'].str.lower()
+    df['team'] = df['team'].str.replace(' ', '_', regex=True)
+    df['opponent'] = df['opponent'].str.replace(' ', '_', regex=True)
+    return df
 
-predictions = read_df_from_gsheets('serie_c_data', 'preds_team_opp')
+
+predictions = read_df_from_gsheets('i2_data', 'preds_team_opp')
+predictions = update_names(predictions)
 past_predictions = limit_to_past(predictions)
 past_predictions = cut_to_preds(past_predictions)
 past_predictions = update_result(past_predictions)
