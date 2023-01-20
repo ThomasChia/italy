@@ -120,7 +120,6 @@ class Wavenet:
         df_future['elo_diff'] = df_future['elo_team'] - df_future['elo_opponent']
         df_future['date'] = pd.to_datetime(df_future['date'], dayfirst=True)
         df_future['date'] = df_future['date'].dt.date
-
         df_future.sort_values(by='date', inplace=True)
 
         return df_future
@@ -144,9 +143,8 @@ class Wavenet:
         self.dfs = self.build_teams_dataset(df_copy, self.past_matches)
         self.dfs_future = self.add_stats_to_future(self.dfs, self.future)
         self.dfs_future = self.dfs_future[self.dfs.columns]
-        # print(self.dfs.tail())
-        # self.dfs = self.dfs[self.dfs['date']<=future_date]
-        # print(self.dfs.tail())
+        self.dfs = self.dfs.loc[:,~self.dfs.columns.duplicated()].copy()
+        self.dfs = self.dfs[self.dfs['date']<future_date]
         self.build_dataset(self.dfs)
         self.dfs = self.remove_duplicate_columns(self.dfs)
 
@@ -207,7 +205,6 @@ FILES = ["elos_matches.csv", "goals_matches.csv"]
 loader = Loader(FILES)
 future = load_future_matches()
 future_date = future['date'][0]
-
 data = loader.get_data()
 wavenet = Wavenet(data, future, 7)
 wavenet.build_wavenet_dataset_past_future()

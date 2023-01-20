@@ -256,7 +256,7 @@ if __name__ == "__main__":
                             # 'opponent_goals_scored',
                             # 'opponent_goals_conceded'
                             ], axis=1, inplace=True)
-
+    data_matches_avg.drop_duplicates(subset=['date', 'team', 'opponent'], inplace=True)
     data_matches_avg.to_csv('../../data/goals_matches.csv')
 
     finish = time.time()

@@ -203,6 +203,11 @@ def limit_to_league(df, league, date=True):
     return df
 
 
+def drop_future(df, date):
+    df = df[df['date']<date]
+    return df
+
+
 def write_df_to_gsheets(gsheet_name, tab_name, df):
     df = df.apply(lambda x: x.astype(str).str.title())
     df = df.apply(lambda x: x.astype(str).str.replace('_', ' '))
@@ -222,6 +227,10 @@ simulations = pd.read_csv("../../data/simulated_season.csv", index_col=0)
 match_importance = pd.read_csv("../../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
 streaks = pd.read_csv("../../data/dashboard_output/streaks.csv", index_col=0)
 league_targets = pd.read_csv("../../data/dashboard_output/league_targets.csv", index_col=0)
+
+future_date = predictions['date'][0]
+elos = drop_future(elos, future_date)
+goals = drop_future(goals, future_date)
 
 all_matches = limit_to_league(all_matches, 'Serie C, Girone B', date=False)
 predictions = limit_to_league(predictions, 'Serie C, Girone B')
