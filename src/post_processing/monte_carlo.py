@@ -169,6 +169,8 @@ def duplicate_to_team_and_opponent(df_matches):
 def cut_to_current_year_and_league(df, year, league):
     df = df[df['date'] >= f'{year}-07-15']
     df = df[df['league'] == league]
+    df['date'] = pd.to_datetime(df['date'])
+    df = df[df['date'] < future_date]
     df.reset_index(inplace=True, drop=True)
 
     return df
@@ -422,6 +424,7 @@ def add_goals(df_past, df_goals):
 data_goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_future = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 data_past = pd.read_csv("../../data/joined_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+future_date = pd.to_datetime(data_future['date'][0])
 data_past = cut_to_current_year_and_league(data_past, '2022', 'Serie C, Girone B')
 data_past = add_goals(data_past, data_goals)
 
