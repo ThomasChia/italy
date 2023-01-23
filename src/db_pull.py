@@ -74,4 +74,4 @@ data = log_in.get_session(query)
 print(data.head())
 print(data.shape)
 
-data.to_csv('../data/football_matches_3.csv')
+data.to_csv('../data/football_matches.csv')

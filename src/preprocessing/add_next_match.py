@@ -3,7 +3,7 @@ import pandas as pd
 
 
 def load_future_matches():
-    df = pd.read_csv('../../data/future_matches_serie_b.csv', parse_dates=True, dayfirst=False)
+    df = pd.read_csv('../../data/future_matches.csv', parse_dates=True, dayfirst=False)
     df['date'] = pd.to_datetime(df['date'], dayfirst=True)
     df.drop('Unnamed: 0', axis=1, inplace=True)
     df = duplicate_to_team_and_opponent(df)

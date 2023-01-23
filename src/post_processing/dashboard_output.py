@@ -239,13 +239,12 @@ goals = limit_to_league(goals, 'Serie C, Girone B')
 simulations = limit_to_league(simulations, 'Serie C, Girone B', date=False)
 match_importance = limit_to_league(match_importance, 'Serie C, Girone B', date=False)
 past_predictions = limit_to_league(past_predictions, 'Serie C, Girone B')
-
+past_predictions.drop(['result'], axis=1, inplace=True)
 data_future = check_fixtures(elos, predictions, all_matches)
 data_future = add_features_to_future(data_future, elos)
 
-
-elos_preds = pd.concat([elos.set_index(['league', 'date', 'team', 'opponent', 'result', 'home']),
-                        past_predictions.set_index(['league', 'date', 'team', 'opponent', 'result', 'home'])],
+elos_preds = pd.concat([elos.set_index(['league', 'date', 'team', 'opponent', 'home']),
+                        past_predictions.set_index(['league', 'date', 'team', 'opponent', 'home'])],
                         axis=1,
                         ).reset_index()
 data_predictions_combined = pd.concat([elos_preds, data_future]).reset_index(drop=True)
@@ -299,7 +298,7 @@ match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
 data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
 data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
 data = [league_targets, data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
-tabs = ['league_targets', 'preds_home_away', 'preds_team_opp', 'current_elos', 'match_importance', 'sim_season', 'streaks']
+tabs = ['league_targets', 'preds_home_away_in', 'preds_team_opp_in', 'current_elos', 'match_importance', 'sim_season', 'streaks']
 
 for i in range(len(data)):
     write_df_to_gsheets('i2_data', tabs[i], data[i])

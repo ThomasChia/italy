@@ -60,7 +60,7 @@ def update_names(df):
     return df
 
 
-predictions = read_df_from_gsheets('i2_data', 'preds_team_opp')
+predictions = read_df_from_gsheets('i2_data', 'preds_team_opp_in')
 predictions = update_names(predictions)
 past_predictions = limit_to_past(predictions)
 past_predictions = cut_to_preds(past_predictions)
