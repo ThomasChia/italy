@@ -10,12 +10,24 @@ def update_names(df):
     df['pt1'] = df['pt1'].replace({'us_ancona': 'ancona',
                                    'Inter Milan': 'inter_milan',
                                    'internazionale': 'inter_milan',
+                                   'inter': 'inter_milan',
+                                   'internazionale': 'inter_milan',
                                    'san_donato': 'san_donato_tavarnelle',
-                                   'sassari_torres': 'torres'})
-    df['pt2'] = df['pt2'].replace({'us_ancona': 'ancona', 'Inter Milan': 'inter_milan', 'san_donato': 'san_donato_tavarnelle', 'sassari_torres': 'torres'})
+                                   'sassari_torres': 'torres',
+                                   'verona': 'hellas_verona',})
+    df['pt2'] = df['pt2'].replace({'us_ancona': 'ancona',
+                                   'Inter Milan': 'inter_milan',
+                                   'internazionale': 'inter_milan',
+                                   'inter': 'inter_milan',
+                                   'san_donato': 'san_donato_tavarnelle',
+                                   'sassari_torres': 'torres',
+                                   'verona': 'hellas_verona',})
     df['league'] = df['league'].replace({'Serie C Grp. A': 'Serie C, Girone A',
                                         'Serie C Grp. B': 'Serie C, Girone B',
                                         'Serie C Grp. C': 'Serie C, Girone C'})
+    df['league'] = df['league'].replace({'Italian Serie A': 'Serie A',
+                                        'Italian Serie B': 'Serie B',
+                                        })
 
     return df
 
