@@ -3,7 +3,7 @@ Objective:
 This file is for calculated the expected goals in each match based on a simple Poisson model.
 """
 
-
+import code
 import numpy as np
 import pandas as pd
 import sqlite3
@@ -261,3 +261,4 @@ if __name__ == "__main__":
 
     finish = time.time()
     print('time taken to calc lambda:', str(finish - start))
+    code.interact(local=locals())

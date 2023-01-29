@@ -2,7 +2,7 @@
 This file updates teams names to be inline.
 """
 
-
+import code
 import pandas as pd
 
 
@@ -41,3 +41,5 @@ data = data.loc[:, ~data.columns.str.contains('Unnamed')]
 data = update_names(data)
 data = drop_duplicates(data)
 data.to_csv("../../data/football_matches_a.csv")
+
+code.interact(local=locals())

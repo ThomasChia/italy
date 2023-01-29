@@ -4,6 +4,7 @@ This file takes in all of the past match data and output pre-match ELO scores fo
 This file also produces a dataframe of teams and their current ELO at the time of running.
 """
 
+import code
 import numpy as np
 import pandas as pd
 import sqlite3
@@ -301,4 +302,5 @@ data = duplicate_to_team_and_opponent(data)
 data.to_csv('../../data/elos_matches.csv')
 teams.to_csv('../../data/elos_list.csv')
 
+code.interact(local=locals())
 # # To update the elos daily and much faster, we can compare the date of the match to the 'last played' date and only update if the match is after the last_played value.
