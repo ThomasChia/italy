@@ -276,6 +276,7 @@ def load_past_matches():
 
 data = load_past_matches()
 data = set_up_data(data)
+print(data.shape)
 data['result'] = data.apply(lambda x: get_result(x), axis=1)
 
 # TEST DATA
