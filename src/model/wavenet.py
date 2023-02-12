@@ -332,8 +332,9 @@ loader = Loader(FILES)
 future = load_future_matches()
 future_date = future['date'][0]
 data = loader.get_data()
-wavenet = Wavenet(data, future, 7, future_date)
+wavenet = Wavenet(data, future, 15, future_date)
 wavenet.build_wavenet_dataset_past_future()
+# wavenet.dfs.to_csv("../../data/test_wavenet.csv")
 
 n1 = int(0.8 * wavenet.X.shape[0])
 n2 = int(0.9 * wavenet.X.shape[0])
@@ -350,19 +351,22 @@ inputs_per_match = data.drop(['league', 'date', 'team', 'opponent',
 
 
 torch.manual_seed(1337)
-conv1 = 16*2
-conv2 = 32*2
-conv3 = 64*2
-conv4 = 128*2
+conv1 = 16
+conv2 = 32
+conv3 = 64
+conv4 = 128
+conv5 = 256
 n_hidden = 25
 
 model = torch.nn.Sequential(
-    torch.nn.Conv1d(1, conv1, kernel_size=inputs_per_match, stride=inputs_per_match), torch.nn.BatchNorm1d(conv1, track_running_stats=False), torch.nn.Tanh(),
-    torch.nn.Conv1d(conv1, conv2, kernel_size=2, stride=2), torch.nn.BatchNorm1d(conv2, track_running_stats=False), torch.nn.Tanh(),
-    torch.nn.Conv1d(conv2, conv3, kernel_size=2, stride=2), torch.nn.BatchNorm1d(conv3, track_running_stats=False), torch.nn.Tanh(),
-# #     torch.nn.Conv1d(conv3, conv3, kernel_size=2, stride=2), torch.nn.BatchNorm1d(conv3), torch.nn.Tanh(),
+    torch.nn.Conv1d(1, conv1, kernel_size=inputs_per_match, stride=inputs_per_match), torch.nn.GroupNorm(conv1, conv1), torch.nn.Tanh(),
+    torch.nn.Conv1d(conv1, conv2, kernel_size=2, stride=2), torch.nn.GroupNorm(conv2, conv2), torch.nn.Tanh(),
+    torch.nn.Conv1d(conv2, conv3, kernel_size=2, stride=2), torch.nn.GroupNorm(conv3, conv3), torch.nn.Tanh(),
+    torch.nn.Conv1d(conv3, conv4, kernel_size=2, stride=2), torch.nn.GroupNorm(conv4, conv4), torch.nn.Tanh(),
+    # torch.nn.Conv1d(conv4, conv5, kernel_size=2, stride=2), torch.nn.GroupNorm(conv5, conv5), torch.nn.Tanh(),
     torch.nn.Flatten(),
-    torch.nn.Linear(conv4, 3)
+    torch.nn.Linear(conv4*2, 100),
+    torch.nn.Linear(100, 3)
 )
 
 model.to('mps')
@@ -377,7 +381,7 @@ for p in parameters:
     p.requires_grad = True
 
 
-max_steps = 100000
+max_steps = 300000
 batch_size = 32
 lossi = []
 
@@ -396,7 +400,7 @@ for i in range(max_steps):
     loss.backward()
     
     # update weights
-    lr = 0.1 if i < 50000 else 0.01
+    lr = 0.1 if i < 150000 else 0.01
     for p in parameters:
         p.data += -lr * p.grad
         
@@ -451,6 +455,12 @@ def get_predictions(x, df):
     
     return df
 
+# split_loss('train')
+# split_loss('val')
+
+# accuracy('train')
+# accuracy('val')
+
 model.eval() 
             
 split_loss('train')
@@ -459,8 +469,8 @@ split_loss('val')
 accuracy('train')
 accuracy('val')
 
-PATH = "trained_models/wavenet_10.pt"
-torch.save(model, PATH)
+# PATH = "trained_models/wavenet_12.pt"
+# torch.save(model, PATH)
 
 
 future_data = add_stats_to_future(data, future)
@@ -468,7 +478,7 @@ future_data.drop(['team_goals_conceded',
                  'opponent_goals_conceded',
                  'opponent_goals_scored',
                  'team_goals_scored'], axis=1, inplace=True)
-current_date = pd.to_datetime("2023-01-25")
+current_date = pd.to_datetime("2023-02-09")
 next_match = wavenet.dfs_all[wavenet.dfs_all['date']>=current_date]
 next_match.reset_index(inplace=True, drop=True)
 next_match_team = next_match.loc[:, next_match.columns.str.contains('\d$', regex=True) | 
@@ -539,6 +549,6 @@ dfs_preds_h_a['prediction'] = dfs_preds_h_a['prediction'].replace({'H': 1, 'D': 
 dfs_preds_h_a.drop_duplicates(subset=['home_team', 'away_team', 'date'], inplace=True)
 dfs_preds_h_a['prediction'].value_counts()
 
-dfs_preds_h_a.to_csv("../../data/predictions/wavenet_9_h_a_c_20230129.csv")
+dfs_preds_h_a.to_csv("../../data/predictions/wavenet_9_h_a_c_20230212.csv")
 
-# code.interact(local=locals())
+code.interact(local=locals())
