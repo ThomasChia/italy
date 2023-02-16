@@ -31,6 +31,12 @@ def update_names(df):
 
     return df
 
+def duplicate_and_swap_pt1_pt2(df):
+    df_copy = df.copy(deep=True)
+    df_copy.columns = [col.replace('pt1', 'pt2') if 'pt1' in col else col.replace('pt2', 'pt1') if 'pt2' in col else col for col in df_copy.columns]
+    df = pd.concat([df, df_copy]).reset_index(drop=True)
+    return df
+
 def drop_duplicates(df):
     df_clean = df.drop_duplicates(subset=['pt1', 'pt2', 'date'])
     return df_clean
@@ -39,6 +45,7 @@ def drop_duplicates(df):
 data = pd.read_csv("../../data/football_matches.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
 data = data.loc[:, ~data.columns.str.contains('Unnamed')]
 data = update_names(data)
+# data = duplicate_and_swap_pt1_pt2(data)
 data = drop_duplicates(data)
 data.to_csv("../../data/football_matches_a.csv")
 

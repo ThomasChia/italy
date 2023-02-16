@@ -1,3 +1,4 @@
+import code
 import log_in
 import numpy as np
 import pandas as pd
@@ -75,3 +76,5 @@ print(data.head())
 print(data.shape)
 
 data.to_csv('../data/football_matches.csv')
+
+code.interact(local=locals())
