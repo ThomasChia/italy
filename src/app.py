@@ -14,7 +14,8 @@ if __name__ == "__main__":
     loader.run_query(query)
     print(loader.data)
 
-    cleaner = 
+    cleaner = Cleaner(loader)
+    loader = cleaner.get_result()
 
     elos = EloPreprocessor(loader.data)
     elos.calculate_elos()

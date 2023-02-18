@@ -1,16 +1,17 @@
+import numpy as np
 import pandas as pd
 from loaders.loader import Loader
 
 
 class Cleaner:
     def __init__(self, loader: Loader) -> None:
-        self.matches = matches
+        self.loader = loader
 
     def get_result(self):
         conditions = [
-            self.matches['score_pt1'] > self.matches['score_pt2'],
-            self.matches['score_pt1'] < self.matches['score_pt2'],
-            self.matches['score_pt1'] == self.matches['score_pt2'],
+            self.loader.data['score_pt1'] > self.loader.data['score_pt2'],
+            self.loader.data['score_pt1'] < self.loader.data['score_pt2'],
+            self.loader.data['score_pt1'] == self.loader.data['score_pt2'],
         ]
 
         outputs = [
@@ -19,4 +20,8 @@ class Cleaner:
             0.5
         ]
 
-        self.matches['result'] = np.select(conditions, outputs)
+        self.loader.data['result'] = np.select(conditions, outputs)
+        return self.loader
+    
+    def clean_league_names(self):
+        pass

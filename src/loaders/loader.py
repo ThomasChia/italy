@@ -6,14 +6,13 @@ from sqlalchemy.engine import Engine
 
 class Loader:
     def __init__(self,):
-        pass
+        self.data: pd.DataFrame = None
 
 
 class DBLoader(Loader):
     def __init__(self):
         super().__init__()
         self.connection = Connector()
-        self.data: pd.DataFrame = None
 
     def run_query(self, query: Query()):
         engine = self.connection.get_connection()

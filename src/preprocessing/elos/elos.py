@@ -19,7 +19,7 @@ class Elo:
     def calc_elos(self, row):
         row_data = RowData(row, self.elo_tracker)
 
-        self.update_div(row_data)
+        self.update_league(row_data)
         self.check_and_set_date(row_data)
 
         row['elo_home'] = row_data.home_team_elo
@@ -52,41 +52,41 @@ class Elo:
         df = df.reset_index(drop=True)
         return df
     
-    def get_league_elos(self, div):
-        return self.elo_tracker[self.elo_tracker['league'] == div]
+    def get_league_elos(self, league):
+        return self.elo_tracker.tracker[self.elo_tracker.tracker['league'] == league]
     
-    def get_league_average(self, div):
-        div_elos = self.get_league_elos(div)
-        if div_elos.empty:
+    def get_league_average(self, league):
+        league_elos = self.get_league_elos(league)
+        if league_elos.empty:
             league_average = config.STARTING_ELO
         else:
-            league_average = div_elos['pts'].mean()
+            league_average = league_elos['pts'].mean()
         return league_average
 
     def changed_league_modification(self, row_data, home_team=True):
-        league_average = self.get_league_average(row_data.div)
+        league_average = self.get_league_average(row_data.league)
         if home_team:
             modified_rating = row_data.home_team_elo * (1 - (row_data.home_team_elo - league_average) / (league_average) * 0.1)
         else:
             modified_rating = row_data.away_team_elo * (1 - (row_data.away_team_elo - league_average) / (league_average) * 0.1)
         return modified_rating
 
-    def check_div_change(self, row_data):
-        if row_data.div != self.row_data.home_team_last_div:
+    def check_league_change(self, row_data):
+        if row_data.league != row_data.home_team_last_league:
             modified_rating = self.changed_league_modification(row_data, home_team=True)
-            self.elo_tracker.loc[row_data.home_team, 'pts'] = modified_rating
-        if row_data.div != self.row_data.away_team_last_div:
+            self.elo_tracker.tracker.loc[row_data.home_team, 'pts'] = modified_rating
+        if row_data.league != row_data.away_team_last_league:
             modified_rating = self.changed_league_modification(row_data, home_team=False)
-            self.elo_tracker.loc[row_data.home_team, 'pts'] = modified_rating
+            self.elo_tracker.tracker.loc[row_data.home_team, 'pts'] = modified_rating
 
-    def update_div(self, row_data):
-        self.check_div_change(row_data)
-        self.elo_tracker.loc[row_data.home_team, 'league'] = row_data.div
-        self.elo_tracker.loc[row_data.away_team, 'league'] = row_data.div
+    def update_league(self, row_data):
+        self.check_league_change(row_data)
+        self.elo_tracker.tracker.loc[row_data.home_team, 'league'] = row_data.league
+        self.elo_tracker.tracker.loc[row_data.away_team, 'league'] = row_data.league
 
     def check_and_set_date(self, row_data):
-        self.elo_tracker.loc[row_data.home_team, 'last_played'] = row_data.date
-        self.elo_tracker.loc[row_data.away_team, 'last_played'] = row_data.date
+        self.elo_tracker.tracker.loc[row_data.home_team, 'last_played'] = row_data.match_date
+        self.elo_tracker.tracker.loc[row_data.away_team, 'last_played'] = row_data.match_date
 
     def calculate_expected_result(self, team_elo, opponent_elo):
         expected_result = 1 / (1 + (10 ** ((opponent_elo - team_elo) / 400)))
@@ -123,6 +123,7 @@ class Elo:
         else:
             df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'elo_away': 'elo_team',
                                     'elo_home': 'elo_opponent'})
+        return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         return df[['league', 'date', 'pt1', 'pt2', 'result', 'elo_home', 'elo_away', 'elo_diff']]
@@ -130,8 +131,7 @@ class Elo:
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['elo_diff'] = df['elo_diff'] * -1
         df['result'] = 1 - df['result']
-        df = df[['league', 'date', 'team', 'opponent', 'result', 'elo_team', 'elo_opponent', 'elo_diff'
-                            ]]
+        df = df[['league', 'date', 'team', 'opponent', 'result', 'elo_team', 'elo_opponent', 'elo_diff']]
         df.loc[:, 'home'] = 0
         return df
 
@@ -153,7 +153,7 @@ class Elo:
         self.team_and_opp_matches = self.sort_by_date(team_matches)
 
 
-class EloTracker:
+class EloTracker():
     def __init__(self, matches):
         self.matches = matches
         self.tracker = self.set_up_tracker()
@@ -172,6 +172,7 @@ class EloTracker:
         tracker['pts'] = config.STARTING_ELO
         tracker['last_played'] = pd.to_datetime('')
         tracker['league'] = ''
+        tracker.set_index('team', inplace=True)
         return tracker
     
     def update_elo_tracker(self, home_team, home_team_elo_new, away_team_elo_new, away_team):
@@ -183,12 +184,12 @@ class RowData:
         self.home_team = row['pt1']
         self.away_team = row['pt2']
         self.match_date = row['date']
-        self.div = row['league']
+        self.league = row['league']
         self.result = row['result']
-        self.home_last_game = elo_tracker.loc[self.home_team, 'last_played']
-        self.away_last_game = elo_tracker.loc[self.away_team, 'last_played']
-        self.home_team_elo = elo_tracker.loc[self.home_team, 'pts']
-        self.away_team_elo = elo_tracker.loc[self.away_team, 'pts']
-        self.home_team_last_div = elo_tracker.loc[self.home_team, 'div']
-        self.away_team_last_div = elo_tracker.loc[self.away_team, 'div']
+        self.home_last_game = elo_tracker.tracker.loc[self.home_team, 'last_played']
+        self.away_last_game = elo_tracker.tracker.loc[self.away_team, 'last_played']
+        self.home_team_elo = elo_tracker.tracker.loc[self.home_team, 'pts']
+        self.away_team_elo = elo_tracker.tracker.loc[self.away_team, 'pts']
+        self.home_team_last_league = elo_tracker.tracker.loc[self.home_team, 'league']
+        self.away_team_last_league = elo_tracker.tracker.loc[self.away_team, 'league']
         
