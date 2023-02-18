@@ -1,3 +1,5 @@
+import os
+
 LEAGUES = '''
     ('Coppa Italia',
     'Coppa Italia Serie C, Girone A',
@@ -60,4 +62,10 @@ LEAGUES = '''
     'Supercoppa Serie')
 '''
 
-TABLE_NAME_PRED = "football_matches"
+TABLE_NAME_PAST = "football_matches"
+
+os.environ["API_DB_USER"] = "postgres"
+os.environ["API_DB_PASSWORD"] = "ywngtpwyBH0922"
+os.environ["API_DB_HOST"] = "localhost"
+os.environ["API_DB_PORT"] = "5431"
+os.environ["API_DB_DB"] = "rugby4cast"

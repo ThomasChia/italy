@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-query = f' SELECT * FROM {config.TABLE_NAME_PRED} WHERE league IN {config.LEAGUES}'
+query = f' SELECT * FROM {config.TABLE_NAME_PAST} WHERE league IN {config.LEAGUES}'
 
 data = log_in.get_session(query)
 print(data.head())

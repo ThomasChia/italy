@@ -1,13 +1,14 @@
 import config
 import os
 from sqlalchemy import create_engine
+from sqlalchemy.engine import Engine
 
 
 class Connector:
     def __init__(self) -> None:
         pass
 
-    def get_connection():
+    def get_connection(self) -> Engine:
         if "API_DB_USER" in os.environ:
             user = os.getenv("API_DB_USER")
             password = os.getenv("API_DB_PASSWORD")

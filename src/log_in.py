@@ -26,9 +26,6 @@ def get_connection():
 
 def get_session(query):
     engine = get_connection()
-    # session_made = sessionmaker(bind=engine)
-    # session = session_made()
-    # session.execute(query)
     data = pd.read_sql_query(query, engine)
 
     return data
