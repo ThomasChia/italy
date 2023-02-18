@@ -10,3 +10,5 @@ if __name__ == "__main__":
     loader = DBLoader()
     loader.run_query(query)
     print(loader.data.head())
+
+    

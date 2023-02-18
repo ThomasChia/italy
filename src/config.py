@@ -1,5 +1,8 @@
 import os
 
+
+# Data Loader
+
 LEAGUES = '''
     ('Coppa Italia',
     'Coppa Italia Serie C, Girone A',
@@ -69,3 +72,11 @@ os.environ["API_DB_PASSWORD"] = "ywngtpwyBH0922"
 os.environ["API_DB_HOST"] = "localhost"
 os.environ["API_DB_PORT"] = "5431"
 os.environ["API_DB_DB"] = "rugby4cast"
+
+
+# ELO settings
+STARTING_ELO = 1500
+KFACTOR_QUICK = 40
+KFACTOR_SLOW = 30
+HOME_AD = 50
+new_team_rating = 1500
