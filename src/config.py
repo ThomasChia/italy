@@ -73,6 +73,15 @@ os.environ["API_DB_HOST"] = "localhost"
 os.environ["API_DB_PORT"] = "5431"
 os.environ["API_DB_DB"] = "rugby4cast"
 
+# Cleaning
+TEAM_NAMES_DICT = {
+    ''
+}
+
+LEAGUES_DICT = {
+    'Italian Serie A': 'Serie A',
+    'Italian Serie B': 'Serie B'
+}
 
 # ELO settings
 STARTING_ELO = 1500
