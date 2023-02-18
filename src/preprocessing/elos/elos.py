@@ -6,10 +6,6 @@ import pandas as pd
 class Elo:
     def __init__(self, matches):
         self.matches: pd.DataFrame = matches
-        self.starting_elo = config.STARTING_ELO
-        self.kfactor_quick = config.KFACTOR_QUICK
-        self.kfactor_slow = config.KFACTOR_SLOW
-        self.home_ad = config.HOME_AD
         self.elo_tracker = EloTracker(matches)
         self.team_and_opp_matches = None
 
@@ -18,10 +14,7 @@ class Elo:
         self.get_team_and_opp_matches()
 
     def calc_all_elos(self):
-        self.matches = self.matches.apply(lambda x: self.calc_elos(x, 
-                                                            self.kfactor_quick,
-                                                            self.kfactor_slow,
-                                                            self.home_ad), axis=1)
+        self.matches = self.matches.apply(lambda x: self.calc_elos(x), axis=1)
 
     def calc_elos(self, row):
         row_data = RowData(row, self.elo_tracker)
@@ -163,7 +156,6 @@ class Elo:
 class EloTracker:
     def __init__(self, matches):
         self.matches = matches
-        self.starting_elo = config.STARTING_ELO
         self.tracker = self.set_up_tracker()
 
     def set_up_tracker(self) -> pd.DataFrame:
@@ -177,7 +169,7 @@ class EloTracker:
         return pd.DataFrame(unique_teams, columns=['team'])
     
     def set_up_stats(self, tracker) -> pd.DataFrame:
-        tracker['pts'] = self.starting_elo
+        tracker['pts'] = config.STARTING_ELO
         tracker['last_played'] = pd.to_datetime('')
         tracker['league'] = ''
         return tracker

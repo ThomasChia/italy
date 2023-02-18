@@ -1,5 +1,5 @@
 import pandas as pd
-from elos.elos import Elo
+from preprocessing.elos.elos import Elo
 
 
 class Preprocessor:
@@ -7,9 +7,9 @@ class Preprocessor:
         pass
 
 class EloPreprocessor(Preprocessor):
-    def __init__(self, elo: Elo) -> None:
+    def __init__(self, matches: pd.DataFrame) -> None:
         super().__init__()
-        self.elo = elo
+        self.elo = Elo(matches)
         self.processed_matches = None
 
     def calculate_elos(self):
