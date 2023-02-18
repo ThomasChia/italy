@@ -11,8 +11,13 @@ class Elo:
         self.kfactor_slow = config.KFACTOR_SLOW
         self.home_ad = config.HOME_AD
         self.elo_tracker = EloTracker(matches)
+        self.team_and_opp_matches = None
 
-    def calc_all_elos(self, matches):
+    def calculate(self):
+        self.calc_all_elos()
+        self.get_team_and_opp_matches()
+
+    def calc_all_elos(self):
         self.matches = self.matches.apply(lambda x: self.calc_elos(x, 
                                                             self.kfactor_quick,
                                                             self.kfactor_slow,
@@ -117,7 +122,42 @@ class Elo:
         elo_home_new = row_data.home_team_elo + config.KFACTOR_SLOW * (row_data.result - expected_result_home)
         elo_away_new = row_data.away_team_elo + config.KFACTOR_SLOW * ((1 - row_data.result) - expected_result_away)
         return elo_home_new, elo_away_new
+    
+    def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
+        if team:
+            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent', 'elo_home': 'elo_team',
+                                    'elo_away': 'elo_opponent'})
+        else:
+            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'elo_away': 'elo_team',
+                                    'elo_home': 'elo_opponent'})
+    
+    def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[['league', 'date', 'pt1', 'pt2', 'result', 'elo_home', 'elo_away', 'elo_diff']]
+    
+    def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        df['elo_diff'] = df['elo_diff'] * -1
+        df['result'] = 1 - df['result']
+        df = df[['league', 'date', 'team', 'opponent', 'result', 'elo_team', 'elo_opponent', 'elo_diff'
+                            ]]
+        df.loc[:, 'home'] = 0
+        return df
 
+    def get_team_and_opp_matches(self):
+        team_matches = self.matches.copy(deep=True)
+        opponent_matches = team_matches.copy(deep=True)
+
+        team_matches = self.cut_columns(team_matches)
+        opponent_matches = self.cut_columns(opponent_matches)
+
+        team_matches = self.rename_columns_to_team_and_opp(team_matches, team=True)
+        opponent_matches = self.rename_columns_to_team_and_opp(opponent_matches, team=False)
+
+        opponent_matches = self.adjust_away_columns(opponent_matches)
+
+        team_matches.loc[:, 'home'] = 1
+ 
+        self.team_and_opp_matches = pd.concat([team_matches, opponent_matches])
+        self.team_and_opp_matches = self.sort_by_date(team_matches)
 
 
 class EloTracker:
