@@ -23,5 +23,12 @@ class Cleaner:
         self.loader.data['result'] = np.select(conditions, outputs)
         return self.loader
     
+    def order_by_date(self):
+        self.loader.data = self.loader.data.sort_values(by='date')
+        self.loader.data = self.loader.data.reset_index(drop=True)
+    
     def clean_league_names(self):
+        pass
+
+    def clean_team_names(self):
         pass
