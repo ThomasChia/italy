@@ -74,9 +74,9 @@ for ind in range(len(times)):
 df_res = pd.DataFrame(dict_res)
 df_res = clean_data(df_res)
 
-# df_res.to_csv("../../data/future_matches_serie_a.csv")
-# df_res.to_csv("../../data/future_matches_serie_b.csv")
-df_res.to_csv("../../data/future_matches.csv")
+# df_res.to_csv("../data/future_matches_serie_a.csv")
+# df_res.to_csv("../data/future_matches_serie_b.csv")
+df_res.to_csv("../data/future_matches.csv")
 print(df_res)
 
 driver.quit()

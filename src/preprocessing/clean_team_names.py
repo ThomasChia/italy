@@ -42,11 +42,11 @@ def drop_duplicates(df):
     return df_clean
 
 
-data = pd.read_csv("../../data/football_matches.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
+data = pd.read_csv("../data/football_matches.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
 data = data.loc[:, ~data.columns.str.contains('Unnamed')]
 data = update_names(data)
 # data = duplicate_and_swap_pt1_pt2(data)
 data = drop_duplicates(data)
-data.to_csv("../../data/football_matches_a.csv")
+data.to_csv("../data/football_matches_a.csv")
 
 code.interact(local=locals())
