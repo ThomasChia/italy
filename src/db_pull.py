@@ -13,4 +13,4 @@ print(data.shape)
 
 data.to_csv('../data/football_matches.csv')
 
-code.interact(local=locals())
+# code.interact(local=locals())
