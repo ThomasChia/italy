@@ -49,4 +49,4 @@ data = update_names(data)
 data = drop_duplicates(data)
 data.to_csv("../data/football_matches_a.csv")
 
-code.interact(local=locals())
+# code.interact(local=locals())

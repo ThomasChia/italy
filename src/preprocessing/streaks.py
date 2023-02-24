@@ -187,11 +187,12 @@ def filter_output(df):
 
     return df
 
-data = load_data("../../data/football_matches.csv")
+print("Calculating streaks...")
+data = load_data("../data/football_matches.csv")
 data['date'] = pd.to_datetime(data['date'], dayfirst=False)
 data = duplicate_to_team_and_opponent(data)
 data = get_win_loss(data)
 data = create_col_team_opp(data)
 data = create_col_5_team_opp(data)
 data = filter_output(data)
-data.to_csv("../../data/dashboard_output/streaks.csv")
+data.to_csv("../data/dashboard_output/streaks.csv")

@@ -21,7 +21,7 @@ class Loader:
         return df_join
 
     def load_past_matches(self, file):
-        df = pd.read_csv(f'../../data/{file}')
+        df = pd.read_csv(f'../data/{file}')
         df.drop('Unnamed: 0', axis=1, inplace=True)
         df['date'] = pd.to_datetime(df['date']).dt.date
 
@@ -149,7 +149,7 @@ class Wavenet:
         self.dfs = self.remove_duplicate_columns(self.dfs)
 
 def load_future_matches():
-    df = pd.read_csv('../../data/future_matches.csv', parse_dates=True, dayfirst=True)
+    df = pd.read_csv('../data/future_matches.csv', parse_dates=True, dayfirst=True)
     df['date'] = pd.to_datetime(df['date'], dayfirst=True)
     df.drop('Unnamed: 0', axis=1, inplace=True)
     df = duplicate_to_team_and_opponent(df)
@@ -201,6 +201,7 @@ def build_future_dataset(df):
     return X
 
 
+print("Building wavenet data...")
 FILES = ["elos_matches.csv", "goals_matches.csv"]
 loader = Loader(FILES)
 future = load_future_matches()
@@ -208,5 +209,5 @@ future_date = future['date'][0]
 data = loader.get_data()
 wavenet = Wavenet(data, future, 7)
 wavenet.build_wavenet_dataset_past_future()
-wavenet.dfs.to_csv('../../data/joined_matches.csv')
-wavenet.dfs_future.to_csv('../../data/future_matches_processed.csv')
+wavenet.dfs.to_csv('../data/joined_matches.csv')
+wavenet.dfs_future.to_csv('../data/future_matches_processed.csv')

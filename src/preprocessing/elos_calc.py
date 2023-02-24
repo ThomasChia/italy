@@ -268,7 +268,7 @@ def update_FTR(row):
 
 
 def load_past_matches():
-    df = pd.read_csv('../../data/football_matches_a.csv', dtype={'manager_pt1': str, 'manager_pt2': str}, parse_dates=['date'])
+    df = pd.read_csv('../data/football_matches_a.csv', dtype={'manager_pt1': str, 'manager_pt2': str}, parse_dates=['date'])
     df.drop('Unnamed: 0', axis=1, inplace=True)
 
     return df
@@ -300,8 +300,8 @@ data = duplicate_to_team_and_opponent(data)
 # save_elos_to_db(teams)
 # save_past_matches_to_db(data)
 # print(data.tail())
-data.to_csv('../../data/elos_matches.csv')
-teams.to_csv('../../data/elos_list.csv')
+data.to_csv('../data/elos_matches.csv')
+teams.to_csv('../data/elos_list.csv')
 
-code.interact(local=locals())
+# code.interact(local=locals())
 # # To update the elos daily and much faster, we can compare the date of the match to the 'last played' date and only update if the match is after the last_played value.

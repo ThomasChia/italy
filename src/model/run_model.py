@@ -17,7 +17,7 @@ def load_model(PATH):
 
 
 def load_future_matches():
-    future = pd.read_csv("../../data/future_matches_processed.csv", index_col=0)
+    future = pd.read_csv("../data/future_matches_processed.csv", index_col=0)
     future.columns = future.columns.str.split('.').str[0]
     future = future.loc[:,~future.columns.duplicated()].copy()
     future['date'] = pd.to_datetime(future['date'])
@@ -70,12 +70,12 @@ def preds_to_matches(preds, matches):
 
 
 # PATH = "trained_models/3_linear_layer.pt"
-PATH = "trained_models/wavenet_4.pt"
+PATH = "model/trained_models/wavenet_4.pt"
 model = load_model(PATH)
 model.train()
 future, matches = load_future_matches()
 predictions = predict(future)
 future = preds_to_matches(predictions, matches)
-future.to_csv("../../data/future_predictions.csv")
+future.to_csv("../data/future_predictions.csv")
 print(future[future['team']=='cesena'].head(1))
 print(future[future['team']=='fermana'].head(1))

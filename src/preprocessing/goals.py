@@ -218,47 +218,48 @@ def merge_on_common_columns(df1, df2):
     return df
 
 
-if __name__ == "__main__":
-    start = time.time()
+# if __name__ == "__main__":
+print("Calculating goals...")
+start = time.time()
 
-    data_matches = pd.read_csv("../../data/football_matches_a.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
-    data_matches['date'] = pd.to_datetime(data_matches['date'], dayfirst=True)
-    data_matches['date'] = data_matches['date'].dt.date
-    data_matches.sort_values(by='date', inplace=True)
-    data_matches.reset_index(inplace=True, drop=True)
+data_matches = pd.read_csv("../data/football_matches_a.csv", dtype={'manager_pt1': str, 'manager_pt2': str})
+data_matches['date'] = pd.to_datetime(data_matches['date'], dayfirst=True)
+data_matches['date'] = data_matches['date'].dt.date
+data_matches.sort_values(by='date', inplace=True)
+data_matches.reset_index(inplace=True, drop=True)
 
-    # data_matches = data_matches[-10000:]
-    data_matches = duplicate_to_team_and_opponent(data_matches)
-    team_stats = ['team_goals_scored',
-            'team_goals_conceded',
-            ]
-    opponent_stats = ['opponent_goals_scored',
-                    'opponent_goals_conceded',]
-    # league_stats = ['league_home_goals_scored',
-    #                 'league_home_goals_conceded',
-    #                 'league_away_goals_scored',
-    #                 'league_away_goals_conceded',]    
-    data_matches['id'] = np.arange(1, len(data_matches)+1)     
-    data_matches_team_avg = get_rolling_average(data_matches, team_stats, for_team=True)
-    data_matches_opponent_avg = get_rolling_average(data_matches, opponent_stats, for_team=False)
-    # data_matches_league_avg = get_rolling_average(data_matches, league_stats)
-    data_matches_avg = merge_on_common_columns(data_matches_team_avg, data_matches_opponent_avg)
-    # data_matches_avg = merge_on_common_columns(data_matches_avg, data_matches_league_avg)
-    data_matches = get_league_average(data_matches, 'scored')
-    data_matches = get_league_average(data_matches, 'conceded')
-    data_matches_avg = merge_on_common_columns(data_matches_avg, data_matches)
-    data_matches_avg = calc_strength(data_matches_avg)
-    data_matches_avg = calc_lambda(data_matches_avg)
-    data_matches_avg.reset_index(inplace=True, drop=True)
-    data_matches_avg.drop(['id', 'row_num',
-                            # 'team_goals_scored',
-                            # 'team_goals_conceded',
-                            # 'opponent_goals_scored',
-                            # 'opponent_goals_conceded'
-                            ], axis=1, inplace=True)
-    data_matches_avg.drop_duplicates(subset=['date', 'team', 'opponent'], inplace=True)
-    data_matches_avg.to_csv('../../data/goals_matches.csv')
+# data_matches = data_matches[-10000:]
+data_matches = duplicate_to_team_and_opponent(data_matches)
+team_stats = ['team_goals_scored',
+        'team_goals_conceded',
+        ]
+opponent_stats = ['opponent_goals_scored',
+                'opponent_goals_conceded',]
+# league_stats = ['league_home_goals_scored',
+#                 'league_home_goals_conceded',
+#                 'league_away_goals_scored',
+#                 'league_away_goals_conceded',]    
+data_matches['id'] = np.arange(1, len(data_matches)+1)     
+data_matches_team_avg = get_rolling_average(data_matches, team_stats, for_team=True)
+data_matches_opponent_avg = get_rolling_average(data_matches, opponent_stats, for_team=False)
+# data_matches_league_avg = get_rolling_average(data_matches, league_stats)
+data_matches_avg = merge_on_common_columns(data_matches_team_avg, data_matches_opponent_avg)
+# data_matches_avg = merge_on_common_columns(data_matches_avg, data_matches_league_avg)
+data_matches = get_league_average(data_matches, 'scored')
+data_matches = get_league_average(data_matches, 'conceded')
+data_matches_avg = merge_on_common_columns(data_matches_avg, data_matches)
+data_matches_avg = calc_strength(data_matches_avg)
+data_matches_avg = calc_lambda(data_matches_avg)
+data_matches_avg.reset_index(inplace=True, drop=True)
+data_matches_avg.drop(['id', 'row_num',
+                        # 'team_goals_scored',
+                        # 'team_goals_conceded',
+                        # 'opponent_goals_scored',
+                        # 'opponent_goals_conceded'
+                        ], axis=1, inplace=True)
+data_matches_avg.drop_duplicates(subset=['date', 'team', 'opponent'], inplace=True)
+data_matches_avg.to_csv('../data/goals_matches.csv')
 
-    finish = time.time()
-    print('time taken to calc lambda:', str(finish - start))
-    code.interact(local=locals())
+finish = time.time()
+print('time taken to calc lambda:', str(finish - start))
+# code.interact(local=locals())

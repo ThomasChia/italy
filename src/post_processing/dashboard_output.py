@@ -212,21 +212,21 @@ def write_df_to_gsheets(gsheet_name, tab_name, df):
     df = df.apply(lambda x: x.astype(str).str.title())
     df = df.apply(lambda x: x.astype(str).str.replace('_', ' '))
     df = df.apply(lambda x: x.astype(str).str.replace('Nan', ''))
-    gc = gspread.service_account(filename='../../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
+    gc = gspread.service_account(filename='../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
     sh = gc.open(gsheet_name) 
     worksheet = sh.worksheet(tab_name)
     set_with_dataframe(worksheet, df)
 
 
-all_matches = pd.read_csv("../../data/all_match_combinations.csv", index_col=0)
-past_predictions = pd.read_csv("../../data/past_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-predictions = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-elos = pd.read_csv("../../data/elos_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-simulations = pd.read_csv("../../data/simulated_season.csv", index_col=0)
-match_importance = pd.read_csv("../../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
-streaks = pd.read_csv("../../data/dashboard_output/streaks.csv", index_col=0)
-league_targets = pd.read_csv("../../data/dashboard_output/league_targets.csv", index_col=0)
+all_matches = pd.read_csv("../data/all_match_combinations.csv", index_col=0)
+past_predictions = pd.read_csv("../data/past_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+predictions = pd.read_csv("../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+elos = pd.read_csv("../data/elos_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+goals = pd.read_csv("../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+simulations = pd.read_csv("../data/simulated_season.csv", index_col=0)
+match_importance = pd.read_csv("../data/match_importance.csv", index_col=0).dropna(axis=1, how='all')
+streaks = pd.read_csv("../data/dashboard_output/streaks.csv", index_col=0)
+league_targets = pd.read_csv("../data/dashboard_output/league_targets.csv", index_col=0)
 
 future_date = predictions['date'][0]
 print(future_date)
@@ -299,13 +299,13 @@ data_predictions_team_and_opponent_days_goals = data_predictions_team_and_oppone
 
 data_predictions_home_and_away_goals = combine_home_and_away_and_goals(data_predictions_home_and_away, data_goals_added_stats_removed)
 
-elos_list = pd.read_csv('../../data/elos_list.csv')
+elos_list = pd.read_csv('../data/elos_list.csv')
 
-elos_list.to_csv('../../data/dashboard_output/list_elos.csv')
-simulations.to_csv('../../data/dashboard_output/simulations.csv')
-match_importance.to_csv('../../data/dashboard_output/match_importance.csv')
-data_predictions_home_and_away_goals.to_csv('../../data/dashboard_output/predictions_home_and_away.csv')
-data_predictions_team_and_opponent_days_goals.to_csv('../../data/dashboard_output/predictions_team_and_opponent.csv')
+elos_list.to_csv('../data/dashboard_output/list_elos.csv')
+simulations.to_csv('../data/dashboard_output/simulations.csv')
+match_importance.to_csv('../data/dashboard_output/match_importance.csv')
+data_predictions_home_and_away_goals.to_csv('../data/dashboard_output/predictions_home_and_away.csv')
+data_predictions_team_and_opponent_days_goals.to_csv('../data/dashboard_output/predictions_team_and_opponent.csv')
 data = [league_targets, data_predictions_home_and_away_goals, data_predictions_team_and_opponent_days_goals, elos_list, match_importance, simulations, streaks]
 tabs = ['league_targets', 'preds_home_away_in', 'preds_team_opp_in', 'current_elos', 'match_importance', 'sim_season', 'streaks']
 

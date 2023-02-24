@@ -11,7 +11,7 @@ pd.options.mode.chained_assignment = None  # default='warn'
 
 
 def read_df_from_gsheets(gsheet_name, tab_name):
-    gc = gspread.service_account(filename='../../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
+    gc = gspread.service_account(filename='../tools/gsheet_s4c_creds/italy-football-373515-95398f188c18.json')
     sh = gc.open(gsheet_name) 
     worksheet = sh.worksheet(tab_name)
     df = pd.DataFrame(worksheet.get_all_records())
@@ -65,4 +65,4 @@ predictions = update_names(predictions)
 past_predictions = limit_to_past(predictions)
 past_predictions = cut_to_preds(past_predictions)
 past_predictions = update_result(past_predictions)
-past_predictions.to_csv("../../data/past_predictions.csv")
+past_predictions.to_csv("../data/past_predictions.csv")

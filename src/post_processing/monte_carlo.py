@@ -421,9 +421,9 @@ def add_goals(df_past, df_goals):
     
     return df
 
-data_goals = pd.read_csv("../../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-data_future = pd.read_csv("../../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
-data_past = pd.read_csv("../../data/joined_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+data_goals = pd.read_csv("../data/goals_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+data_future = pd.read_csv("../data/future_predictions.csv", index_col=0, parse_dates=['date'], dayfirst=False)
+data_past = pd.read_csv("../data/joined_matches.csv", index_col=0, parse_dates=['date'], dayfirst=False)
 future_date = pd.to_datetime(data_future['date'][0])
 data_past = cut_to_current_year_and_league(data_past, '2022', 'Serie C, Girone B')
 data_past = add_goals(data_past, data_goals)
@@ -489,6 +489,6 @@ for div in divs:
 [data_match_importance_all_divs.columns.tolist()]
 finishing_positions_combined.drop(0, axis=1, inplace=True)
 
-data_match_importance_all_divs.to_csv("../../data/match_importance.csv")
-finishing_positions_combined.to_csv('../../data/simulated_season.csv')
-data_targets.to_csv('../../data/dashboard_output/league_targets.csv')
+data_match_importance_all_divs.to_csv("../data/match_importance.csv")
+finishing_positions_combined.to_csv('../data/simulated_season.csv')
+data_targets.to_csv('../data/dashboard_output/league_targets.csv')
