@@ -229,6 +229,7 @@ streaks = pd.read_csv("../../data/dashboard_output/streaks.csv", index_col=0)
 league_targets = pd.read_csv("../../data/dashboard_output/league_targets.csv", index_col=0)
 
 future_date = predictions['date'][0]
+print(future_date)
 elos = drop_future(elos, future_date)
 goals = drop_future(goals, future_date)
 
@@ -243,6 +244,14 @@ past_predictions.drop(['result'], axis=1, inplace=True)
 data_future = check_fixtures(elos, predictions, all_matches)
 data_future = add_features_to_future(data_future, elos)
 
+
+
+elos = elos.drop_duplicates()
+past_predictions = past_predictions.drop_duplicates()
+elos.reset_index(inplace=True, drop=True)
+past_predictions.reset_index(inplace=True, drop=True)
+print(elos)
+print(past_predictions)
 elos_preds = pd.concat([elos.set_index(['league', 'date', 'team', 'opponent', 'home']),
                         past_predictions.set_index(['league', 'date', 'team', 'opponent', 'home'])],
                         axis=1,
