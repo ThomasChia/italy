@@ -6,6 +6,8 @@ from loaders.loader import DBLoader
 import logging
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
+import pandas as pd
+pd.options.mode.chained_assignment = None  # default='warn'
 
 
 
@@ -22,8 +24,8 @@ if __name__ == "__main__":
     cleaner = Cleaner(loader)
     loader = cleaner.get_result()
 
-    # logging.info("Calculating elo statistics.")
-    # elos = EloPreprocessor(loader.data)
+    logging.info("Calculating elo statistics.")
+    elos = EloPreprocessor(loader.data)
     # elos.calculate_elos()
 
     logging.info("Calculating goals statistics.")

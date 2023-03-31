@@ -4,17 +4,19 @@ import pandas as pd
 
 
 class TeamGoals:
-    team_stats = [
-        'team_goals_scored',
-        'team_goals_conceded',]
-    opponent_stats = [
-        'opponent_goals_scored',
-        'opponent_goals_conceded',]
+    # team_stats = [
+    #     'team_goals_scored',
+    #     'team_goals_conceded',]
+    # opponent_stats = [
+    #     'opponent_goals_scored',
+    #     'opponent_goals_conceded',]
         
-    def __init__(self, matches, team_stats, opponent_stats):
+    def __init__(self, matches):
         self.matches: pd.DataFrame = matches
-        self.team_stats = team_stats
-        self.opponent_stats = opponent_stats
+        self.team_stats = ['team_goals_scored',
+                           'team_goals_conceded',]
+        self.opponent_stats = ['opponent_goals_scored',
+                               'opponent_goals_conceded',]
         self.teams_list = self.get_team_list()
         self.team_rolling = None
         self.opponent_rolling = None
@@ -24,6 +26,7 @@ class TeamGoals:
         self.matches['id'] = np.arange(1, len(self.matches)+1)
 
     def get_team_list(self):
+        print(self.matches.head())
         return self.matches['team'].unique().tolist()
     
     def calculate_team_averages(self):
@@ -35,14 +38,13 @@ class TeamGoals:
         self.set_match_ids()
         matches_average = pd.DataFrame(columns=self.matches.columns)
         for team in self.teams_list:
-            df_temp = self.get_team_rolling_average(self.matches,
-                                                team,
-                                                stats_list,
-                                                for_team)
+            df_temp = self.get_team_rolling_average(team,
+                                                    stats_list,
+                                                    for_team)
             matches_average = pd.concat([matches_average, df_temp])
         return matches_average
     
-    def merge_on_common_columns(df1, df2):
+    def merge_on_common_columns(self, df1, df2):
         common_columns = list(set(df1.columns).intersection(df2.columns))
         df = pd.merge(df1, df2, on=common_columns)
         return df
@@ -246,7 +248,7 @@ class Statistics:
         self.forwardfill_stats_processed()
 
     def get_average_column_names(self):
-        return [col for col in self.stat_neutral.columns if 'avg' in col]
+        return [col for col in self.stat_home.columns if 'avg' in col] + [col for col in self.stat_away.columns if 'avg' in col]
     
     def sort_processed_by_date(self):
         self.stat_processed = self.stat_processed.sort_values(by='date')

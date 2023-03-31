@@ -31,21 +31,29 @@ class GoalsPreprocessor(Preprocessor):
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
-            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent', 'elo_home': 'elo_team',
-                                    'elo_away': 'elo_opponent'})
+            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent',
+                                    'score_pt1': 'team_goals_scored', 'score_pt2': 'opponent_goals_scored'})
         else:
-            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'elo_away': 'elo_team',
-                                    'elo_home': 'elo_opponent'})
+            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'score_pt2': 'team_goals_scored', 'score_pt1': 'opponent_goals_scored'})
         return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[['league', 'date', 'pt1', 'pt2', 'result', 'elo_home', 'elo_away', 'elo_diff']]
+        return df[['league', 'date', 'pt1', 'pt2', 'result', 'score_pt1', 'score_pt2']]
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        df['elo_diff'] = df['elo_diff'] * -1
         df['result'] = 1 - df['result']
-        df = df[['league', 'date', 'team', 'opponent', 'result', 'elo_team', 'elo_opponent', 'elo_diff']]
+        df = df[['league', 'date', 'team', 'opponent', 'result', 'team_goals_scored', 'opponent_goals_scored']]
         df.loc[:, 'home'] = 0
+        return df
+    
+    def sort_by_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.sort_values(by='date')
+        df = df.reset_index(drop=True)
+        return df
+    
+    def get_goals_conceded(self, df: pd.DataFrame) -> pd.DataFrame:
+        df.loc[:, 'team_goals_conceded'] = df['opponent_goals_scored']
+        df.loc[:, 'opponent_goals_conceded'] = df['team_goals_scored']
         return df
 
     def get_team_and_opp_matches(self, matches):
@@ -58,9 +66,14 @@ class GoalsPreprocessor(Preprocessor):
         team_matches = self.rename_columns_to_team_and_opp(team_matches, team=True)
         opponent_matches = self.rename_columns_to_team_and_opp(opponent_matches, team=False)
 
+        team_matches = self.get_goals_conceded(team_matches)
+        opponent_matches = self.get_goals_conceded(opponent_matches)
+
         opponent_matches = self.adjust_away_columns(opponent_matches)
 
         team_matches.loc[:, 'home'] = 1
  
-        self.team_and_opp_matches = pd.concat([team_matches, opponent_matches])
-        self.team_and_opp_matches = self.sort_by_date(team_matches)
+        team_and_opp_matches = pd.concat([team_matches, opponent_matches])
+        team_and_opp_matches = self.sort_by_date(team_and_opp_matches)
+
+        return team_and_opp_matches
