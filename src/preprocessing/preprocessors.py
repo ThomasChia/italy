@@ -1,6 +1,6 @@
 import pandas as pd
 from preprocessing.elos.elos import Elo
-from preprocessing.goals.goals import Goals
+from preprocessing.goals.goals import TeamGoals
 
 
 class Preprocessor:
@@ -25,9 +25,9 @@ class GoalsPreprocessor(Preprocessor):
         self.preprocessed_matches = None
 
     def calculate_goals_statistics(self):
-        self.goals = Goals(self.team_and_opp_matches)
-        self.goals.calculate()
-        self.preprocessed_matches = self.elo.team_and_opp_matches
+        self.goals = TeamGoals(self.team_and_opp_matches)
+        self.goals.calculate_team_averages()
+        self.preprocessed_matches = self.goals.team_and_opponent_rolling
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
@@ -48,8 +48,8 @@ class GoalsPreprocessor(Preprocessor):
         df.loc[:, 'home'] = 0
         return df
 
-    def get_team_and_opp_matches(self):
-        team_matches = self.matches.copy(deep=True)
+    def get_team_and_opp_matches(self, matches):
+        team_matches = matches.copy(deep=True)
         opponent_matches = team_matches.copy(deep=True)
 
         team_matches = self.cut_columns(team_matches)
