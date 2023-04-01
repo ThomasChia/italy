@@ -87,7 +87,8 @@ class LeagueGoals:
         self.matches = matches
         self.matches_home = self.cut_to_home()
         self.matches_away = self.cut_to_away()
-        self.league_rolling = None
+        self.league_rolling_scored = None
+        self.league_rolling_conceded = None
 
     def calculate_league_averages(self, scored_or_conceded):
         self.set_match_ids()
@@ -139,7 +140,7 @@ class LeagueGoals:
         df_merge = df_merge.sort_values(by='date')
         df_merge = df_merge.reset_index(drop=True)
 
-        self.league_rolling = df_merge
+        return df_merge
 
 
     def calculate_single_stat_average(self, home_average, away_average, column):

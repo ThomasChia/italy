@@ -32,9 +32,10 @@ class GoalsPreprocessor(Preprocessor):
         # self.preprocessed_matches = self.goals.team_and_opponent_rolling
 
         self.league_goals = LeagueGoals(self.team_and_opp_matches)
-        self.league_goals.calculate_league_averages('scored')
-        # self.league_goals.calculate_league_averages('conceded') <-- This is not working, so needs debugging and fixing
-        self.league_preprocessed_matches = self.league_goals.league_rolling
+        league_averages_scored = self.league_goals.calculate_league_averages('scored')
+        league_averages_conceded = self.league_goals.calculate_league_averages('conceded')
+        league_averages = self.join_league_averages(league_averages_scored, league_averages_conceded)
+        self.league_preprocessed_matches = league_averages
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
@@ -88,3 +89,7 @@ class GoalsPreprocessor(Preprocessor):
         team_and_opp_matches = self.sort_by_date(team_and_opp_matches)
 
         return team_and_opp_matches
+    
+    def join_league_averages(self, df1, df2):
+        common_columns = list(set(df1.columns).intersection(df2.columns))
+        return pd.merge(df1, df2, on=common_columns)
