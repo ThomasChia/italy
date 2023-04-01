@@ -92,18 +92,21 @@ class LeagueGoals:
     def calculate_league_averages(self, scored_or_conceded):
         self.set_match_ids()
         home_average, away_average = self.pivot_matches(scored_or_conceded)
-        statistics = Statistics(self.matches, home_average, away_average)
-        for column in home_average.columns:
-            statistics.get_rolling_average_column(self)
-            home_average = home_average.merge(statistics.stat_home, left_on='date', right_on='date').reset_index()
-            away_average = away_average.merge(statistics.stat_away, left_on='date', right_on='date').reset_index()
+        leagues = home_average.columns
+        # statistics = Statistics(self.matches, home_average, away_average)
+        for column in leagues:
+            statistics = Statistics(self.matches, home_average[column], away_average[column])
+            statistics.get_rolling_average_column(column)
+            home_average = home_average.merge(statistics.stat_home, left_on='date', right_on='date')
+            away_average = away_average.merge(statistics.stat_away, left_on='date', right_on='date')
 
-        home_average = home_average.ffill()
-        away_average = away_average.ffill()
+        home_average = home_average.ffill().reset_index()
+        away_average = away_average.ffill().reset_index()
 
-        home_average_merge = pd.merge(self.matches, home_average.melt(id_vars='date')
+        # Adding in the league goals scored/conceded each match day. Probably not needed in the model.
+        home_average_merge = pd.merge(self.matches, home_average.melt(id_vars='date', var_name='league')
                                         , on=['league','date'])
-        away_average_merge = pd.merge(self.matches, away_average.melt(id_vars='date')
+        away_average_merge = pd.merge(self.matches, away_average.melt(id_vars='date', var_name='league')
                                         , on=['league','date'])
 
         home_average_merge.rename(columns={'value': 'league_home_goals_'  + scored_or_conceded}, inplace=True)
@@ -112,19 +115,19 @@ class LeagueGoals:
         df_merge = home_average_merge.copy()
         df_merge['league_away_goals_' + scored_or_conceded] = away_average_merge['league_away_goals_' + scored_or_conceded]
 
-        columns = home_average.columns.values.tolist()
-        home_average_merge.drop(columns, axis=1, inplace=True)
-        away_average_merge.drop(columns, axis=1, inplace=True)
-        for column in home_average_merge.columns:
+        # Adding in the league average goals scored/conceded
+        home_average.drop(leagues, axis=1, inplace=True)
+        away_average.drop(leagues, axis=1, inplace=True)
+        for column in home_average.columns:
             if column[-9:] == '_avg_home':
-                home_average_merge.rename(columns={column: column[:-9]}, inplace=True)
-        for column in away_average_merge.columns:
+                home_average.rename(columns={column: column[:-9]}, inplace=True)
+        for column in away_average.columns:
             if column[-9:] == '_avg_away':
-                away_average_merge.rename(columns={column: column[:-9]}, inplace=True)
+                away_average.rename(columns={column: column[:-9]}, inplace=True)
         
-        home_average_merge = pd.merge(home_average_merge, home_average_merge.melt(id_vars='date')
+        home_average_merge = pd.merge(home_average_merge, home_average.melt(id_vars='date', var_name='league')
                                         , on=['league','date'])
-        away_average_merge = pd.merge(away_average_merge, away_average_merge.melt(id_vars='date')
+        away_average_merge = pd.merge(away_average_merge, away_average.melt(id_vars='date', var_name='league')
                                         , on=['league','date'])
 
         home_average_merge.rename(columns={'value': 'league_home_goals_'  + scored_or_conceded + '_avg'}, inplace=True)
@@ -163,7 +166,7 @@ class LeagueGoals:
     def calc_rolling_average_away(self, stat_name: str):
         self.stat_away.loc[:, stat_name + '_avg_away'] = self.stat_away[stat_name].shift(1).rolling(19).mean()
 
-    def merge_on_common_columns(df1, df2):
+    def merge_on_common_columns(self, df1, df2):
         common_columns = list(set(df1.columns).intersection(df2.columns))
         return pd.merge(df1, df2, on=common_columns)
     
@@ -221,13 +224,23 @@ class Statistics:
         self.stat_processed = None
 
     def calc_rolling_average(self, stat_name: str):
-        self.stat_neutral.loc[:, stat_name + '_avg'] = self.stat_neutral[stat_name].shift(1).rolling(19).mean()
+        self.stat_neutral.loc[:, stat_name + '_avg'] = self.stat_neutral[stat_name].shift(1).rolling(19, min_periods=1).mean()
 
     def calc_rolling_average_home(self, stat_name: str):
-        self.stat_home.loc[:, stat_name + '_avg_home'] = self.stat_home[stat_name].shift(1).rolling(19).mean()
+        self.stat_home.loc[:, stat_name + '_avg_home'] = self.stat_home[stat_name].shift(1).rolling(19, min_periods=1).mean()
 
     def calc_rolling_average_away(self, stat_name: str):
-        self.stat_away.loc[:, stat_name + '_avg_away'] = self.stat_away[stat_name].shift(1).rolling(19).mean()
+        self.stat_away.loc[:, stat_name + '_avg_away'] = self.stat_away[stat_name].shift(1).rolling(19, min_periods=1).mean()
+
+    def calc_league_rolling_average_home(self, stat_name: str):
+        rolling_average = pd.Series(self.stat_home.shift(1).rolling(50, min_periods=1).mean(), name=stat_name + '_avg_home')
+        self.stat_home = pd.concat([self.stat_home, rolling_average], axis=1)
+        # self.stat_home[stat_name + '_avg_home'] = self.stat_home.shift(1).rolling(19, min_periods=1).mean()
+
+    def calc_league_rolling_average_away(self, stat_name: str):
+        rolling_average = pd.Series(self.stat_away.shift(1).rolling(50, min_periods=1).mean(), name=stat_name + '_avg_away')
+        self.stat_away = pd.concat([self.stat_away, rolling_average], axis=1)
+        # self.stat_away.loc[:, stat_name + '_avg_away'] = self.stat_away.shift(1).rolling(19, min_periods=1).mean()
 
     def combine_home_and_away(self):
         self.stat_home_and_away = pd.concat([self.stat_home, self.stat_away])
@@ -263,11 +276,12 @@ class Statistics:
         average_columns = self.get_average_column_names()
         self.stat_processed.loc[:, average_columns] = self.stat_processed.loc[:, average_columns].ffill()
 
-    def drop_column(self, df, column):
-        return df.drop(column, axis=1)
+    def get_avg_column(self, df):
+        avg_column = [col for col in df.columns if 'avg' in col]
+        return df.loc[:, avg_column]
     
     def get_rolling_average_column(self, column):
-        self.calc_rolling_average_home(column)
-        self.calc_rolling_average_away(column)
-        self.drop_column(self.stat_home, column)
-        self.drop_column(self.stat_away, column)
+        self.calc_league_rolling_average_home(column)
+        self.calc_league_rolling_average_away(column)
+        self.stat_home = self.get_avg_column(self.stat_home)
+        self.stat_away = self.get_avg_column(self.stat_away)

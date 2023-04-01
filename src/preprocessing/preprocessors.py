@@ -27,12 +27,13 @@ class GoalsPreprocessor(Preprocessor):
         self.league_preprocessed_matches = None
 
     def calculate_goals_statistics(self):
-        self.goals = TeamGoals(self.team_and_opp_matches)
-        self.goals.calculate_team_averages()
-        self.preprocessed_matches = self.goals.team_and_opponent_rolling
+        # self.goals = TeamGoals(self.team_and_opp_matches)
+        # self.goals.calculate_team_averages()
+        # self.preprocessed_matches = self.goals.team_and_opponent_rolling
 
         self.league_goals = LeagueGoals(self.team_and_opp_matches)
-        self.league_goals.calculate_league_averages()
+        self.league_goals.calculate_league_averages('scored')
+        # self.league_goals.calculate_league_averages('conceded') <-- This is not working, so needs debugging and fixing
         self.league_preprocessed_matches = self.league_goals.league_rolling
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
