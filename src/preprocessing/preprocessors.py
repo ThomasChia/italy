@@ -1,6 +1,6 @@
 import pandas as pd
 from preprocessing.elos.elos import Elo
-from preprocessing.goals.goals import TeamGoals
+from preprocessing.goals.goals import TeamGoals, LeagueGoals
 
 
 class Preprocessor:
@@ -22,12 +22,18 @@ class GoalsPreprocessor(Preprocessor):
         super().__init__()
         self.team_and_opp_matches = self.get_team_and_opp_matches(matches)
         self.goals = None
+        self.league_goals = None
         self.preprocessed_matches = None
+        self.league_preprocessed_matches = None
 
     def calculate_goals_statistics(self):
         self.goals = TeamGoals(self.team_and_opp_matches)
         self.goals.calculate_team_averages()
         self.preprocessed_matches = self.goals.team_and_opponent_rolling
+
+        self.league_goals = LeagueGoals(self.team_and_opp_matches)
+        self.league_goals.calculate_league_averages()
+        self.league_preprocessed_matches = self.league_goals.league_rolling
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
@@ -42,7 +48,11 @@ class GoalsPreprocessor(Preprocessor):
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['result'] = 1 - df['result']
-        df = df[['league', 'date', 'team', 'opponent', 'result', 'team_goals_scored', 'opponent_goals_scored']]
+        df = df[['league', 'date', 'team', 'opponent', 'result',
+                 'team_goals_scored',
+                 'opponent_goals_scored',
+                 'team_goals_conceded',
+                 'opponent_goals_conceded']]
         df.loc[:, 'home'] = 0
         return df
     
