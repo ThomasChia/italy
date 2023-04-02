@@ -75,12 +75,22 @@ os.environ["API_DB_DB"] = "rugby4cast"
 
 # Cleaning
 TEAM_NAMES_DICT = {
-    ''
+    'us_ancona': 'ancona',
+    'Inter Milan': 'inter_milan',
+    'internazionale': 'inter_milan',
+    'inter': 'inter_milan',
+    'internazionale': 'inter_milan',
+    'san_donato': 'san_donato_tavarnelle',
+    'sassari_torres': 'torres',
+    'verona': 'hellas_verona',
 }
 
-LEAGUES_DICT = {
+LEAGUE_NAMES_DICT = {
     'Italian Serie A': 'Serie A',
-    'Italian Serie B': 'Serie B'
+    'Italian Serie B': 'Serie B',
+    'Serie C Grp. A': 'Serie C, Girone A',
+    'Serie C Grp. B': 'Serie C, Girone B',
+    'Serie C Grp. C': 'Serie C, Girone C'
 }
 
 # ELO settings

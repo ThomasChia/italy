@@ -26,10 +26,14 @@ if __name__ == "__main__":
 
     logging.info("Calculating elo statistics.")
     elos = EloPreprocessor(loader.data)
-    # elos.calculate_elos()
+    elos.calculate_elos()
 
     logging.info("Calculating goals statistics.")
     goals = GoalsPreprocessor(loader.data)
     goals.calculate_goals_statistics()
+
+    logging.info("Combining statistics.")
+    # TODO properly merge the preprocessed matches from elos and goals, and make flexible for any number of preprocesor objects.
+    # elos.merge_on_common_columns()
 
     code.interact(local=locals())

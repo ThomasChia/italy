@@ -1,6 +1,7 @@
 import config
 import numpy as np
 import pandas as pd
+import logging
 
 
 class Elo:
@@ -34,7 +35,7 @@ class Elo:
         self.update_elos(row_data, expected_result_home, expected_result_away)
 
         if row.name % 5000 == 0:
-            print(row.name, 'matches calculated.')
+            logging.info(f'{row.name} matches calculated.')
 
         return row
 

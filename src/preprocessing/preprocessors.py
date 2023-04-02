@@ -24,18 +24,19 @@ class GoalsPreprocessor(Preprocessor):
         self.goals = None
         self.league_goals = None
         self.preprocessed_matches = None
-        self.league_preprocessed_matches = None
+
+        # TODO update anything that is updating self.preprocessed_matches to self.team_preprocessed_matches, and then combine league and team preprocessed matches into self.preprocessed_matches.
 
     def calculate_goals_statistics(self):
-        # self.goals = TeamGoals(self.team_and_opp_matches)
-        # self.goals.calculate_team_averages()
-        # self.preprocessed_matches = self.goals.team_and_opponent_rolling
+        self.goals = TeamGoals(self.team_and_opp_matches)
+        self.goals.calculate_team_averages()
+        self.preprocessed_matches = self.goals.team_and_opponent_rolling
 
         self.league_goals = LeagueGoals(self.team_and_opp_matches)
         league_averages_scored = self.league_goals.calculate_league_averages('scored')
         league_averages_conceded = self.league_goals.calculate_league_averages('conceded')
         league_averages = self.join_league_averages(league_averages_scored, league_averages_conceded)
-        self.league_preprocessed_matches = league_averages
+        self.preprocessed_matches = league_averages
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
