@@ -8,12 +8,14 @@ from preprocessing.builder.builder import Builder
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
+import time
 pd.options.mode.chained_assignment = None  # default='warn'
 
 
 
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+    start_time = time.time()
 
     logging.info("Loading data.")
     query = Query()
@@ -26,6 +28,7 @@ if __name__ == "__main__":
     cleaner = Cleaner(loader)
     cleaner.clean()
 
+    # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
     logging.info("Calculating elo statistics.")
     elos = EloPreprocessor(cleaner.data)
     elos.calculate_elos()
@@ -37,7 +40,17 @@ if __name__ == "__main__":
     logging.info("Building training set.")
     builder = Builder([elos, goals])
     builder.build_dataset()
-    # TODO properly merge the preprocessed matches from elos and goals, and make flexible for any number of preprocesor objects.
-    # elos.merge_on_common_columns()
 
+    # logging.info("Training model.")
+
+    # logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+
+    # logging.info("Running simulations.")
+
+    # logging.info("Creating output.")
+
+    # logging.info("Uploading output.")
+
+    elapsed_time = time.time() - start_time
+    logging.info(f"Programme completed in {elapsed_time:.2f} seconds.")
     code.interact(local=locals())

@@ -18,6 +18,7 @@ class Builder:
     def build_dataset(self):
         merged_data = self.merge_on_common_columns(self.preprocessed_matches)
         self.data = self.cut_to_features(merged_data, FEATURES)
+        logging.info(f"Dataset built with shape: {self.data.shape}.")
 
     def cut_to_features(self, df, features_list):
         return df[features_list]

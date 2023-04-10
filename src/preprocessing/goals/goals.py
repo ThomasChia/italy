@@ -26,7 +26,6 @@ class TeamGoals:
         self.matches['id'] = np.arange(1, len(self.matches)+1)
 
     def get_team_list(self):
-        print(self.matches.head())
         return self.matches['team'].unique().tolist()
     
     def calculate_team_averages(self):
