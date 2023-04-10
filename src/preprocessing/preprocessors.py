@@ -1,17 +1,17 @@
 import pandas as pd
 from preprocessing.elos.elos import Elo
-from preprocessing.goals.goals import TeamGoals, LeagueGoals
+from preprocessing.goals.goals import TeamGoals, LeagueGoals, PoissonGoals
 
 
 class Preprocessor:
     def __init__(self) -> None:
-        pass
+        self.preprocessed_matches = None
 
 class EloPreprocessor(Preprocessor):
     def __init__(self, matches: pd.DataFrame) -> None:
         super().__init__()
         self.elo = Elo(matches)
-        self.processed_matches = None
+        self.preprocessed_matches = None
 
     def calculate_elos(self):
         self.elo.calculate()
@@ -23,6 +23,9 @@ class GoalsPreprocessor(Preprocessor):
         self.team_and_opp_matches = self.get_team_and_opp_matches(matches)
         self.goals = None
         self.league_goals = None
+        self.poisson_goals = None
+        self.team_matches = None
+        self.league_matches = None
         self.preprocessed_matches = None
 
         # TODO update anything that is updating self.preprocessed_matches to self.team_preprocessed_matches, and then combine league and team preprocessed matches into self.preprocessed_matches.
@@ -30,13 +33,15 @@ class GoalsPreprocessor(Preprocessor):
     def calculate_goals_statistics(self):
         self.goals = TeamGoals(self.team_and_opp_matches)
         self.goals.calculate_team_averages()
-        self.preprocessed_matches = self.goals.team_and_opponent_rolling
+        self.team_matches = self.goals.team_and_opponent_rolling
 
         self.league_goals = LeagueGoals(self.team_and_opp_matches)
         league_averages_scored = self.league_goals.calculate_league_averages('scored')
         league_averages_conceded = self.league_goals.calculate_league_averages('conceded')
-        league_averages = self.join_league_averages(league_averages_scored, league_averages_conceded)
-        self.preprocessed_matches = league_averages
+        self.league_matches = self.merge_on_common_columns(league_averages_scored, league_averages_conceded)
+
+        self.poisson_goals = PoissonGoals(team_matches=self.team_matches, league_matches=self.league_matches)
+        self.preprocessed_matches = self.poisson_goals.calculate_poisson_goals()
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
@@ -91,6 +96,10 @@ class GoalsPreprocessor(Preprocessor):
 
         return team_and_opp_matches
     
-    def join_league_averages(self, df1, df2):
+    # def join_league_averages(self, df1, df2):
+    #     common_columns = list(set(df1.columns).intersection(df2.columns))
+    #     return pd.merge(df1, df2, on=common_columns)
+    
+    def merge_on_common_columns(self, df1, df2):
         common_columns = list(set(df1.columns).intersection(df2.columns))
         return pd.merge(df1, df2, on=common_columns)

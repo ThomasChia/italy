@@ -42,6 +42,7 @@ class TeamGoals:
                                                     stats_list,
                                                     for_team)
             matches_average = pd.concat([matches_average, df_temp])
+        matches_average = matches_average.drop(['id'], axis=1)
         return matches_average
     
     def merge_on_common_columns(self, df1, df2):
@@ -139,6 +140,7 @@ class LeagueGoals:
         df_merge = self.merge_on_common_columns(df_merge, df_merge_avg)
         df_merge = df_merge.sort_values(by='date')
         df_merge = df_merge.reset_index(drop=True)
+        df_merge = df_merge.drop('id', axis=1)
 
         return df_merge
 
@@ -172,14 +174,20 @@ class LeagueGoals:
         return pd.merge(df1, df2, on=common_columns)
     
 class PoissonGoals:
-    def __init__(self, team_matches: TeamGoals, league_matches: LeagueGoals):
-        pass
+    def __init__(self, team_matches: pd.DataFrame, league_matches: pd.DataFrame):
+        self.team_matches = team_matches
+        self.league_matches = league_matches
+        # self.poisson_matches = None
 
-    def merge_on_common_columns(df1, df2):
+    def calculate_poisson_goals(self):
+        all_matches = self.merge_on_common_columns(self.team_matches, self.league_matches)
+        return self.calc_strength(all_matches)
+
+    def merge_on_common_columns(self, df1, df2):
         common_columns = list(set(df1.columns).intersection(df2.columns))
         return pd.merge(df1, df2, on=common_columns)
     
-    def calc_strength(df):
+    def calc_strength(self, df):
         conditions = [
             df['home'] == 1,
             df['home'] == 0

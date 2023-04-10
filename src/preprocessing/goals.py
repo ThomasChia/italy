@@ -228,7 +228,6 @@ data_matches['date'] = data_matches['date'].dt.date
 data_matches.sort_values(by='date', inplace=True)
 data_matches.reset_index(inplace=True, drop=True)
 
-# data_matches = data_matches[-10000:]
 data_matches = duplicate_to_team_and_opponent(data_matches)
 team_stats = ['team_goals_scored',
         'team_goals_conceded',

@@ -93,6 +93,49 @@ LEAGUE_NAMES_DICT = {
     'Serie C Grp. C': 'Serie C, Girone C'
 }
 
+FEATURES = [
+    # 'id',
+    'league',
+    'date',
+    'team',
+    'opponent',
+    'result',
+    'elo_team',
+    'elo_opponent',
+    'elo_diff',
+    'home',
+    'team_goals_scored',
+    'team_goals_conceded',
+    'team_goals_scored_avg',
+    'team_goals_conceded_avg',
+    'team_goals_scored_avg_home',
+    'team_goals_conceded_avg_home', 
+    'team_goals_scored_avg_away',
+    'team_goals_conceded_avg_away',
+    'opponent_goals_scored',
+    'opponent_goals_conceded',
+    'opponent_goals_scored_avg',
+    'opponent_goals_conceded_avg',
+    'opponent_goals_scored_avg_home',
+    'opponent_goals_conceded_avg_home',
+    'opponent_goals_scored_avg_away',
+    'opponent_goals_conceded_avg_away',
+    'league_home_goals_scored',
+    'league_away_goals_scored',
+    'league_home_goals_scored_avg',
+    'league_away_goals_scored_avg',
+    'league_home_goals_conceded',
+    'league_away_goals_conceded',
+    'league_home_goals_conceded_avg',
+    'league_away_goals_conceded_avg',
+    'team_attack_strength',
+    'team_defense_strength',
+    'opponent_attack_strength',
+    'opponent_defense_strength',
+    # 'team_lambda',
+    # 'opponent_lambda'
+]
+
 # ELO settings
 STARTING_ELO = 1500
 KFACTOR_QUICK = 40

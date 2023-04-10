@@ -151,7 +151,7 @@ class Elo:
         team_matches.loc[:, 'home'] = 1
  
         self.team_and_opp_matches = pd.concat([team_matches, opponent_matches])
-        self.team_and_opp_matches = self.sort_by_date(team_matches)
+        self.team_and_opp_matches = self.sort_by_date(self.team_and_opp_matches)
 
 
 class EloTracker():
