@@ -41,7 +41,7 @@ if __name__ == "__main__":
     builder = Builder([elos, goals])
     builder.build_dataset()
 
-    # logging.info("Training model.")
+    logging.info("Training model.")
 
     # logging.info("Predicting matches.") # TODO add in number of matches being predicted.
 
