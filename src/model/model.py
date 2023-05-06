@@ -55,7 +55,12 @@ class Model:
 
     def predict(self, future_matches, features_list):
         df = self.prepare_future_data(future_matches, self.scaler, features_list)
-        predictions = self.model.predict(df)
+        # predictions = self.model.predict(df)
         predictions_proba = self.model.predict_proba(df)
+        future_matches = self.add_probabilities_to_matches(future_matches, predictions_proba)
 
-        return predictions, predictions_proba
+        return future_matches
+    
+    def add_probabilities_to_matches(self, future_matches, probabilities):
+        future_matches[['loss', 'draw', 'win']] = pd.DataFrame(probabilities)
+        return future_matches

@@ -27,6 +27,10 @@ if __name__ == "__main__":
     loader.run_query(query)
     loader.data = loader.data.iloc[:5000, :]
 
+    logging.info("Scraping future matches.")
+    future_matches = FlashScoreScraper(ItalianMatches)
+    future_matches.get_matches()
+
     logging.info("Cleaning data.")
     cleaner = Cleaner(loader)
     cleaner.clean()
@@ -49,10 +53,7 @@ if __name__ == "__main__":
     model.train()
 
     logging.info("Predicting matches.") # TODO add in number of matches being predicted.
-    future_matches = FlashScoreScraper(ItalianMatches)
-    future_matches.get_matches()
-    future_matches.matches.clean_future_matches()
-    predictions, probabilities = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
+    future_matches = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
 
     # logging.info("Running simulations.")
 

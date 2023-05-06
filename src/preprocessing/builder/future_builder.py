@@ -17,6 +17,7 @@ class FutureBuilder:
 
     def get_future_matches(self):
         self.scraper.get_matches()
+        self.scraper.matches.clean_future_matches()
         return self.scraper.matches.matches_df
 
     def add_past_stats_to_future_matches(self):
