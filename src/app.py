@@ -3,12 +3,14 @@ import config
 from loaders.query import Query
 from loaders.loader import DBLoader
 import logging
+from matches.matches import ItalianMatches, EnglishMatches
 from model.model import Model
 from preprocessing.builder.builder import Builder
 from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
+from scrapers.scrapers import FlashScoreScraper
 import time
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -46,7 +48,11 @@ if __name__ == "__main__":
     model = Model(builder.data)
     model.train()
 
-    # logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+    logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+    future_matches = FlashScoreScraper(ItalianMatches)
+    future_matches.get_matches()
+    future_matches.matches.clean_future_matches()
+    predictions, probabilities = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
 
     # logging.info("Running simulations.")
 

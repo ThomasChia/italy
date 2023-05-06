@@ -17,7 +17,7 @@ class FlashScoreScraper(Scraper):
     def __init__(self, matches: Matches):
         super().__init__()
         self.base_url = f'https://www.flashscore.com/football/'
-        self.matches = matches
+        self.matches = matches()
 
     def get_matches(self):
         for league in self.matches.leagues:

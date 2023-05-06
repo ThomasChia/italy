@@ -27,7 +27,6 @@ class Model:
         self.data = self.fill_and_sort(self.data)
         y = self.data[['result']].astype(float)
         x = self.data[features_list]
-
         lab = LabelEncoder()
         y = lab.fit_transform(y.values.ravel())
 
@@ -47,3 +46,16 @@ class Model:
     def train_model(self, x_train, y_train):
         print("Training model.")
         self.model.fit(x_train, y_train.ravel())
+
+    def prepare_future_data(df, scaler, features_list):
+        features_ = features_list
+        df = df[features_]
+        df.fillna(0, inplace=True)
+        return scaler.transform(df)
+
+    def predict(self, future_matches, features_list):
+        df = self.prepare_future_data(future_matches, self.scaler, features_list)
+        predictions = self.model.predict(df)
+        predictions_proba = self.model.predict_proba(df)
+
+        return predictions, predictions_proba
