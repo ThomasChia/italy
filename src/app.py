@@ -53,7 +53,8 @@ if __name__ == "__main__":
     model.train()
 
     logging.info("Predicting matches.") # TODO add in number of matches being predicted.
-    future_matches = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
+    future_home_and_away_matches, future_team_and_opponent = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
+    # TODO add in something to tell which league we are looking at.
 
     # logging.info("Running simulations.")
 

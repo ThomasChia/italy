@@ -58,9 +58,30 @@ class Model:
         # predictions = self.model.predict(df)
         predictions_proba = self.model.predict_proba(df)
         future_matches = self.add_probabilities_to_matches(future_matches, predictions_proba)
-
-        return future_matches
+        home_and_away_matches, team_and_opponent_matches = self.average_probailities(future_matches)
+        return home_and_away_matches, team_and_opponent_matches
     
     def add_probabilities_to_matches(self, future_matches, probabilities):
         future_matches[['loss', 'draw', 'win']] = pd.DataFrame(probabilities)
         return future_matches
+    
+    def average_probailities(self, future_matches):
+        home_matches = future_matches[future_matches['home'] == 1].rename(columns={'team': 'home_team',
+                                                                                   'opponent': 'away_team',
+                                                                                   'win': 'home_win',
+                                                                                   'loss': 'away_win'}).drop('home', axis=1)
+        away_matches = future_matches[future_matches['home'] == 0].rename(columns={'team': 'away_team',
+                                                                                   'opponent': 'home_team',
+                                                                                   'win': 'away_win',
+                                                                                   'loss': 'home_win'}).drop('home', axis=1)
+        home_and_away_matches = pd.concat([home_matches, away_matches])
+        home_and_away_matches[['home_win', 'draw', 'away_win']] = pd.groupby(home_and_away_matches, by=['home_team', 'away_team']).mean()[['home_win', 'draw', 'away_win']]
+
+        team_matches = home_and_away_matches[['home_team', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
+                                                                                                            'home_win': 'win',
+                                                                                                            'away_win': 'loss'})
+        opponent_matches = home_and_away_matches[['away_team', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
+                                                                                                                'home_win': 'loss',
+                                                                                                                'away_win': 'win'})
+        team_and_opponent_matches = pd.concat([team_matches, opponent_matches])
+        return home_and_away_matches, team_and_opponent_matches
