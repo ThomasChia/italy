@@ -1,10 +1,11 @@
 import code
 import config
-from preprocessing.cleaners.cleaner import Cleaner
 from loaders.query import Query
 from loaders.loader import DBLoader
 import logging
+from model.model import Model
 from preprocessing.builder.builder import Builder
+from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
@@ -42,6 +43,8 @@ if __name__ == "__main__":
     builder.build_dataset()
 
     logging.info("Training model.")
+    model = Model(builder.data)
+    model.train()
 
     # logging.info("Predicting matches.") # TODO add in number of matches being predicted.
 

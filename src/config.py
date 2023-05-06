@@ -95,10 +95,10 @@ LEAGUE_NAMES_DICT = {
 
 FEATURES = [
     # 'id',
-    'league',
-    'date',
-    'team',
-    'opponent',
+    # 'league',
+    # 'date',
+    # 'team',
+    # 'opponent',
     'result',
     'elo_team',
     'elo_opponent',
