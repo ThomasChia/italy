@@ -23,7 +23,6 @@ class Model:
         data_x_train, self.scaler = self.scale_features()
         self.model = self.train_model(data_x_train, self.y)
 
-
     def split_features_results_data(self, features_list):
         self.data = self.fill_and_sort(self.data)
         y = self.data[['result']].astype(float)
@@ -33,20 +32,17 @@ class Model:
         y = lab.fit_transform(y.values.ravel())
 
         return x, y
-    
 
     def fill_and_sort(self, df):
         df.fillna(0, inplace=True)
         df.sort_values(by='date', inplace=True)
         return df
 
-
     def scale_features(self):
         scaler = StandardScaler()
         x_train_prepared = scaler.fit_transform(self.x)
 
         return x_train_prepared, scaler
-
 
     def train_model(self, x_train, y_train):
         print("Training model.")

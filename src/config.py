@@ -93,12 +93,15 @@ LEAGUE_NAMES_DICT = {
     'Serie C Grp. C': 'Serie C, Girone C'
 }
 
+ID_FEATURES = [
+    'id',
+    'league',
+    'date',
+    'team',
+    'opponent'
+]
+
 FEATURES = [
-    # 'id',
-    # 'league',
-    # 'date',
-    # 'team',
-    # 'opponent',
     'result',
     'elo_team',
     'elo_opponent',
