@@ -11,6 +11,7 @@ from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
 from scrapers.scrapers import FlashScoreScraper
+from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
 pd.options.mode.chained_assignment = None  # default='warn'
 
@@ -56,9 +57,13 @@ if __name__ == "__main__":
     future_home_and_away_matches, future_team_and_opponent = model.predict(future_matches.matches.matches_df, config.FEATURES - config.ID_FEATURES)
     # TODO add in something to tell which league we are looking at.
 
-    # logging.info("Running simulations.")
+    logging.info("Running simulations.")
+    simulator = MonteCarloSimulator(future_home_and_away_matches)
+    simulation_results = simulator.run_simulations(num_simulations=config.SIMULATIONS)
 
-    # logging.info("Creating output.")
+    logging.info("Creating output.")
+    results = MonteCarloResults(simulation_results)
+    results.get_finishing_positions()
 
     # logging.info("Uploading output.")
 

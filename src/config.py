@@ -145,3 +145,6 @@ KFACTOR_QUICK = 40
 KFACTOR_SLOW = 30
 HOME_AD = 50
 new_team_rating = 1500
+
+# Simulation settings
+SIMULATIONS = 1000
