@@ -67,14 +67,14 @@ class MonteCarloResults:
 
             for j, row in total_points.iterrows():
                 position = row['finishing_position']
-                points = row[0]
+                points = row.iloc[1]
                 if position not in position_counts:
-                    position_counts[position] = {position: np.array(points)}
+                    position_counts[position] = np.array(points)
                 else:
-                    position_counts[position].append(points)
+                    position_counts[position] = np.append(position_counts[position], points)
 
         self.finishing_positions = pd.DataFrame(team_counts).T.sort_index().sort_index()
-        self.league_targets = pd.DataFrame(position_counts)
+        self.league_targets = pd.DataFrame(position_counts).mean()
     
     def get_league_targets(self):
         away_results = self.simulation_results.copy(deep=True).replace({3:0, 0:3})
