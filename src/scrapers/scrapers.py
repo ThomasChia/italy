@@ -24,15 +24,15 @@ class FlashScoreScraper(Scraper):
             league_url = self.base_url + self.matches.country + '/' + league + '/fixtures/'
             self.driver.get(league_url)
             self.click_cookies()
-            self.get_fixture_data()            
+            self.get_fixture_data(league=league)            
 
     def click_cookies(self):
         cookies = self.driver.find_element(By.XPATH, '//*[@id="onetrust-reject-all-handler"]')
         cookies.click()
 
-    def get_fixture_data(self):
+    def get_fixture_data(self, league):
         times, home_teams, away_teams = self.get_fixture_elements()
-        self.store_future_matches(times, home_teams, away_teams)
+        self.store_future_matches(times, home_teams, away_teams, league)
 
     def get_fixture_elements(self):
         body = self.driver.find_element(By.XPATH, '//*[@id="live-table"]/div[1]/div/div')
@@ -42,9 +42,10 @@ class FlashScoreScraper(Scraper):
 
         return times, home_teams, away_teams
     
-    def store_future_matches(self, times, home_teams, away_teams):
+    def store_future_matches(self, times, home_teams, away_teams, league):
         for ind in range(len(times)):
             self.matches.matches_dict['date'].append(times[ind].text)
+            self.matches.matches_dict['league'].append(league)
             self.matches.matches_dict['pt1'].append(home_teams[ind].text)
             self.matches.matches_dict['pt2'].append(away_teams[ind].text)
 
