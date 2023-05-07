@@ -1,25 +1,42 @@
+import code
 import pandas as pd
 import numpy as np
-from simulations.match import MatchSimulator
+# from simulations.match import MatchSimulator
 
 class SeasonSimulator:
     def __init__(self, matches):
         self.matches = matches
+        self.match_results = None
 
-    def simulate(self, num_simulations):
+    def run_season_simulations(self, num_simulations):
         simulation_results = []
-        for match in self.matches:
-            match_simulator = MatchSimulator(match['match_id'], match['home_team'], match['away_team'], match['win'], match['draw'], match['loss'])
-            match_results = match_simulator.simulate(num_simulations)
-            simulation_results.append(match_results)
-        simulation_results = pd.concat(simulation_results)
-        return simulation_results
+        for s in range(num_simulations):
+            season_results = self.simulate_season()
+            simulation_results.append(season_results)
+        self.simulation_results = pd.concat(simulation_results)
 
-    def simulate_and_save(self, num_simulations):
-        simulation_results = self.simulate(num_simulations)
-        for match_id in simulation_results['match_id'].unique():
-            match_results = simulation_results[simulation_results['match_id'] == match_id]
-            match_results.to_csv(f'match_{match_id}_simulations.csv', index=False)
+    def simulate_season(self):
+        simulation_results = []
+        teams = set(self.matches['home_team'].unique()).union(set(self.matches['away_team'].unique()))
+        team_points = dict(zip(teams, [0]*len(teams)))
+
+        for i in range(len(self.matches)):
+            match = self.matches.iloc[i]
+            result = np.random.choice(['home_win', 'draw', 'away_win'], p=[match['home_win'], match['draw'], match['away_win']])
+            home_team = match['home_team']
+            away_team = match['away_team']
+            if result == 'home_win':
+                team_points[home_team] += 3
+            elif result == 'draw':
+                team_points[home_team] += 1
+                team_points[away_team] += 1
+            else:
+                team_points[away_team] += 3
+
+        return pd.DataFrame({'team': list(team_points.keys()), 'points': list(team_points.values())})
+
+
+
 
 
 if __name__ == "__main__":
@@ -28,20 +45,13 @@ if __name__ == "__main__":
         'match_id': [1, 2, 3],
         'home_team': ['Arsenal', 'Chelsea', 'Manchester United'],
         'away_team': ['Liverpool', 'Tottenham', 'Leicester'],
-        'win': [0.4, 0.5, 0.6],
+        'home_win': [0.4, 0.5, 0.6],
         'draw': [0.3, 0.2, 0.2],
-        'loss': [0.3, 0.3, 0.2]
+        'away_win': [0.3, 0.3, 0.2]
     })
 
     # create match simulator objects
-    match_simulators = []
-    for i in range(len(matches)):
-        match = matches.iloc[i]
-        match_simulator = MatchSimulator(match['match_id'], match['home_team'], match['away_team'], match['win'], match['draw'], match['loss'])
-        match_simulators.append(match_simulator)
+    simulator = SeasonSimulator(matches)
+    simulator.run_simulations(1000)
 
-    # create season simulator object and simulate the season
-    season_simulator = SeasonSimulator(matches)
-    # num_simulations = 1000000
-    num_simulations = 10
-    season_simulator.simulate_and_save(num_simulations)
+    code.interact(local=locals())
