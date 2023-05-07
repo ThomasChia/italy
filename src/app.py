@@ -1,3 +1,4 @@
+import argparse
 import code
 import config
 from loaders.query import Query
@@ -21,12 +22,34 @@ if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     start_time = time.time()
 
+    parser = argparse.ArgumentParser(
+        prog='football_prediction',
+        description='Run the football prediction model.'
+    )
+    parser.add_argument('-d', '--debug', action='store_true', help='Run in debug mode.')
+    if parser.parse_args().debug:
+        logging.info("Running in debug mode.")
+
+    print("""
+            ________     ,-----.        ,-----.  ,---------.  _______      ____      .---.     .---.           ,---.      _______      ____       .-'''-. ,---------.  
+    |        |  .'  .-,  '.    .'  .-,  '.\          \\  ____  \  .'  __ `.   | ,_|     | ,_|          /,--.|     /   __  \   .'  __ `.   / _     \\          \ 
+    |   .----' / ,-.|  \ _ \  / ,-.|  \ _ \`--.  ,---'| |    \ | /   '  \  \,-./  )   ,-./  )         //_  ||    | ,_/  \__) /   '  \  \ (`' )/`--' `--.  ,---' 
+    |  _|____ ;  \  '_ /  | :;  \  '_ /  | :  |   \   | |____/ / |___|  /  |\  '_ '`) \  '_ '`)      /_( )_||  ,-./  )       |___|  /  |(_ o _).       |   \    
+    |_( )_   ||  _`,/ \ _/  ||  _`,/ \ _/  |  :_ _:   |   _ _ '.    _.-`   | > (_)  )  > (_)  )     /(_ o _)|  \  '_ '`)        _.-`   | (_,_). '.     :_ _:    
+    (_ o._)__|: (  '\_/ \   ;: (  '\_/ \   ;  (_I_)   |  ( ' )  \.'   _    |(  .  .-' (  .  .-'    / /(_,_)||_  > (_)  )  __ .'   _    |.---.  \  :    (_I_)    
+    |(_,_)     \ `"/  \  ) /  \ `"/  \  ) /  (_(=)_)  | (_{;}_) ||  _( )_  | `-'`-'|___`-'`-'|___ /  `-----' ||(  .  .-'_/  )|  _( )_  |\    `-'  |   (_(=)_)   
+    |   |       '. \_/``".'    '. \_/``".'    (_I_)   |  (_,_)  /\ (_ o _) /  |        \|        \`-------|||-' `-'`-'     / \ (_ o _) / \       /     (_I_)    
+    '---'         '-----'        '-----'      '---'   /_______.'  '.(_,_).'   `--------``--------`        '-'     `._____.'   '.(_,_).'   `-...-'      '---'    
+                                                                                                                                                                
+    """)
+
     logging.info("Loading data.")
     query = Query()
     query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES)
     loader = DBLoader()
     loader.run_query(query)
-    loader.data = loader.data.iloc[:5000, :]
+    if parser.parse_args().debug:
+        loader.data = loader.data.iloc[:5000, :]
 
     logging.info("Scraping future matches.")
     future_matches = FlashScoreScraper(ItalianMatches)
@@ -59,7 +82,7 @@ if __name__ == "__main__":
 
     logging.info("Running simulations.")
     simulator = MonteCarloSimulator(future_home_and_away_matches)
-    simulation_results = simulator.run_simulations(num_simulations=config.SIMULATIONS)
+    simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
     logging.info("Creating output.")
     results = MonteCarloResults(simulation_results)

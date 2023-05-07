@@ -147,4 +147,4 @@ HOME_AD = 50
 new_team_rating = 1500
 
 # Simulation settings
-SIMULATIONS = 1000
+NUM_SIMULATIONS = 1000
