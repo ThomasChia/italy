@@ -61,24 +61,29 @@ class MonteCarloResults:
             for j, row in total_points.iterrows():
                 team = row['index']
                 position = row['finishing_position']
-                if team not in team_counts:
-                    team_counts[team] = {position: 1}
-                else:
-                    if position not in team_counts[team]:
-                        team_counts[team][position] = 1
-                    else:
-                        team_counts[team][position] += 1
-
-            for j, row in total_points.iterrows():
-                position = row['finishing_position']
                 points = row.iloc[1]
+                result = self.next_match_simulations.loc[team, simulation-1]
+                if team not in team_counts:
+                    team_counts[team] = {str(position) + '_' + str(result): 1}
+                else:
+                    if str(position) + '_' + str(result) not in team_counts[team]:
+                        team_counts[team][str(position) + '_' + str(result)] = 1
+                    else:
+                        team_counts[team][str(position) + '_' + str(result)] += 1
+
+                    # if result not in team_counts[team]:
+                    #     team_counts[team][result] = 1
+                    # else:
+                    #     team_counts[team][1][result] += 1
+
                 if position not in position_counts:
                     position_counts[position] = np.array(points)
                 else:
                     position_counts[position] = np.append(position_counts[position], points)
 
-        self.finishing_positions = pd.DataFrame(team_counts).T.sort_index().sort_index()
+        self.match_importance = pd.DataFrame(team_counts).sort_index().T.sort_index()
         self.league_targets = pd.DataFrame(position_counts).mean()
+        self.combine_finishing_positions()
     
     def get_next_match(self):
         teams = pd.concat([self.simulation_results['home_team'], self.simulation_results['away_team']]).unique()
@@ -94,7 +99,6 @@ class MonteCarloResults:
                 next_match[away_team] = (home_team, 'away')
         return next_match
 
-
     def get_next_match_simulated_result(self):
         next_matches = self.get_next_match()
         next_match_simulations = {}
@@ -106,6 +110,14 @@ class MonteCarloResults:
                 next_match_simulations[team] = self.simulation_results[(self.simulation_results['home_team']==next_match[0]) &
                                                                        (self.simulation_results['away_team']==team)].iloc[:, 3:].replace({3:0, 0:3}).values[0]
         self.next_match_simulations = pd.DataFrame(next_match_simulations).T
+
+    def combine_finishing_positions(self):
+        self.finishing_positions = self.match_importance.copy(deep=True)
+        current_cols = self.finishing_positions.columns
+        new_cols = [col.split('_')[0] for col in current_cols]
+        self.finishing_positions.columns = new_cols
+        self.finishing_positions = self.finishing_positions.groupby(axis=1, level=0).sum()
+        
 
 
 
@@ -134,4 +146,4 @@ if __name__ == "__main__":
     end_time = time.time()
     print("Time elapsed: ", end_time - start_time, " seconds")
 
-    # code.interact(local=locals())
+    code.interact(local=locals())
