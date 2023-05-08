@@ -88,7 +88,7 @@ if __name__ == "__main__":
     simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
     logging.info("Creating output.")
-    results = MonteCarloResults(simulation_results)
+    results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches.matches_df)
     results.get_finishing_positions()
 
     # logging.info("Uploading output.")

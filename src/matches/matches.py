@@ -54,3 +54,32 @@ class EnglishMatches(Matches):
 @dataclass
 class PastMatches:
     matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
+
+    def align_to_simultions(self):
+        self.rename_columns()
+        self.replicate_column('result', self.num_simulations)
+
+    def replicate_column(self, col_name, num_replications):
+        """
+        Replicates the given column of a dataframe a specified number of times.
+        
+        Args:
+        col_name (str): The name of the column to be replicated.
+        num_replications (int): The number of times to replicate the column.
+        
+        Returns:
+        pandas.DataFrame: A new dataframe with the replicated column(s).
+        """
+
+        col = self.matches_df[col_name]
+        replicated_cols = [col] * num_replications
+        replicated_df = pd.concat(replicated_cols, axis=1)
+        new_col_names = [str(i) for i in range(1, num_replications+1)]
+        replicated_df.columns = new_col_names
+        self.matches_df = replicated_df
+
+    def rename_columns(self):
+        self.matches_df = self.matches_df.rename(columns={'pt1': 'home_team',
+                                                          'pt2': 'away_team',
+                                                          'score_pt1': 'home_score',
+                                                          'score_pt2': 'away_score'})

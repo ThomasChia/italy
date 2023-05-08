@@ -2,6 +2,7 @@ import code
 import pandas as pd
 import numpy as np
 import time
+from matches.matches import PastMatches
 
 
 class MonteCarloSimulator:
@@ -28,9 +29,9 @@ class MonteCarloSimulator:
 
 
 class MonteCarloResults:
-    def __init__(self, simulation_results, season_simulation_results=None):
+    def __init__(self, simulation_results, past_results=None):
+        self.past_results: PastMatches = past_results
         self.simulation_results = simulation_results
-        self.season_simulation_results = season_simulation_results
         self.num_simulations = self.get_num_simulations()
         self.str_columns = self.get_str_columns()
         self.finishing_positions = None
@@ -38,6 +39,12 @@ class MonteCarloResults:
         self.match_importance = None
         self.next_match = None
         self.next_match_simulations = None
+
+        if self.past_results:
+            self.past_results.align_to_simultions()
+            self.full_season = pd.concat([self.past_results.matches_df, self.simulation_results])
+        else:
+            self.full_season = self.simulation_results
     
     def get_num_simulations(self):
         num_cols = [col for col in self.simulation_results.columns if str(col).isdigit()]
@@ -51,9 +58,9 @@ class MonteCarloResults:
         team_counts = {}
         position_counts = {}
         self.get_next_match_simulated_result()
-        away_results = self.simulation_results.copy(deep=True).replace({3:0, 0:3})
+        away_results = self.full_season.copy(deep=True).replace({3:0, 0:3})
         for simulation in range(1, self.num_simulations+1):
-            home_points = self.simulation_results.groupby(by='home_team')[simulation].sum()
+            home_points = self.full_season.groupby(by='home_team')[simulation].sum()
             away_points = away_results.groupby(by='away_team')[simulation].sum()
             total_points = pd.concat([home_points, away_points]).groupby(level=0).sum().sort_values(ascending=False)
             total_points = pd.DataFrame(total_points).reset_index()
@@ -70,11 +77,6 @@ class MonteCarloResults:
                         team_counts[team][str(position) + '_' + str(result)] = 1
                     else:
                         team_counts[team][str(position) + '_' + str(result)] += 1
-
-                    # if result not in team_counts[team]:
-                    #     team_counts[team][result] = 1
-                    # else:
-                    #     team_counts[team][1][result] += 1
 
                 if position not in position_counts:
                     position_counts[position] = np.array(points)
