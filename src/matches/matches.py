@@ -24,8 +24,8 @@ class Matches(ABC):
 @dataclass
 class ItalianMatches(Matches):
     country: str = 'italy'
-    leagues: List = ITALIAN_LEAGUES
-    correct_names: dict = ITALIAN_CORRECT_NAMES
+    leagues: List[str] = field(default_factory=lambda: ITALIAN_LEAGUES)
+    correct_names: dict = field(default_factory=lambda: ITALIAN_CORRECT_NAMES)
 
     def clean_future_matches(self):
         self.remove_spaces_in_teams()
@@ -40,7 +40,7 @@ class ItalianMatches(Matches):
 @dataclass
 class EnglishMatches(Matches):
     country: str = 'england'
-    leagues: List = ENGLISH_LEAGUES
+    leagues: List = field(default_factory=lambda: ENGLISH_LEAGUES)
 
     def correct_teams(self):
         self.matches_df['pt1'] = self.matches_df['pt1'].replace(ENGLISH_CORRECT_NAMES)

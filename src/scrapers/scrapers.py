@@ -9,7 +9,7 @@ import time
 class Scraper:
     def __init__(self):
         self.PATH = '../../tools/chromedriver'
-        self.driver = webdriver.Chrome(self.PATH)
+        self.driver = None
         self.matches = None
 
 
@@ -17,11 +17,12 @@ class FlashScoreScraper(Scraper):
     def __init__(self, matches: Matches):
         super().__init__()
         self.base_url = f'https://www.flashscore.com/football/'
-        self.matches = matches()
+        self.matches = matches
 
     def get_matches(self):
         for league in self.matches.leagues:
             league_url = self.base_url + self.matches.country + '/' + league + '/fixtures/'
+            self.driver = webdriver.Chrome(self.PATH)
             self.driver.get(league_url)
             self.click_cookies()
             self.get_fixture_data(league=league)            
