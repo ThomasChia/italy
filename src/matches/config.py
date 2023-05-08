@@ -1,9 +1,9 @@
 ITALIAN_LEAGUES = [
-    'serie-a',
+    # 'serie-a',
     'serie-b',
     'serie-c-grione-a',
-    'serie-c-grione-b',
-    'serie-c-grione-c',
+    # 'serie-c-grione-b',
+    # 'serie-c-grione-c',
     ]
 
 ITALIAN_CORRECT_NAMES = {
@@ -20,9 +20,9 @@ ITALIAN_CORRECT_NAMES = {
 
 ENGLISH_LEAGUES = [
     'premier-league',
-    'championship',
-    'league-one',
-    'league-two',
+    # 'championship',
+    # 'league-one',
+    # 'league-two',
     ]
 
 ENGLISH_CORRECT_NAMES = {

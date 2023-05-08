@@ -1,8 +1,11 @@
 from collections import defaultdict
+import logging
 from matches.matches import Matches
 import pandas as pd 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 import time
 
 
@@ -18,18 +21,26 @@ class FlashScoreScraper(Scraper):
         super().__init__()
         self.base_url = f'https://www.flashscore.com/football/'
         self.matches = matches
+        self.site_active = True
 
     def get_matches(self):
         for league in self.matches.leagues:
+            logging.info(f"Getting matches for {league}")
             league_url = self.base_url + self.matches.country + '/' + league + '/fixtures/'
             self.driver = webdriver.Chrome(self.PATH)
             self.driver.get(league_url)
             self.click_cookies()
-            self.get_fixture_data(league=league)            
+            if self.site_active:
+                self.get_fixture_data(league=league)            
 
     def click_cookies(self):
-        cookies = self.driver.find_element(By.XPATH, '//*[@id="onetrust-reject-all-handler"]')
-        cookies.click()
+        try:
+            WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.XPATH, '//*[@id="onetrust-reject-all-handler"]')))
+            cookies = self.driver.find_element(By.XPATH, '//*[@id="onetrust-reject-all-handler"]')
+            cookies.click()
+            self.site_active = True
+        except Exception as e:
+            self.site_active = False
 
     def get_fixture_data(self, league):
         times, home_teams, away_teams = self.get_fixture_elements()

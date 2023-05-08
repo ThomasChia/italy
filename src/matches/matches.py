@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from collections import defaultdict
 from dataclasses import dataclass, field
 from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES
 import pandas as pd
@@ -9,7 +10,7 @@ from typing import List
 class Matches(ABC):
     country: str
     leagues: List
-    matches_dict: dict = field(default_factory=dict)
+    matches_dict: dict = field(default_factory=lambda: defaultdict(list))
     matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
 
     def remove_spaces_in_teams(self):

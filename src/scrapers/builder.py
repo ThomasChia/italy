@@ -27,7 +27,7 @@ class ScraperFactory:
 
 class MultiScraper:
     def __init__(self, countries):
-        self.scraped_matches = None
+        self.scraped_matches = pd.DataFrame()
         self.matches_list = []
         for country in countries:
             if country == 'England':
@@ -40,10 +40,10 @@ class MultiScraper:
         scraper_list = ScraperFactory.from_matches_list(self.matches_list)
         for scraper in scraper_list:
             scraper.get_matches()
-            if self.scraped_matches:
-                self.scraped_matches = pd.concat([self.scraped_matches, scraper.matches_df])
+            if self.scraped_matches.empty:
+                self.scraped_matches = scraper.matches.matches_df
             else:
-                self.scraped_matches = scraper.matches_df
+                self.scraped_matches = pd.concat([self.scraped_matches, scraper.matches.matches_df])
 
 
 if __name__=="__main__":
