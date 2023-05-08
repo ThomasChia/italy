@@ -85,7 +85,7 @@ TEAM_NAMES_DICT = {
     'verona': 'hellas_verona',
 }
 
-LEAGUE_NAMES_DICT = {
+LEAGUE_NAMES_MAPPING = {
     'Italian Serie A': 'Serie A',
     'Italian Serie B': 'Serie B',
     'Serie C Grp. A': 'Serie C, Girone A',

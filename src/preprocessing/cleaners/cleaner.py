@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from loaders.loader import Loader
-from config import TEAM_NAMES_DICT, LEAGUE_NAMES_DICT
+from config import TEAM_NAMES_DICT, LEAGUE_NAMES_MAPPING
 
 
 class Cleaner:
@@ -36,8 +36,8 @@ class Cleaner:
         self.data = self.data.reset_index(drop=True)
     
     def clean_league_names(self):
-        self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_DICT)
-        self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_DICT)
+        self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
+        self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
 
     def clean_team_names(self):
         self.data['pt1'] = self.data['pt1'].replace(TEAM_NAMES_DICT)
