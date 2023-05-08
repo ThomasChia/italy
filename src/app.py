@@ -4,7 +4,7 @@ import config
 from loaders.query import Query
 from loaders.loader import DBLoader
 import logging
-from matches.matches import ItalianMatches, EnglishMatches
+from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from preprocessing.builder.builder import Builder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -58,6 +58,9 @@ if __name__ == "__main__":
     logging.info("Cleaning data.")
     cleaner = Cleaner(loader)
     cleaner.clean()
+
+    logging.info("Storing past matches.")
+    past_matches = PastMatches(cleaner.data)
 
     # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
     logging.info("Calculating elo statistics.")

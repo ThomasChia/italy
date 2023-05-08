@@ -49,3 +49,8 @@ class EnglishMatches(Matches):
     def clean_future_matches(self):
         self.remove_spaces_in_teams()
         self.correct_teams()
+
+
+@dataclass
+class PastMatches:
+    matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
