@@ -1,4 +1,5 @@
 import code
+from config import DASHBOARD_LEAGUES
 import pandas as pd
 import numpy as np
 import time
@@ -55,36 +56,47 @@ class MonteCarloResults:
         return [col for col in self.simulation_results.columns if any(c.isalpha() for c in str(col))]
 
     def get_finishing_positions(self):
-        team_counts = {}
-        position_counts = {}
         self.get_next_match_simulated_result()
-        away_results = self.full_season.copy(deep=True).replace({3:0, 0:3})
-        for simulation in range(1, self.num_simulations+1):
-            home_points = self.full_season.groupby(by='home_team')[simulation].sum()
-            away_points = away_results.groupby(by='away_team')[simulation].sum()
-            total_points = pd.concat([home_points, away_points]).groupby(level=0).sum().sort_values(ascending=False)
-            total_points = pd.DataFrame(total_points).reset_index()
-            total_points['finishing_position'] = np.arange(1, len(total_points)+1)
-            for j, row in total_points.iterrows():
-                team = row['index']
-                position = row['finishing_position']
-                points = row.iloc[1]
-                result = self.next_match_simulations.loc[team, simulation-1]
-                if team not in team_counts:
-                    team_counts[team] = {str(position) + '_' + str(result): 1}
-                else:
-                    if str(position) + '_' + str(result) not in team_counts[team]:
-                        team_counts[team][str(position) + '_' + str(result)] = 1
+        for league in DASHBOARD_LEAGUES:
+            league_full_season = self.full_season[self.full_season['league']==league]
+            team_counts = {}
+            position_counts = {}
+            away_results = league_full_season.copy(deep=True).replace({3:0, 0:3})
+            for simulation in range(1, self.num_simulations+1):
+                home_points = league_full_season.groupby(by='home_team')[simulation].sum()
+                away_points = away_results.groupby(by='away_team')[simulation].sum()
+                total_points = pd.concat([home_points, away_points]).groupby(level=0).sum().sort_values(ascending=False)
+                total_points = pd.DataFrame(total_points).reset_index()
+                total_points['finishing_position'] = np.arange(1, len(total_points)+1)
+                for j, row in total_points.iterrows():
+                    team = row['index']
+                    position = row['finishing_position']
+                    points = row.iloc[1]
+                    result = self.next_match_simulations.loc[team, simulation-1]
+                    if team not in team_counts:
+                        team_counts[team] = {str(position) + '_' + str(result): 1}
                     else:
-                        team_counts[team][str(position) + '_' + str(result)] += 1
+                        if str(position) + '_' + str(result) not in team_counts[team]:
+                            team_counts[team][str(position) + '_' + str(result)] = 1
+                        else:
+                            team_counts[team][str(position) + '_' + str(result)] += 1
 
-                if position not in position_counts:
-                    position_counts[position] = np.array(points)
-                else:
-                    position_counts[position] = np.append(position_counts[position], points)
+                    if position not in position_counts:
+                        position_counts[position] = np.array(points)
+                    else:
+                        position_counts[position] = np.append(position_counts[position], points)
 
-        self.match_importance = pd.DataFrame(team_counts).sort_index().T.sort_index()
-        self.league_targets = pd.DataFrame(position_counts).mean()
+            league_match_importance = pd.DataFrame(team_counts).sort_index().T.sort_index()
+            single_league_targets = pd.DataFrame(position_counts).mean()
+
+        if self.match_importance is None:
+            self.match_importance = league_match_importance
+        else:
+            self.match_importance = pd.concat([self.match_importance, league_match_importance])
+        if self.league_targets is None:
+            self.league_targets = pd.DataFrame(position_counts).mean()
+        else:
+            self.league_targets = pd.concat([self.league_targets, single_league_targets])
         self.combine_finishing_positions()
     
     def get_next_match(self):

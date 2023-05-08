@@ -31,12 +31,6 @@ if __name__ == "__main__":
     if parser.parse_args().debug:
         logging.info("Running in debug mode.")
 
-    countries = ['England', 'Italy']
-    scraper = MultiScraper(countries)
-    scraper.scrape_all()
-
-    code.interact(local=locals())
-
     # print("""
     #         ________     ,-----.        ,-----.  ,---------.  _______      ____      .---.     .---.           ,---.      _______      ____       .-'''-. ,---------.  
     # |        |  .'  .-,  '.    .'  .-,  '.\          \\  ____  \  .'  __ `.   | ,_|     | ,_|          /,--.|     /   __  \   .'  __ `.   / _     \\          \ 

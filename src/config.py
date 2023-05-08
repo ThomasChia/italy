@@ -65,6 +65,30 @@ LEAGUES = '''
     'Supercoppa Serie')
 '''
 
+DASHBOARD_LEAGUES = [
+    'Serie A',
+    'Serie B',
+    'Serie C, Girone A',
+    'Serie C, Girone B',
+    'Serie C, Girone C',
+    'Premier League',
+    'Championship',
+    'League One',
+    'League Two'
+]
+
+SCRAPED_LEAGUES_MAPPING = {
+    'serie-a': 'Serie A',
+    'serie-b': 'Serie B',
+    'serie-c-girone-a': 'Serie C, Girone A',
+    'serie-c-girone-b': 'Serie C, Girone B',
+    'serie-c-girone-c': 'Serie C, Girone C',
+    'premier-league': 'Premier League',
+    'championship': 'Championship',
+    'league-one': 'League One',
+    'league-two': 'League Two'
+}
+
 TABLE_NAME_PAST = "football_matches"
 
 os.environ["API_DB_USER"] = "postgres"
