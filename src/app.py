@@ -79,13 +79,14 @@ if __name__ == "__main__":
 
     logging.info("Building prediction set.")
     future_builder = FutureBuilder(future_matches.scraped_matches, builder)
+    future_builder.build_future_matches()
 
     logging.info("Training model.")
     model = Model(builder.data)
     model.train()
 
     logging.info("Predicting matches.") # TODO add in number of matches being predicted.
-    future_home_and_away_matches, future_team_and_opponent = model.predict(future_matches.matches.matches_df, config.FEATURES, config.ID_FEATURES)
+    future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
     # TODO add in something to tell which league we are looking at.
 
     logging.info("Running simulations.")
