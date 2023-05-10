@@ -3,6 +3,11 @@ import os
 
 # Data Loader
 
+COUNTRIES = [
+    'England',
+    'Italy'
+]
+
 LEAGUES = '''
     ('Coppa Italia',
     'Coppa Italia Serie C, Girone A',

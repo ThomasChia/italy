@@ -7,6 +7,7 @@ import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from preprocessing.builder.builder import Builder
+from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
@@ -53,8 +54,8 @@ if __name__ == "__main__":
         loader.data = loader.data.iloc[:5000, :]
 
     logging.info("Scraping future matches.")
-    future_matches = FlashScoreScraper(ItalianMatches())
-    future_matches.get_matches()
+    future_matches = MultiScraper(config.COUNTRIES)
+    future_matches.scrape_all()
 
     logging.info("Cleaning data.")
     cleaner = Cleaner(loader)
@@ -73,8 +74,11 @@ if __name__ == "__main__":
     goals.calculate_goals_statistics()
 
     logging.info("Building training set.")
-    builder = Builder([elos, goals])
+    builder = Builder([elos, goals], future_matches.scraped_matches)
     builder.build_dataset()
+
+    logging.info("Building prediction set.")
+    future_builder = FutureBuilder(future_matches.scraped_matches, builder)
 
     logging.info("Training model.")
     model = Model(builder.data)

@@ -5,20 +5,13 @@ from scrapers.scrapers import Scraper
 
 
 class FutureBuilder:
-    def __init__(self, scraper: Scraper, future_matches: Matches, past_matches: Builder) -> None:
-        self.scraper = scraper(future_matches)
+    def __init__(self, future_matches: pd.DataFrame, past_matches: Builder) -> None:
         self.past_matches = past_matches
-        self.future_matches = None
+        self.future_matches = future_matches
         self.preprocessed_future_matches = None
 
     def build_future_matches(self):
-        self.future_matches = self.get_future_matches()
         self.add_past_stats_to_future_matches()
-
-    def get_future_matches(self):
-        self.scraper.get_matches()
-        self.scraper.matches.clean_future_matches()
-        return self.scraper.matches.matches_df
 
     def add_past_stats_to_future_matches(self):
         most_recent_team_df = self.get_latest_past_stats()

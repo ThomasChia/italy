@@ -40,6 +40,7 @@ class MultiScraper:
         scraper_list = ScraperFactory.from_matches_list(self.matches_list)
         for scraper in scraper_list:
             scraper.get_matches()
+            scraper.matches.clean_future_matches()
             if self.scraped_matches.empty:
                 self.scraped_matches = scraper.matches.matches_df
             else:
