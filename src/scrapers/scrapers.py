@@ -25,7 +25,7 @@ class FlashScoreScraper(Scraper):
 
     def get_matches(self):
         for league in self.matches.leagues:
-            logging.info(f"Getting matches for {league}")
+            logging.info(f"Getting matches for {league} in {self.matches.country}")
             league_url = self.base_url + self.matches.country + '/' + league + '/fixtures/'
             self.driver = webdriver.Chrome(self.PATH)
             self.driver.get(league_url)

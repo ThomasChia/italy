@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from loaders.loader import Loader
+import logging
 from config import TEAM_NAMES_DICT, LEAGUE_NAMES_MAPPING
 
 
@@ -16,6 +17,7 @@ class Cleaner:
         self.order_by_date()
 
     def get_result(self):
+        logging.info(f"Converting score to result")
         conditions = [
             self.data['score_pt1'] > self.data['score_pt2'],
             self.data['score_pt1'] < self.data['score_pt2'],
@@ -32,13 +34,16 @@ class Cleaner:
         return self.data
     
     def order_by_date(self):
+        logging.info(f"Ordering by date")
         self.data = self.data.sort_values(by='date')
         self.data = self.data.reset_index(drop=True)
     
     def clean_league_names(self):
+        logging.info(f"Cleaning league names")
         self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
         self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
 
     def clean_team_names(self):
+        logging.info(f"Cleaning team names")
         self.data['pt1'] = self.data['pt1'].replace(TEAM_NAMES_DICT)
         self.data['pt2'] = self.data['pt2'].replace(TEAM_NAMES_DICT)
