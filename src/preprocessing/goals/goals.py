@@ -219,6 +219,7 @@ class PoissonGoals:
 
         df.replace(np.nan, 0, inplace=True)
         df.replace('nan', 0, inplace=True)
+        df.replace([np.inf, -np.inf], 0, inplace=True)
 
         return df
 

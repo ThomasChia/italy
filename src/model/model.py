@@ -1,4 +1,5 @@
 from config import FEATURES
+import logging
 import numpy as np
 import pandas as pd
 from sklearn.metrics import brier_score_loss
@@ -44,17 +45,18 @@ class Model:
         return x_train_prepared, scaler
 
     def train_model(self, x_train, y_train):
-        print("Training model.")
+        logging.info("Fitting model to training data.")
         self.model.fit(x_train, y_train.ravel())
 
-    def prepare_future_data(df, scaler, features_list):
+    def prepare_future_data(self, df, scaler, features_list):
         features_ = features_list
         df = df[features_]
         df.fillna(0, inplace=True)
         return scaler.transform(df)
 
-    def predict(self, future_matches, features_list):
-        df = self.prepare_future_data(future_matches, self.scaler, features_list)
+    def predict(self, future_matches, features_list, id_features):
+        prediction_features = [x for x in features_list if x not in id_features]
+        df = self.prepare_future_data(future_matches, self.scaler, prediction_features)
         # predictions = self.model.predict(df)
         predictions_proba = self.model.predict_proba(df)
         future_matches = self.add_probabilities_to_matches(future_matches, predictions_proba)

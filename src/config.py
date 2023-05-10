@@ -118,7 +118,7 @@ LEAGUE_NAMES_MAPPING = {
 }
 
 ID_FEATURES = [
-    'id',
+    # 'id',
     'league',
     'date',
     'team',
