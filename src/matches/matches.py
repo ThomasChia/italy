@@ -78,6 +78,7 @@ class PastMatches:
         new_col_names = [i for i in range(1, num_replications+1)]
         replicated_df.columns = new_col_names
         self.matches_df = self.matches_df.merge(replicated_df, left_index=True, right_index=True)
+        self.matches_df['result'] = self.matches_df['result'].replace({1:3, 0.5:1})
 
     def rename_columns(self):
         self.matches_df = self.matches_df.rename(columns={'pt1': 'home_team',
