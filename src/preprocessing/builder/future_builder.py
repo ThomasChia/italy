@@ -55,4 +55,4 @@ class FutureBuilder:
         return df.drop(['result', 'date', 'league'], axis=1)
     
     def remove_result_elo_diff_home(self, df):
-        return df.drop(['result', 'elo_diff', 'home'], axis=1)
+        return df.drop(['elo_diff', 'home'], axis=1)

@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 from preprocessing.preprocessors import Preprocessor
-from config import ID_FEATURES, FEATURES
+from config import DEPENDENT_FEATURE, ID_FEATURES, FEATURES
 import logging
 
 class Builder:
@@ -18,7 +18,7 @@ class Builder:
 
     def build_dataset(self):
         merged_data = self.merge_on_common_columns(self.preprocessed_matches)
-        self.data = self.cut_to_features(merged_data, ID_FEATURES + FEATURES)
+        self.data = self.cut_to_features(merged_data, DEPENDENT_FEATURE + ID_FEATURES + FEATURES)
         logging.info(f"Dataset built with shape: {self.data.shape}.")
 
     def cut_to_features(self, df, features_list):

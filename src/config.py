@@ -124,6 +124,10 @@ LEAGUE_NAMES_MAPPING = {
     'Serie C Grp. C': 'Serie C, Girone C'
 }
 
+DEPENDENT_FEATURE = [
+    'result'
+]
+
 ID_FEATURES = [
     # 'id',
     'league',
@@ -133,7 +137,6 @@ ID_FEATURES = [
 ]
 
 FEATURES = [
-    'result',
     'elo_team',
     'elo_opponent',
     'elo_diff',
