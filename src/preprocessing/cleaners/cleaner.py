@@ -14,6 +14,7 @@ class Cleaner:
         self.clean_league_names()
         self.clean_team_names()
         self.get_result()
+        self.drop_duplicates()
         self.order_by_date()
 
     def get_result(self):
@@ -47,3 +48,7 @@ class Cleaner:
         logging.info(f"Cleaning team names")
         self.data['pt1'] = self.data['pt1'].replace(TEAM_NAMES_DICT)
         self.data['pt2'] = self.data['pt2'].replace(TEAM_NAMES_DICT)
+
+    def drop_duplicates(self):
+        logging.info(f"Dropping duplicates")
+        self.data = self.data.drop_duplicates(subset=['date', 'pt1', 'pt2'])

@@ -51,7 +51,7 @@ if __name__ == "__main__":
     loader = DBLoader()
     loader.run_query(query)
     if parser.parse_args().debug:
-        loader.data = loader.data.iloc[:5000, :]
+        loader.data = loader.data[loader.data['date']>='2019-08-01']
 
     logging.info("Scraping future matches.")
     future_matches = MultiScraper(config.COUNTRIES)
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
     logging.info("Creating output.")
-    results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches.matches_df)
+    results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches, season_start=config.SEASON_START)
     results.get_finishing_positions()
 
     # logging.info("Uploading output.")

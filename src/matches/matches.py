@@ -56,9 +56,9 @@ class EnglishMatches(Matches):
 class PastMatches:
     matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
 
-    def align_to_simultions(self):
+    def align_to_simultions(self, num_simulations):
         self.rename_columns()
-        self.replicate_column('result', self.num_simulations)
+        self.replicate_column('result', num_simulations)
 
     def replicate_column(self, col_name, num_replications):
         """
@@ -75,12 +75,15 @@ class PastMatches:
         col = self.matches_df[col_name]
         replicated_cols = [col] * num_replications
         replicated_df = pd.concat(replicated_cols, axis=1)
-        new_col_names = [str(i) for i in range(1, num_replications+1)]
+        new_col_names = [i for i in range(1, num_replications+1)]
         replicated_df.columns = new_col_names
-        self.matches_df = replicated_df
+        self.matches_df = self.matches_df.merge(replicated_df, left_index=True, right_index=True)
 
     def rename_columns(self):
         self.matches_df = self.matches_df.rename(columns={'pt1': 'home_team',
                                                           'pt2': 'away_team',
                                                           'score_pt1': 'home_score',
                                                           'score_pt2': 'away_score'})
+        
+    def filter_by_date(self, filter_date):
+        self.matches_df = self.matches_df[self.matches_df['date'] > filter_date]

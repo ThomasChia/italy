@@ -31,9 +31,10 @@ class MonteCarloSimulator:
 
 
 class MonteCarloResults:
-    def __init__(self, simulation_results, past_results=None):
+    def __init__(self, simulation_results, past_results=None, season_start=None):
         self.past_results: PastMatches = past_results
         self.simulation_results = simulation_results
+        self.season_start = season_start
         self.num_simulations = self.get_num_simulations()
         self.str_columns = self.get_str_columns()
         self.finishing_positions = None
@@ -43,7 +44,8 @@ class MonteCarloResults:
         self.next_match_simulations = None
 
         if self.past_results:
-            self.past_results.align_to_simultions()
+            self.past_results.filter_by_date(self.season_start)
+            self.past_results.align_to_simultions(num_simulations=self.num_simulations)
             self.full_season = pd.concat([self.past_results.matches_df, self.simulation_results])
         else:
             self.full_season = self.simulation_results

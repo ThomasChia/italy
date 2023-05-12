@@ -73,15 +73,15 @@ LEAGUES = [
 
 
 DASHBOARD_LEAGUES = [
-    'Serie A',
+    # 'Serie A',
     'Serie B',
-    'Serie C, Girone A',
-    'Serie C, Girone B',
-    'Serie C, Girone C',
+    # 'Serie C, Girone A',
+    # 'Serie C, Girone B',
+    # 'Serie C, Girone C',
     'Premier League',
-    'Championship',
-    'League One',
-    'League Two'
+    # 'Championship',
+    # 'League One',
+    # 'League Two'
 ]
 
 SCRAPED_LEAGUES_MAPPING = {
@@ -106,14 +106,24 @@ os.environ["API_DB_DB"] = "rugby4cast"
 
 # Cleaning
 TEAM_NAMES_DICT = {
-    'us_ancona': 'ancona',
+    'afc_bournemouth': 'bournemouth',
+    'brighton_and_hove_albion': 'brighton',
     'Inter Milan': 'inter_milan',
     'internazionale': 'inter_milan',
     'inter': 'inter_milan',
     'internazionale': 'inter_milan',
+    'leeds_united': 'leeds',
+    'leicester_city': 'leicester',
+    'manchester_united': 'manchester_utd',
+    'newcastle_united': 'newcastle',
     'san_donato': 'san_donato_tavarnelle',
     'sassari_torres': 'torres',
+    'suditrol': 'sudtirol',
+    'südtirol': 'sudtirol',
+    'us_ancona': 'ancona',
     'verona': 'hellas_verona',
+    'west_ham_united': 'west_ham',
+    'wolverhampton': 'wolves',
 }
 
 LEAGUE_NAMES_MAPPING = {
@@ -172,6 +182,8 @@ FEATURES = [
     # 'team_lambda',
     # 'opponent_lambda'
 ]
+
+SEASON_START = '2022-07-20'
 
 # ELO settings
 STARTING_ELO = 1500
