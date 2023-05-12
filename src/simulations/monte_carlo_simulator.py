@@ -99,7 +99,7 @@ class MonteCarloResults:
             else:
                 self.match_importance = pd.concat([self.match_importance, league_match_importance])
             if self.league_targets is None:
-                self.league_targets = pd.DataFrame(position_counts).mean()
+                self.league_targets = single_league_targets
             else:
                 self.league_targets = pd.concat([self.league_targets, single_league_targets])
             self.combine_finishing_positions()
@@ -131,11 +131,11 @@ class MonteCarloResults:
         self.next_match_simulations = pd.DataFrame(next_match_simulations).T
 
     def combine_finishing_positions(self):
-        self.finishing_positions = self.match_importance.copy(deep=True)
-        current_cols = self.finishing_positions.columns
+        finishing_positions = self.match_importance.copy(deep=True)
+        current_cols = finishing_positions.columns
         new_cols = [col.split('_')[0] for col in current_cols]
-        self.finishing_positions.columns = new_cols
-        finishing_positions = self.finishing_positions.groupby(axis=1, level=0).sum()
+        finishing_positions.columns = new_cols
+        finishing_positions = finishing_positions.groupby(axis=1, level=0).sum()
         if self.finishing_positions is None:
             self.finishing_positions = finishing_positions
         else:
