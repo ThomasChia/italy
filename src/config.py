@@ -68,7 +68,8 @@ LEAGUES = [
     'Serie D, Poule Scudetto, Knockout stage',
     'Supercoppa',
     'Supercoppa Serie',
-    'Premier League'
+    'Premier League',
+    'English Premier League'
 ]
 
 
@@ -132,7 +133,8 @@ LEAGUE_NAMES_MAPPING = {
     'Italian Serie B': 'Serie B',
     'Serie C Grp. A': 'Serie C, Girone A',
     'Serie C Grp. B': 'Serie C, Girone B',
-    'Serie C Grp. C': 'Serie C, Girone C'
+    'Serie C Grp. C': 'Serie C, Girone C',
+    'English Premier League': 'Premier League'
 }
 
 DEPENDENT_FEATURE = [

@@ -14,6 +14,7 @@ class Cleaner:
         self.clean_league_names()
         self.clean_team_names()
         self.get_result()
+        self.remove_timestamp()
         self.drop_duplicates()
         self.order_by_date()
 
@@ -42,7 +43,6 @@ class Cleaner:
     def clean_league_names(self):
         logging.info(f"Cleaning league names")
         self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
-        self.data['league'] = self.data['league'].replace(LEAGUE_NAMES_MAPPING)
 
     def clean_team_names(self):
         logging.info(f"Cleaning team names")
@@ -52,3 +52,6 @@ class Cleaner:
     def drop_duplicates(self):
         logging.info(f"Dropping duplicates")
         self.data = self.data.drop_duplicates(subset=['date', 'pt1', 'pt2'])
+
+    def remove_timestamp(self):
+        self.data['date'] = pd.to_datetime(self.data['date']).dt.date
