@@ -46,6 +46,7 @@ class MonteCarloResults:
 
         if self.past_results:
             self.past_results.filter_by_date(self.season_start)
+            self.past_results.remove_in_season_duplicates()
             self.past_results.align_to_simultions(num_simulations=self.num_simulations)
             self.full_season = pd.concat([self.past_results.matches_df, self.simulation_results])
         else:
