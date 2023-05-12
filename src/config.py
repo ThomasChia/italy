@@ -8,8 +8,8 @@ COUNTRIES = [
     'Italy'
 ]
 
-LEAGUES = '''
-    ('Coppa Italia',
+LEAGUES = [
+    'Coppa Italia',
     'Coppa Italia Serie C, Girone A',
     'Coppa Italia Serie C, Girone B',
     'Coppa Italia Serie C, Girone C',
@@ -67,8 +67,10 @@ LEAGUES = '''
     'Serie D, Poule Scudetto, Group 3',
     'Serie D, Poule Scudetto, Knockout stage',
     'Supercoppa',
-    'Supercoppa Serie')
-'''
+    'Supercoppa Serie',
+    'Premier League'
+]
+
 
 DASHBOARD_LEAGUES = [
     'Serie A',

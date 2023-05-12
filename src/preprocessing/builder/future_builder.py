@@ -43,7 +43,7 @@ class FutureBuilder:
     def get_latest_opponent_stats(self, team_and_league_df):
         team_df = self.remove_columns_containing_string(team_and_league_df, 'league')
         opponent_df = self.replace_string_in_column_name('team', 'opponent', team_df)
-        opponent_df = self.remove_date_result_elo_diff(opponent_df)
+        opponent_df = self.remove_result_elo_diff_home(opponent_df)
         return opponent_df
     
     def replace_string_in_column_name(self, old_string, new_string, df):
@@ -52,7 +52,7 @@ class FutureBuilder:
         return df
     
     def remove_date_and_league(self, df):
-        return df.drop(['date', 'league'], axis=1)
+        return df.drop(['result', 'date', 'league'], axis=1)
     
-    def remove_date_result_elo_diff_home(self, df):
-        return df.drop(['date', 'result', 'elo_diff', 'home'], axis=1)
+    def remove_result_elo_diff_home(self, df):
+        return df.drop(['result', 'elo_diff', 'home'], axis=1)

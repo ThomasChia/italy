@@ -47,7 +47,7 @@ if __name__ == "__main__":
 
     logging.info("Loading data.")
     query = Query()
-    query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES)
+    query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES, config.COUNTRIES)
     loader = DBLoader()
     loader.run_query(query)
     if parser.parse_args().debug:
