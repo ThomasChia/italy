@@ -24,7 +24,7 @@ class MonteCarloSimulator:
                 'away_team': [match['away_team']] * num_simulations,
                 'result': result,
                 'season': np.arange(1, num_simulations+1)
-            }).pivot_table(index=['match_id', 'home_team', 'away_team'],
+            }).pivot_table(index=['match_id', 'home_team', 'away_team', 'league'],
                           columns='season', values='result',
                           aggfunc='sum', fill_value=0).reset_index()
             simulation_results.append(match_results)

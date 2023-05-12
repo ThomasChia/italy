@@ -77,7 +77,7 @@ class Model:
                                                                                    'win': 'away_win',
                                                                                    'loss': 'home_win'}).drop('home', axis=1)
         home_and_away_matches = pd.concat([home_matches, away_matches])
-        home_and_away_average_matches = home_and_away_matches.groupby(['home_team', 'away_team']).mean().reset_index()
+        home_and_away_average_matches = home_and_away_matches.groupby(['home_team', 'away_team', 'league']).mean().reset_index()
 
         team_matches = home_and_away_average_matches[['home_team', 'away_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
                                                                                                                                  'away_team': 'opponent',
