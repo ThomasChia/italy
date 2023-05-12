@@ -116,6 +116,7 @@ TEAM_NAMES_DICT = {
     'leicester_city': 'leicester',
     'manchester_united': 'manchester_utd',
     'newcastle_united': 'newcastle',
+    'nottingham_forest': 'nottingham',
     'san_donato': 'san_donato_tavarnelle',
     'sassari_torres': 'torres',
     'suditrol': 'sudtirol',
