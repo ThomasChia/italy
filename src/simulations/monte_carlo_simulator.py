@@ -19,6 +19,7 @@ class MonteCarloSimulator:
             result = np.random.choice([3, 1, 0], size=num_simulations, p=[match['home_win'], match['draw'], match['away_win']])
             match_results = pd.DataFrame({
                 'match_id': [match['match_id']] * num_simulations,
+                'league': [match['league']] * num_simulations,
                 'home_team': [match['home_team']] * num_simulations,
                 'away_team': [match['away_team']] * num_simulations,
                 'result': result,
@@ -91,7 +92,7 @@ class MonteCarloResults:
 
             league_match_importance = pd.DataFrame(team_counts).sort_index().T.sort_index()
             league_match_importance['league'] = league
-            single_league_targets = pd.DataFrame(position_counts).mean()
+            single_league_targets = pd.DataFrame(position_counts).mean().reset_index(drop=True)
             single_league_targets['league'] = league
 
             if self.match_importance is None:

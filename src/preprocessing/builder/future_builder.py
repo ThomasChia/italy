@@ -16,9 +16,9 @@ class FutureBuilder:
     def add_past_stats_to_future_matches(self):
         most_recent_team_df = self.get_latest_past_stats()
         most_recent_opponent_df = self.get_latest_opponent_stats(most_recent_team_df)
-        future_matches_pt1 = pd.merge(self.future_matches, most_recent_team_df, left_on='pt1', right_on='team', how='left').rename(columns={'pt2': 'opponent'}).drop('pt1', axis=1)
+        future_matches_pt1 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt1', 'league'], right_on=['team', 'league'], how='left').rename(columns={'pt2': 'opponent'}).drop('pt1', axis=1)
         future_matches_pt1['home'] = 1
-        future_matches_pt2 = pd.merge(self.future_matches, most_recent_team_df, left_on='pt2', right_on='team', how='left').rename(columns={'pt1': 'opponent'}).drop('pt2', axis=1)
+        future_matches_pt2 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt2', 'league'], right_on=['team', 'league'], how='left').rename(columns={'pt1': 'opponent'}).drop('pt2', axis=1)
         future_matches_pt2['home'] = 0
         future_matches_team_and_league = pd.concat([future_matches_pt1, future_matches_pt2]).reset_index(drop=True)
         self.preprocessed_future_matches = pd.merge(future_matches_team_and_league, most_recent_opponent_df, on=['opponent'], how='left')
@@ -27,7 +27,7 @@ class FutureBuilder:
         sorted_past_matches = self.sort_past_matches()
         most_recent_team_df = self.get_final_team_entry(sorted_past_matches)
         most_recent_team_df = self.remove_columns_containing_string(most_recent_team_df, 'opponent')
-        most_recent_team_df = self.remove_date_and_league(most_recent_team_df)
+        most_recent_team_df = self.remove_date_and_result(most_recent_team_df)
         return most_recent_team_df
 
     def sort_past_matches(self):
@@ -51,8 +51,8 @@ class FutureBuilder:
         df.columns = new_cols
         return df
     
-    def remove_date_and_league(self, df):
-        return df.drop(['result', 'date', 'league'], axis=1)
+    def remove_date_and_result(self, df):
+        return df.drop(['date', 'result'], axis=1)
     
     def remove_result_elo_diff_home(self, df):
         return df.drop(['elo_diff', 'home'], axis=1)

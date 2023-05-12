@@ -1,4 +1,5 @@
 import code
+from config import SCRAPED_LEAGUES_MAPPING
 import pandas as pd
 import numpy as np
 from matches.matches import Matches, EnglishMatches, ItalianMatches
@@ -45,6 +46,11 @@ class MultiScraper:
                 self.scraped_matches = scraper.matches.matches_df
             else:
                 self.scraped_matches = pd.concat([self.scraped_matches, scraper.matches.matches_df])
+
+        self.clean_team_names()
+
+    def clean_team_names(self):
+        self.scraped_matches['league'] = self.scraped_matches['league'].replace(SCRAPED_LEAGUES_MAPPING)
 
 
 if __name__=="__main__":
