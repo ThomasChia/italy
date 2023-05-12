@@ -12,6 +12,7 @@ class MonteCarloSimulator:
         self.simulation_results = None
 
     def run_simulations(self, num_simulations):
+        self.matches_df['match_id'] = np.arange(1, len(self.matches_df)+1)
         simulation_results = []
         for i in range(len(self.matches_df)):
             match = self.matches_df.iloc[i]
