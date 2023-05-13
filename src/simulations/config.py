@@ -1,0 +1,1 @@
+MATCH_IMPORTANCE_COLUMN_NAMES = ['{}_{}'.format(i, j) for i in range(1, 25) for j in [0, 1, 3]]

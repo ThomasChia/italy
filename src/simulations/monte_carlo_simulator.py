@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import time
 from matches.matches import PastMatches
+from simulations.config import MATCH_IMPORTANCE_COLUMN_NAMES
 
 
 class MonteCarloSimulator:
@@ -99,14 +100,14 @@ class MonteCarloResults:
 
             if self.match_importance is None:
                 self.match_importance = league_match_importance
-                self.match_importance = self.set_dataframe_columns(self.match_importance)
+                self.match_importance = self.set_dataframe_columns(self.match_importance, column_names=MATCH_IMPORTANCE_COLUMN_NAMES)
             else:
                 self.match_importance = pd.concat([self.match_importance, league_match_importance])
             if self.league_targets is None:
                 self.league_targets = single_league_targets
             else:
                 self.league_targets = pd.concat([self.league_targets, single_league_targets])
-            self.combine_finishing_positions()
+        self.combine_finishing_positions()
     
     def get_next_match(self):
         teams = pd.concat([self.simulation_results['home_team'], self.simulation_results['away_team']]).unique()
@@ -144,22 +145,22 @@ class MonteCarloResults:
             self.finishing_positions = finishing_positions
         else:
             self.finishing_positions = pd.concat([self.finishing_positions, finishing_positions])
+        self.finishing_positions = self.sort_columns_by_prefix(self.finishing_positions)
 
     def remove_duplicates_in_season(self, df):
         return df.drop_duplicates(subset=['home_team', 'away_team'], keep='last')
-    
-    # def sort_columns_by_prefix(self, df, delimiter='_'):
-    #     prefixes = [int(col.split(delimiter)[0]) for col in df.columns if col != 'league']
-    #     sorted_cols = [col for _, col in sorted(zip(prefixes, df.columns))]
-    #     all_cols = ['{}_{}'.format(i, j) for i in range(1, 21) for j in [0, 1, 3]]
-    #     return df[sorted_cols + ['league']]
     
     def set_dataframe_columns(self, df: pd.DataFrame, column_names):
         existing_columns = set(df.columns)
         new_columns = set(column_names) - existing_columns
         for column in new_columns:
             df[column] = np.nan
-        return df[column_names]
+        return df[column_names + ['league']]
+    
+    def sort_columns_by_prefix(self, df: pd.DataFrame, delimiter: str='_'):
+        prefixes = [int(col.split(delimiter)[0]) for col in df.columns if col != 'league']
+        sorted_cols = [col for _, col in sorted(zip(prefixes, df.columns))]
+        return df[sorted_cols + ['league']]
         
 
 
