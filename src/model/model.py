@@ -77,15 +77,15 @@ class Model:
                                                                                    'win': 'away_win',
                                                                                    'loss': 'home_win'}).drop('home', axis=1)
         home_and_away_matches = pd.concat([home_matches, away_matches])
-        home_and_away_average_matches = home_and_away_matches.groupby(['home_team', 'away_team', 'league']).mean().reset_index()
+        home_and_away_average_matches = home_and_away_matches.groupby(['date', 'home_team', 'away_team', 'league']).mean().reset_index()
 
-        team_matches = home_and_away_average_matches[['home_team', 'away_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
-                                                                                                                                 'away_team': 'opponent',
-                                                                                                                                 'home_win': 'win',
-                                                                                                                                 'away_win': 'loss'})
-        opponent_matches = home_and_away_average_matches[['away_team', 'home_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
-                                                                                                                                     'home_team': 'opponent',
-                                                                                                                                     'home_win': 'loss',
-                                                                                                                                     'away_win': 'win'})
+        team_matches = home_and_away_average_matches[['date', 'home_team', 'away_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
+                                                                                                                                                   'away_team': 'opponent',
+                                                                                                                                                   'home_win': 'win',
+                                                                                                                                                   'away_win': 'loss'})
+        opponent_matches = home_and_away_average_matches[['date', 'away_team', 'home_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
+                                                                                                                                                       'home_team': 'opponent',
+                                                                                                                                                       'home_win': 'loss',
+                                                                                                                                                       'away_win': 'win'})
         team_and_opponent_matches = pd.concat([team_matches, opponent_matches])
         return home_and_away_average_matches, team_and_opponent_matches
