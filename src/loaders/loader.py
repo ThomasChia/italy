@@ -7,15 +7,14 @@ from sqlalchemy.engine import Engine
 
 class Loader:
     def __init__(self,):
-        self.data: pd.DataFrame = None
-
+        self.data: pd.DataFrame = pd.DataFrame()
 
 class DBLoader(Loader):
     def __init__(self):
         super().__init__()
         self.connection = Connector()
 
-    def run_query(self, query: Query()):
+    def run_query(self, query: Query):
         logging.info("Pulling data from DB.")
         engine = self.connection.get_connection()
         self.data = pd.read_sql_query(query.query, engine)

@@ -72,13 +72,13 @@ class PastMatches:
         pandas.DataFrame: A new dataframe with the replicated column(s).
         """
 
+        self.matches_df['result'] = self.matches_df['result'].replace({1:3, 0.5:1})
         col = self.matches_df[col_name]
         replicated_cols = [col] * num_replications
         replicated_df = pd.concat(replicated_cols, axis=1)
         new_col_names = [i for i in range(1, num_replications+1)]
         replicated_df.columns = new_col_names
         self.matches_df = self.matches_df.merge(replicated_df, left_index=True, right_index=True)
-        self.matches_df['result'] = self.matches_df['result'].replace({1:3, 0.5:1})
 
     def rename_columns(self):
         self.matches_df = self.matches_df.rename(columns={'pt1': 'home_team',
@@ -90,4 +90,4 @@ class PastMatches:
         self.matches_df = self.matches_df[self.matches_df['date'] > pd.to_datetime(filter_date)]
 
     def remove_in_season_duplicates(self):
-        self.matches_df = self.matches_df.drop_duplicates(subset=['pt1', 'pt2'])
+        self.matches_df = self.matches_df.drop_duplicates(subset=['pt1', 'pt2'], keep='last')

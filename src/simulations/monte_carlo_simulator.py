@@ -32,7 +32,7 @@ class MonteCarloSimulator:
 
 
 class MonteCarloResults:
-    def __init__(self, simulation_results, past_results=None, season_start=None):
+    def __init__(self, simulation_results, past_results: PastMatches, season_start=None):
         self.past_results: PastMatches = past_results
         self.simulation_results = simulation_results
         self.season_start = season_start
@@ -64,6 +64,7 @@ class MonteCarloResults:
         self.get_next_match_simulated_result()
         for league in DASHBOARD_LEAGUES:
             league_full_season = self.full_season[self.full_season['league']==league]
+            league_full_season = self.remove_duplicates_in_season(league_full_season)
             team_counts = {}
             position_counts = {}
             away_results = league_full_season.copy(deep=True).replace({3:0, 0:3})
@@ -77,7 +78,7 @@ class MonteCarloResults:
                     team = row['index']
                     position = row['finishing_position']
                     points = row.iloc[1]
-                    result = self.next_match_simulations.loc[team, simulation-1]
+                    result = self.next_match_simulations.loc[team, simulation]
                     if team not in team_counts:
                         team_counts[team] = {str(position) + '_' + str(result): 1}
                     else:
@@ -98,6 +99,7 @@ class MonteCarloResults:
 
             if self.match_importance is None:
                 self.match_importance = league_match_importance
+                self.match_importance = self.set_dataframe_columns(self.match_importance)
             else:
                 self.match_importance = pd.concat([self.match_importance, league_match_importance])
             if self.league_targets is None:
@@ -130,7 +132,7 @@ class MonteCarloResults:
             elif next_match[1] == 'away':
                 next_match_simulations[team] = self.simulation_results[(self.simulation_results['home_team']==next_match[0]) &
                                                                        (self.simulation_results['away_team']==team)].iloc[:, 3:].replace({3:0, 0:3}).values[0]
-        self.next_match_simulations = pd.DataFrame(next_match_simulations).T
+        self.next_match_simulations = pd.DataFrame(next_match_simulations).T.rename(columns={0: 'league'})
 
     def combine_finishing_positions(self):
         finishing_positions = self.match_importance.copy(deep=True)
@@ -142,6 +144,22 @@ class MonteCarloResults:
             self.finishing_positions = finishing_positions
         else:
             self.finishing_positions = pd.concat([self.finishing_positions, finishing_positions])
+
+    def remove_duplicates_in_season(self, df):
+        return df.drop_duplicates(subset=['home_team', 'away_team'], keep='last')
+    
+    # def sort_columns_by_prefix(self, df, delimiter='_'):
+    #     prefixes = [int(col.split(delimiter)[0]) for col in df.columns if col != 'league']
+    #     sorted_cols = [col for _, col in sorted(zip(prefixes, df.columns))]
+    #     all_cols = ['{}_{}'.format(i, j) for i in range(1, 21) for j in [0, 1, 3]]
+    #     return df[sorted_cols + ['league']]
+    
+    def set_dataframe_columns(self, df: pd.DataFrame, column_names):
+        existing_columns = set(df.columns)
+        new_columns = set(column_names) - existing_columns
+        for column in new_columns:
+            df[column] = np.nan
+        return df[column_names]
         
 
 
