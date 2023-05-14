@@ -10,7 +10,5 @@ class SeasonBuilder:
     def get_all_matches(self, div, teams):
         matches = list(itertools.permutations(teams, 2))
         matches_df = pd.DataFrame(matches, columns=['home_team', 'away_team'])
-
         matches_df['league'] = div
-
-        return matches_df
+        self.matches = matches_df
