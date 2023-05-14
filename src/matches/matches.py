@@ -91,3 +91,8 @@ class PastMatches:
 
     def remove_in_season_duplicates(self):
         self.matches_df = self.matches_df.drop_duplicates(subset=['pt1', 'pt2'], keep='last')
+
+
+@dataclass
+class FullSeasonMatches(Matches):
+    

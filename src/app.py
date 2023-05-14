@@ -13,7 +13,7 @@ from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
-from scrapers.builder import MultiScraper
+from scrapers.scraper_factory import MultiScraper
 from scrapers.scrapers import FlashScoreScraper
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time

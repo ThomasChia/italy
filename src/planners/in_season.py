@@ -11,7 +11,7 @@ from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
-from scrapers.builder import MultiScraper
+from scrapers.scraper_factory import MultiScraper
 from scrapers.scrapers import FlashScoreScraper
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
