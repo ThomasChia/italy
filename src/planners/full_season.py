@@ -2,6 +2,7 @@ import config
 from loaders.query import Query
 from loaders.loader import DBLoader
 import logging
+from matches.config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner
@@ -11,6 +12,7 @@ from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
+from scrapers.builders import SeasonBuilder
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
 pd.options.mode.chained_assignment
@@ -32,8 +34,9 @@ class FullSeasonPlanner(Planner):
             loader.data = loader.data[loader.data['date']>='2019-08-01']
 
         logging.info("Building full season.")
-        future_matches = FullSeasonMatches()
-        future_matches.scrape_all()
+        season_builder = SeasonBuilder(LEAGUE_TEAMS_MAPPING)
+        season_builder.get_all_matches()
+        future_matches = season_builder.matches
 
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)
@@ -52,7 +55,7 @@ class FullSeasonPlanner(Planner):
         goals.calculate_goals_statistics()
 
         logging.info("Building training set.")
-        builder = Builder([elos, goals], future_matches.scraped_matches)
+        builder = Builder([elos, goals], future_matches)
         builder.build_dataset()
 
         logging.info("Training model.")
