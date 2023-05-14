@@ -94,3 +94,58 @@ ENGLISH_CORRECT_NAMES = {
     'Wolverhampton Wanderers': 'Wolves',
     'Wycombe Wanderers': 'Wycombe'
 }
+
+
+####################################################################################################
+# TEAMS FOR FULL SEASON SIMULATION
+####################################################################################################
+
+PREMIER_LEAGUE_TEAMS = [
+    'Arsenal',
+    'Aston Villa',
+    'Bournemouth',
+    'Brentford',
+    'Brighton',
+    'Chelsea',
+    'Crystal Palace',
+    'Everton',
+    'Fulham',
+    'Leeds',
+    'Leicester',
+    'Liverpool',
+    'Manchester City',
+    'Manchester United',
+    'Newcastle',
+    'Nottingham Forest',
+    'Southampton',
+    'Tottenham',
+    'West Ham',
+    'Wolves'
+]
+
+CHAMPIONSHIP_TEAMS = [
+    'Birmingham',
+    'Blackburn',
+    'Blackpool',
+    'Bristol City',
+    'Burnley',
+    'Cardiff',
+    'Coventry',
+    'Huddersfield',
+    'Hull',
+    'Luton',
+    'Middlesbrough',
+    'Millwall',
+    'Norwich',
+    'Preston',
+    'Queens Park Rangers',
+    'Reading',
+    'Rotherham',
+    'Sheffield United',
+    'Stoke',
+    'Sunderland',
+    'Swansea',
+    'West Brom',
+    'Watford',
+    'Wigan'
+]

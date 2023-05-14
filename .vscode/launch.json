@@ -19,7 +19,7 @@
             "program": "${workspaceFolder}/src/app.py",
             "cwd": "${workspaceFolder}/src",
             "console": "integratedTerminal",
-            "args": ["--debug"]
+            "args": ["--debug", "--plan", "in_season"]
         }
         
     ]
