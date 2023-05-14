@@ -23,7 +23,7 @@ class FullSeasonPlanner(Planner):
         """
         Run the full-season planner.
         """
-        print("Running full-season planner.")
+        logging.info("Running full-season planner.")
 
         logging.info("Loading data.")
         query = Query()
