@@ -325,7 +325,7 @@ LEAGUE_TEAMS_MAPPING = {
     'League Two': LEAGUE_TWO_TEAMS,
     'Serie A': SERIE_A_TEAMS,
     'Serie B': SERIE_B_TEAMS,
-    'Serie C Girone A': SERIE_C_GIRONE_A_TEAMS,
-    'Serie C Girone B': SERIE_C_GIRONE_B_TEAMS,
-    'Serie C Girone C': SERIE_C_GIRONE_C_TEAMS
+    'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
 }

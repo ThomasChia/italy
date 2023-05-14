@@ -15,7 +15,7 @@ from scrapers.scraper_factory import MultiScraper
 from scrapers.scrapers import FlashScoreScraper
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
-pd.options.mode.chained_assignment
+pd.options.mode.chained_assignment = None
 
 
 class InSeasonPlanner(Planner):
@@ -59,7 +59,7 @@ class InSeasonPlanner(Planner):
         goals.calculate_goals_statistics()
 
         logging.info("Building training set.")
-        builder = Builder([elos, goals], future_matches.scraped_matches)
+        builder = Builder([elos, goals])
         builder.build_dataset()
 
         logging.info("Building prediction set.")

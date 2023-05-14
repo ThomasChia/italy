@@ -5,10 +5,9 @@ from config import DEPENDENT_FEATURE, ID_FEATURES, FEATURES
 import logging
 
 class Builder:
-    def __init__(self, preprocessors: Preprocessor, future_matches: pd.DataFrame):
+    def __init__(self, preprocessors: Preprocessor):
         self.preprocessed_matches = self.get_preprocessed_matches(preprocessors)
         self.data = None
-        self.future_matches = future_matches
 
     def get_preprocessed_matches(self, preprocessors):
         matches = []

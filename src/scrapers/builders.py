@@ -16,7 +16,8 @@ class SeasonBuilder:
 
     def get_all_matches_in_league(self, league, teams):
         matches = list(itertools.permutations(teams, 2))
-        matches_df = pd.DataFrame(matches, columns=['home_team', 'away_team'])
+        matches_df = pd.DataFrame(matches, columns=['pt1', 'pt2'])
+        matches_df['date'] = '2023-08-01'
         matches_df['league'] = league
         return matches_df
 

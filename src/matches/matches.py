@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
+from config import TEAM_NAMES_DICT
 from dataclasses import dataclass, field
+import logging
 from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES
 import pandas as pd
 from typing import List
@@ -96,3 +98,16 @@ class PastMatches:
 @dataclass
 class FullSeasonMatches:
     matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
+
+    def clean(self):
+        self.remove_spaces_in_teams()
+        self.clean_team_names()
+
+    def remove_spaces_in_teams(self):
+        self.matches_df['pt1'] = self.matches_df['pt1'].replace(' ', '_', regex=True).str.lower()
+        self.matches_df['pt2'] = self.matches_df['pt2'].replace(' ', '_', regex=True).str.lower()
+
+    def clean_team_names(self):
+        logging.info(f"Cleaning team names")
+        self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)
+        self.matches_df['pt2'] = self.matches_df['pt2'].replace(TEAM_NAMES_DICT)

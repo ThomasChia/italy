@@ -15,7 +15,7 @@ import pandas as pd
 from scrapers.builders import SeasonBuilder
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
-pd.options.mode.chained_assignment
+pd.options.mode.chained_assignment = None
 
 
 class FullSeasonPlanner(Planner):
@@ -36,7 +36,8 @@ class FullSeasonPlanner(Planner):
         logging.info("Building full season.")
         season_builder = SeasonBuilder(LEAGUE_TEAMS_MAPPING)
         season_builder.get_all_matches()
-        future_matches = season_builder.matches
+        future_matches = FullSeasonMatches(season_builder.matches)
+        future_matches.clean()
 
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)
@@ -55,9 +56,27 @@ class FullSeasonPlanner(Planner):
         goals.calculate_goals_statistics()
 
         logging.info("Building training set.")
-        builder = Builder([elos, goals], future_matches)
+        builder = Builder([elos, goals])
         builder.build_dataset()
+
+        logging.info("Building prediction set.")
+        future_builder = FutureBuilder(future_matches.matches_df, builder)
+        future_builder.build_future_matches()
 
         logging.info("Training model.")
         model = Model(builder.data)
         model.train()
+
+        logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+        future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
+        # TODO add in something to tell which league we are looking at.
+
+        logging.info("Running simulations.")
+        simulator = MonteCarloSimulator(future_home_and_away_matches)
+        simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
+
+        logging.info("Creating output.")
+        results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches, season_start=config.SEASON_START)
+        results.get_finishing_positions()
+
+        logging.info("Finished full-season planner.")
