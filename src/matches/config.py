@@ -149,3 +149,57 @@ CHAMPIONSHIP_TEAMS = [
     'Watford',
     'Wigan'
 ]
+
+LEAGUE_ONE_TEAMS = [
+    'Accrington',
+    'Barnsley',
+    'Bolton',
+    'Bristol Rovers',
+    'Burton',
+    'Cambridge',
+    'Charlton',
+    'Cheltenham',
+    'Derby',
+    'Exeter',
+    'Fleetwood Town',
+    'Forest Green',
+    'Ipswich',
+    'Lincoln',
+    'Milton Keynes Dons',
+    'Morecambe',
+    'Oxford',
+    'Peterborough',
+    'Plymouth',
+    'Portsmouth',
+    'Port Vale',
+    'Sheffield Wednesday',
+    'Shrewsbury',
+    'Wycombe'
+]
+
+LEAGUE_TWO_TEAMS = [
+    'AFC Wimbledon',
+    'Barrow',
+    'Bradford',
+    'Carlisle',
+    'Colchester',
+    'Crawley',
+    'Crewe',
+    'Doncaster',
+    'Gillingham',
+    'Grimsby',
+    'Harrogate',
+    'Hartlepool',
+    'Leyton Orient',
+    'Mansfield',
+    'Newport',
+    'Northampton',
+    'Rochdale',
+    'Salford',
+    'Stevenage',
+    'Stockport',
+    'Sutton',
+    'Swindon',
+    'Tranmere',
+    'Walsall'
+]
