@@ -4,7 +4,7 @@ from loaders.loader import DBLoader
 import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
-from planners.planner_factory import Planner
+from planners.planner import Planner
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner

@@ -1,16 +1,7 @@
 from abc import ABC
+from planners.planner import Planner
 from planners.in_season import InSeasonPlanner
 from planners.full_season import FullSeasonPlanner
-
-
-class Planner(ABC):
-    """
-    Abstract class for planners.
-    This represents a combination of steps for outputting different types of plans.
-    """
-
-    def run(self):
-       pass
 
 
 class PlannerFactory(ABC):
@@ -20,5 +11,5 @@ class PlannerFactory(ABC):
             "full_season": FullSeasonPlanner,
         }
 
-    def get_planner(self, planner_type):
+    def get_planner(self, planner_type) -> Planner:
         return self.factories[planner_type]()

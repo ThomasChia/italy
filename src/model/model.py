@@ -51,7 +51,7 @@ class Model:
     def prepare_future_data(self, df, scaler, features_list):
         features_ = features_list
         df = df[features_]
-        df.fillna(0, inplace=True)
+        df = df.fillna(0, inplace=True)
         return scaler.transform(df)
 
     def predict(self, future_matches, features_list, id_features):
