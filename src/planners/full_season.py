@@ -2,7 +2,7 @@ import config
 from loaders.query import Query
 from loaders.loader import DBLoader
 import logging
-from matches.matches import ItalianMatches, EnglishMatches, PastMatches
+from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner
 from preprocessing.builder.builder import Builder
@@ -30,6 +30,10 @@ class FullSeasonPlanner(Planner):
         loader.run_query(query)
         if debug:
             loader.data = loader.data[loader.data['date']>='2019-08-01']
+
+        logging.info("Building full season.")
+        future_matches = FullSeasonMatches()
+        future_matches.scrape_all()
 
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)

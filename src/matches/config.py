@@ -294,3 +294,38 @@ SERIE_C_GIRONE_B_TEAMS = [
     'Torres',
     'Vis Pesaro'
 ]
+
+SERIE_C_GIRONE_C_TEAMS = [
+    'Audace Cerignola',
+    'Avellino',
+    'AZ Picerno',
+    'Catanzaro',
+    'Crotone',
+    'Fidelis Andria',
+    'Foggia',
+    'Gelbison',
+    'Giugliano',
+    'Juve Stabia',
+    'Latina',
+    'Messina',
+    'Monopoli',
+    'Monterosi',
+    'Pescara',
+    'Potenza',
+    'Taranto',
+    'Turris',
+    'Virtus Francavilla',
+    'Viterbese'
+]
+
+LEAGUE_TEAMS_MAPPING = {
+    'Premier League': PREMIER_LEAGUE_TEAMS,
+    'Championship': CHAMPIONSHIP_TEAMS,
+    'League One': LEAGUE_ONE_TEAMS,
+    'League Two': LEAGUE_TWO_TEAMS,
+    'Serie A': SERIE_A_TEAMS,
+    'Serie B': SERIE_B_TEAMS,
+    'Serie C Girone A': SERIE_C_GIRONE_A_TEAMS,
+    'Serie C Girone B': SERIE_C_GIRONE_B_TEAMS,
+    'Serie C Girone C': SERIE_C_GIRONE_C_TEAMS
+}

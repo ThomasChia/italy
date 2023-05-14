@@ -94,5 +94,5 @@ class PastMatches:
 
 
 @dataclass
-class FullSeasonMatches(Matches):
-    
+class FullSeasonMatches:
+    matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
