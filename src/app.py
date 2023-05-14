@@ -109,6 +109,6 @@ if __name__ == "__main__":
 
     # # logging.info("Uploading output.")
 
-    # elapsed_time = time.time() - start_time
-    # logging.info(f"Programme completed in {elapsed_time:.2f} seconds.")
-    # code.interact(local=locals())
+    elapsed_time = time.time() - start_time
+    logging.info(f"Programme completed in {elapsed_time:.2f} seconds.")
+    code.interact(local=locals())

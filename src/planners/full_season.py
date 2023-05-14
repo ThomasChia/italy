@@ -30,3 +30,27 @@ class FullSeasonPlanner(Planner):
         loader.run_query(query)
         if debug:
             loader.data = loader.data[loader.data['date']>='2019-08-01']
+
+        logging.info("Cleaning data.")
+        cleaner = Cleaner(loader)
+        cleaner.clean()
+
+        logging.info("Storing past matches.")
+        past_matches = PastMatches(cleaner.data)
+
+        # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
+        logging.info("Calculating elo statistics.")
+        elos = EloPreprocessor(cleaner.data)
+        elos.calculate_elos()
+
+        logging.info("Calculating goals statistics.")
+        goals = GoalsPreprocessor(cleaner.data)
+        goals.calculate_goals_statistics()
+
+        logging.info("Building training set.")
+        builder = Builder([elos, goals], future_matches.scraped_matches)
+        builder.build_dataset()
+
+        logging.info("Training model.")
+        model = Model(builder.data)
+        model.train()
