@@ -69,7 +69,9 @@ LEAGUES = [
     'Supercoppa',
     'Supercoppa Serie',
     'Premier League',
-    'English Premier League'
+    'English Premier League',
+    'Championship',
+    'English League Championship',
 ]
 
 
@@ -80,7 +82,7 @@ DASHBOARD_LEAGUES = [
     # 'Serie C, Girone B',
     # 'Serie C, Girone C',
     'Premier League',
-    # 'Championship',
+    'Championship',
     # 'League One',
     # 'League Two'
 ]

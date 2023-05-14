@@ -2,9 +2,10 @@ import code
 from config import DASHBOARD_LEAGUES
 import pandas as pd
 import numpy as np
-import time
 from matches.matches import PastMatches
 from simulations.config import MATCH_IMPORTANCE_COLUMN_NAMES
+import time
+from tqdm import tqdm
 
 
 class MonteCarloSimulator:
@@ -15,7 +16,7 @@ class MonteCarloSimulator:
     def run_simulations(self, num_simulations):
         self.matches_df['match_id'] = np.arange(1, len(self.matches_df)+1)
         simulation_results = []
-        for i in range(len(self.matches_df)):
+        for i in tqdm(range(len(self.matches_df))):
             match = self.matches_df.iloc[i]
             result = np.random.choice([3, 1, 0], size=num_simulations, p=[match['home_win'], match['draw'], match['away_win']])
             match_results = pd.DataFrame({
@@ -33,7 +34,7 @@ class MonteCarloSimulator:
 
 
 class MonteCarloResults:
-    def __init__(self, simulation_results, past_results: PastMatches, season_start=None):
+    def __init__(self, simulation_results, past_results:PastMatches=None, season_start=None):
         self.past_results: PastMatches = past_results
         self.simulation_results = simulation_results
         self.season_start = season_start

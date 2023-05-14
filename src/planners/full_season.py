@@ -76,7 +76,8 @@ class FullSeasonPlanner(Planner):
         simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
         logging.info("Creating output.")
-        results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches, season_start=config.SEASON_START)
+        results = MonteCarloResults(simulation_results=simulation_results, season_start=config.SEASON_START)
         results.get_finishing_positions()
+        # TODO update league targets output to ds_data; add in elos to team and opponent, home, rest days, goals; 538 scraper; opponent analysis
 
         logging.info("Finished full-season planner.")
