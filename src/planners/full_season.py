@@ -31,7 +31,7 @@ class FullSeasonPlanner(Planner):
         loader = DBLoader()
         loader.run_query(query)
         if debug:
-            loader.data = loader.data[loader.data['date']>='2019-08-01']
+            loader.data = loader.data[loader.data['date']>='2021-08-01']
 
         logging.info("Building full season.")
         season_builder = SeasonBuilder(LEAGUE_TEAMS_MAPPING)

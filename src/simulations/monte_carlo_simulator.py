@@ -96,8 +96,9 @@ class MonteCarloResults:
 
             league_match_importance = pd.DataFrame(team_counts).sort_index().T.sort_index()
             league_match_importance['league'] = league
-            single_league_targets = pd.DataFrame(position_counts).mean().reset_index(drop=True)
+            single_league_targets = pd.DataFrame(position_counts).mean().reset_index(drop=True).to_frame(name='points')
             single_league_targets['league'] = league
+            single_league_targets['position'] = np.arange(1, len(single_league_targets)+1)
 
             if self.match_importance is None:
                 self.match_importance = league_match_importance
