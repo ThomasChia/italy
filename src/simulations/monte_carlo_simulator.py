@@ -36,13 +36,13 @@ class MonteCarloSimulator:
 class MonteCarloResults:
     def __init__(self, simulation_results, past_results:PastMatches=None, season_start=None):
         self.past_results: PastMatches = past_results
-        self.simulation_results = simulation_results
+        self.simulation_results:pd.DataFrame = simulation_results
         self.season_start = season_start
         self.num_simulations = self.get_num_simulations()
         self.str_columns = self.get_str_columns()
-        self.finishing_positions = None
-        self.league_targets = None
-        self.match_importance = None
+        self.finishing_positions = pd.DataFrame()
+        self.league_targets = pd.DataFrame()
+        self.match_importance = pd.DataFrame()
         self.next_match = None
         self.next_match_simulations = None
 
@@ -100,18 +100,18 @@ class MonteCarloResults:
             single_league_targets['league'] = league
             single_league_targets['position'] = np.arange(1, len(single_league_targets)+1)
 
-            if self.match_importance is None:
+            if self.match_importance.empty:
                 self.match_importance = league_match_importance
                 self.match_importance = self.set_dataframe_columns(self.match_importance, column_names=MATCH_IMPORTANCE_COLUMN_NAMES)
             else:
                 self.match_importance = pd.concat([self.match_importance, league_match_importance])
-            if self.league_targets is None:
+            if self.league_targets.empty:
                 self.league_targets = single_league_targets
             else:
                 self.league_targets = pd.concat([self.league_targets, single_league_targets])
         self.combine_finishing_positions()
     
-    def get_next_match(self):
+    def get_next_match(self) -> dict:
         teams = pd.concat([self.simulation_results['home_team'], self.simulation_results['away_team']]).unique()
         next_match = {team: None for team in teams}
         for _, row in self.simulation_results.iterrows():
@@ -143,7 +143,7 @@ class MonteCarloResults:
         new_cols = [col.split('_')[0] for col in current_cols]
         finishing_positions.columns = new_cols
         finishing_positions = finishing_positions.groupby(axis=1, level=0).sum()
-        if self.finishing_positions is None:
+        if self.finishing_positions.empty:
             self.finishing_positions = finishing_positions
         else:
             self.finishing_positions = pd.concat([self.finishing_positions, finishing_positions])

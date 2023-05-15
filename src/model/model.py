@@ -83,9 +83,11 @@ class Model:
                                                                                                                                                    'away_team': 'opponent',
                                                                                                                                                    'home_win': 'win',
                                                                                                                                                    'away_win': 'loss'})
+        team_matches['home'] = 1
         opponent_matches = home_and_away_average_matches[['date', 'away_team', 'home_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
                                                                                                                                                        'home_team': 'opponent',
                                                                                                                                                        'home_win': 'loss',
                                                                                                                                                        'away_win': 'win'})
+        opponent_matches['home'] = 0
         team_and_opponent_matches = pd.concat([team_matches, opponent_matches])
         return home_and_away_average_matches, team_and_opponent_matches

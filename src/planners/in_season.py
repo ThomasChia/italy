@@ -5,6 +5,7 @@ import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from planners.planner import Planner
+from post_processing.post_processor import InSeasonPostProcessor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -87,3 +88,12 @@ class InSeasonPlanner(Planner):
         results.get_finishing_positions()
 
         logging.info("Uploading output.")
+        post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
+                                               results=pd.DataFrame(),
+                                               past_predictions=pd.DataFrame(),
+                                               future_predictions=future_team_and_opponent,
+                                               match_importance=results.match_importance,
+                                               finishing_positions=results.finishing_positions,
+                                               opponent_analysis=pd.DataFrame())
+        post_processor.run()
+        # TODO upload output to gsheets.
