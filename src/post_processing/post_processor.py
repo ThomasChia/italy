@@ -1,4 +1,5 @@
 from abc import ABC
+from matches.matches import PastMatches
 import pandas as pd
 from post_processing.rest_days_post_processor import RestDaysPostProcessor
 
@@ -10,7 +11,7 @@ class PostProcessor(ABC):
 class InSeasonPostProcessor(PostProcessor):
     def __init__(self, 
                  league_targets=pd.DataFrame(), 
-                 results=pd.DataFrame(), 
+                 results: PastMatches = PastMatches(), 
                  past_predictions=pd.DataFrame(),
                  future_predictions=pd.DataFrame(),
                  match_importance=pd.DataFrame(),
@@ -18,7 +19,7 @@ class InSeasonPostProcessor(PostProcessor):
                  opponent_analysis=pd.DataFrame()):
         super().__init__()
         self.league_targets: pd.DataFrame = league_targets
-        self.results = results
+        self.results: PastMatches = results
         self.past_predictions = past_predictions
         self.future_predictions = future_predictions
         self.match_importance = match_importance
@@ -39,8 +40,8 @@ class InSeasonPostProcessor(PostProcessor):
             self.league_targets['rounded'] = self.league_targets['points'].round(0)
 
     def process_results(self):
-        if not self.results.empty:
-            self.results = self.results.rename(columns={'pt1': 'team', 'pt2': 'opponent'})
+        if not self.results:
+            self.results.get_team_and_opp_matches()
 
     def process_past_predictions(self):
         pass

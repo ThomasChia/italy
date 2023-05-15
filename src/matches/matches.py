@@ -57,6 +57,7 @@ class EnglishMatches(Matches):
 @dataclass
 class PastMatches:
     matches_df: pd.DataFrame = field(default_factory=pd.DataFrame)
+    team_and_opp_matches: pd.DataFrame = field(default_factory=pd.DataFrame)
 
     def align_to_simultions(self, num_simulations):
         self.rename_columns()
