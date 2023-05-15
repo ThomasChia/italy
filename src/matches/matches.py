@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from config import TEAM_NAMES_DICT
+from config import SEASON_START, TEAM_NAMES_DICT
 from dataclasses import dataclass, field
 import logging
 from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES
@@ -96,7 +96,8 @@ class PastMatches:
         self.matches_df = self.matches_df.drop_duplicates(subset=['pt1', 'pt2'], keep='last')
 
     def get_team_and_opp_matches(self):
-        team_matches = self.matches_df.copy(deep=True)
+        season_matches = self.cut_from_date(self.matches_df, SEASON_START)
+        team_matches = season_matches.copy(deep=True)
         opponent_matches = team_matches.copy(deep=True)
 
         team_matches = self.cut_columns(team_matches)
@@ -114,15 +115,13 @@ class PastMatches:
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
-            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent', 'elo_home': 'elo_team',
-                                    'elo_away': 'elo_opponent'})
+            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent'})
         else:
-            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'elo_away': 'elo_team',
-                                    'elo_home': 'elo_opponent'})
+            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent'})
         return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[['league', 'date', 'pt1', 'pt2', 'result', 'elo_home', 'elo_away', 'elo_diff']]
+        return df[['league', 'date', 'pt1', 'pt2', 'result']]
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['result'] = 1 - df['result']
@@ -132,6 +131,10 @@ class PastMatches:
     def sort_by_date(self, df: pd.DataFrame) -> pd.DataFrame:
         df = df.sort_values(by='date')
         df = df.reset_index(drop=True)
+        return df
+    
+    def cut_from_date(self, df, date):
+        df = df[df['date'] > pd.to_datetime(date)]
         return df
 
 

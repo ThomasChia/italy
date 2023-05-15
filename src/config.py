@@ -82,7 +82,7 @@ DASHBOARD_LEAGUES = [
     # 'Serie C, Girone B',
     # 'Serie C, Girone C',
     'Premier League',
-    'Championship',
+    # 'Championship',
     # 'League One',
     # 'League Two'
 ]

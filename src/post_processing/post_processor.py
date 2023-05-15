@@ -1,4 +1,5 @@
 from abc import ABC
+from config import SEASON_START
 from matches.matches import PastMatches
 import pandas as pd
 from post_processing.rest_days_post_processor import RestDaysPostProcessor
@@ -40,7 +41,7 @@ class InSeasonPostProcessor(PostProcessor):
             self.league_targets['rounded'] = self.league_targets['points'].round(0)
 
     def process_results(self):
-        if not self.results:
+        if self.results:
             self.results.get_team_and_opp_matches()
 
     def process_past_predictions(self):

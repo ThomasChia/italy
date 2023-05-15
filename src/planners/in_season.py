@@ -1,3 +1,4 @@
+from copy import deepcopy
 import config
 from loaders.query import Query
 from loaders.loader import DBLoader
@@ -37,7 +38,7 @@ class InSeasonPlanner(Planner):
         loader = DBLoader()
         loader.run_query(query)
         if debug:
-            loader.data = loader.data[loader.data['date']>='2019-08-01']
+            loader.data = loader.data[loader.data['date']>='2020-08-01']
 
         logging.info("Scraping future matches.")
         future_matches = MultiScraper(config.COUNTRIES)
@@ -84,12 +85,12 @@ class InSeasonPlanner(Planner):
         simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
         logging.info("Creating output.")
-        results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches, season_start=config.SEASON_START)
+        results = MonteCarloResults(simulation_results=simulation_results, past_results=deepcopy(past_matches), season_start=config.SEASON_START)
         results.get_finishing_positions()
 
         logging.info("Uploading output.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
-                                               results=loader.data,
+                                               results=past_matches,
                                                past_predictions=pd.DataFrame(),
                                                future_predictions=future_team_and_opponent,
                                                match_importance=results.match_importance,
