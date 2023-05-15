@@ -83,6 +83,11 @@ class FiveThirtyEightScraper(Scraper):
         self.base_url = f'https://github.com/fivethirtyeight/data/tree/master/soccer-spi'
         self.matches = None
 
+    def run(self):
+        webpage = self.get_page(self.base_url)
+        href_list = self.get_href_list(webpage)
+        self.read_latest_matches_link(href_list)
+
     def get_page(self, site):
         driver = webdriver.Chrome(self.PATH)
         driver.get(site)
@@ -102,13 +107,9 @@ class FiveThirtyEightScraper(Scraper):
         return href_list
 
 
-    def read_links(self, links_list):
-        i = 0
-        print(links_list)
-        for link in links_list[2:4]:
-            filename = link.rsplit('/', 1)[-1]
-            data = pd.read_csv(link)
-            i += 1
+    def read_latest_matches_link(self, links_list):
+        latest_matches_link = [s for s in links_list if 'matches_latest' in s]
+        self.matches = pd.read_csv(latest_matches_link[0])
 
 
 if __name__ == '__main__':

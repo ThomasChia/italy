@@ -12,7 +12,7 @@ from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
 import pandas as pd
 from scrapers.scraper_factory import MultiScraper
-from scrapers.scrapers import FlashScoreScraper
+from scrapers.scrapers import FiveThirtyEightScraper 
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
 import time
 pd.options.mode.chained_assignment = None
@@ -43,7 +43,8 @@ class InSeasonPlanner(Planner):
         future_matches.scrape_all()
 
         logging.info("Scraping 538 predictions.")
-        # TODO add in 538 predictions.
+        scraper = FiveThirtyEightScraper()
+        scraper.run()
 
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)
@@ -85,4 +86,4 @@ class InSeasonPlanner(Planner):
         results = MonteCarloResults(simulation_results=simulation_results, past_results=past_matches, season_start=config.SEASON_START)
         results.get_finishing_positions()
 
-        # logging.info("Uploading output.")
+        logging.info("Uploading output.")
