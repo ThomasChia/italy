@@ -1,5 +1,6 @@
 from abc import ABC
 import pandas as pd
+from post_processing.rest_days_post_processor import RestDaysPostProcessor
 
 class PostProcessor(ABC):
     def __init__(self):
@@ -47,8 +48,11 @@ class InSeasonPostProcessor(PostProcessor):
         # if not self.past_predictions.empty:
 
     def process_future_predictions(self):
-        pass
-        # if not self.future_predictions.empty:
+        if not self.future_predictions.empty:
+            self.future_predictions['team'] = self.future_predictions['team'].str.replace('_', ' ')
+            self.future_predictions['team'] = self.future_predictions['team'].str.title()
+            calculator = RestDaysPostProcessor(self.future_predictions)
+            self.future_predictions = calculator.calculate_rest_days()
 
     def process_match_importance(self):
         if not self.match_importance.empty:
