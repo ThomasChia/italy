@@ -1,3 +1,4 @@
+import bs4 as bs
 from collections import defaultdict
 import logging
 from matches.matches import Matches
@@ -74,3 +75,44 @@ class FlashScoreScraper(Scraper):
             return f"{day_month}{first_year}"
         else:
             return f"{day_month}{second_year}"
+        
+
+class FiveThirtyEightScraper(Scraper):
+    def __init__(self):
+        super().__init__()
+        self.base_url = f'https://github.com/fivethirtyeight/data/tree/master/soccer-spi'
+        self.matches = None
+
+    def get_page(self, site):
+        driver = webdriver.Chrome(self.PATH)
+        driver.get(site)
+        webpage = bs.BeautifulSoup(driver.page_source, features='html.parser')
+        driver.quit()
+        return webpage
+
+
+    def get_href_list(self, webpage):
+        href_list = []
+        table = webpage.find('table')
+        rows = table.find_all('td')
+        for row in rows:
+            a = row.find('a')
+            link = a['href']
+            href_list.append(link)
+        return href_list
+
+
+    def read_links(self, links_list):
+        i = 0
+        print(links_list)
+        for link in links_list[2:4]:
+            filename = link.rsplit('/', 1)[-1]
+            data = pd.read_csv(link)
+            i += 1
+
+
+if __name__ == '__main__':
+    scraper = FiveThirtyEightScraper()
+    webpage = scraper.get_page(scraper.base_url)
+    href_list = scraper.get_href_list(webpage)
+    scraper.read_links(href_list)

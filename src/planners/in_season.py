@@ -42,6 +42,9 @@ class InSeasonPlanner(Planner):
         future_matches = MultiScraper(config.COUNTRIES)
         future_matches.scrape_all()
 
+        logging.info("Scraping 538 predictions.")
+        # TODO add in 538 predictions.
+
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)
         cleaner.clean()
