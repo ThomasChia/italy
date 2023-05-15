@@ -14,15 +14,15 @@
         // },
 
         // In Season Plan
-        {
-            "name": "Debug app.py",
-            "type": "python",
-            "request": "launch",
-            "program": "${workspaceFolder}/src/app.py",
-            "cwd": "${workspaceFolder}/src",
-            "console": "integratedTerminal",
-            "args": ["--debug", "--plan", "in_season"]
-        }
+        // {
+        //     "name": "Debug app.py",
+        //     "type": "python",
+        //     "request": "launch",
+        //     "program": "${workspaceFolder}/src/app.py",
+        //     "cwd": "${workspaceFolder}/src",
+        //     "console": "integratedTerminal",
+        //     "args": ["--debug", "--plan", "in_season"]
+        // }
 
         // Full Season Plan
         // {
@@ -34,5 +34,16 @@
         //     "console": "integratedTerminal",
         //     "args": ["--debug", "--plan", "full_season"]
         // }
+
+        // Reset Plan
+        {
+            "name": "Debug app.py",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/app.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "args": ["--debug", "--plan", "reset"]
+        }
     ]
 }

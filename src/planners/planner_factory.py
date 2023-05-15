@@ -2,6 +2,7 @@ from abc import ABC
 from planners.planner import Planner
 from planners.in_season import InSeasonPlanner
 from planners.full_season import FullSeasonPlanner
+from planners.reset import ResetPlanner
 
 
 class PlannerFactory(ABC):
@@ -9,6 +10,7 @@ class PlannerFactory(ABC):
         self.factories = {
             "in_season": InSeasonPlanner,
             "full_season": FullSeasonPlanner,
+            "reset": ResetPlanner
         }
 
     def get_planner(self, planner_type) -> Planner:

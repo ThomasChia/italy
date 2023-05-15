@@ -102,10 +102,10 @@ class Elo:
             home_team_elo_new, away_team_elo_new = self.calculate_updated_elo_end(row_data,
                                                                              expected_result_home,
                                                                              expected_result_away)
-        self.elo_tracker.update_elo_tracker(row_data.home_team,
-                                            home_team_elo_new,
-                                            row_data.away_team,
-                                            away_team_elo_new)
+        self.elo_tracker.update_elo_tracker(home_team=row_data.home_team,
+                                            home_team_elo_new=home_team_elo_new,
+                                            away_team=row_data.away_team,
+                                            away_team_elo_new=away_team_elo_new)
     
     def calculate_updated_elo_start(self, row_data, expected_result_home, expected_result_away):
         elo_home_new = row_data.home_team_elo + config.KFACTOR_QUICK * (row_data.result - expected_result_home)
@@ -176,7 +176,7 @@ class EloTracker():
         tracker.set_index('team', inplace=True)
         return tracker
     
-    def update_elo_tracker(self, home_team, home_team_elo_new, away_team_elo_new, away_team):
+    def update_elo_tracker(self, home_team, home_team_elo_new, away_team, away_team_elo_new):
         self.tracker.loc[home_team, 'pts'] = home_team_elo_new
         self.tracker.loc[away_team, 'pts'] = away_team_elo_new
 
