@@ -89,7 +89,7 @@ class InSeasonPlanner(Planner):
 
         logging.info("Uploading output.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
-                                               results=pd.DataFrame(),
+                                               results=loader.data,
                                                past_predictions=pd.DataFrame(),
                                                future_predictions=future_team_and_opponent,
                                                match_importance=results.match_importance,

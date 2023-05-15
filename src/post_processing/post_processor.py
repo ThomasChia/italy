@@ -39,9 +39,8 @@ class InSeasonPostProcessor(PostProcessor):
             self.league_targets['rounded'] = self.league_targets['points'].round(0)
 
     def process_results(self):
-        pass
-        # if not self.results.empty:
-        #     self.results['rounded'] = self.results['points'].round(0)
+        if not self.results.empty:
+            self.results = self.results.rename(columns={'pt1': 'team', 'pt2': 'opponent'})
 
     def process_past_predictions(self):
         pass
