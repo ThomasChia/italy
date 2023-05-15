@@ -1,3 +1,4 @@
+from config import SEASON_START
 import pandas as pd
 
 class RestDaysPostProcessor:
@@ -7,6 +8,7 @@ class RestDaysPostProcessor:
 
     def calculate_rest_days(self):
         self.df['rest_days'] = 0
+        self.df['date'] = pd.to_datetime(self.df['date'])
         self.df = self.sort_dates(self.df)
 
         for index, row in self.df.iterrows():
@@ -23,7 +25,7 @@ class RestDaysPostProcessor:
         team_list = df['team'].unique()
         team_list = pd.DataFrame(team_list)
         team_list = team_list.rename(columns={list(team_list)[0]: 'teams'})
-        team_list['last_played'] = pd.to_datetime('')
+        team_list['last_played'] = pd.to_datetime(SEASON_START)
         team_list = team_list.set_index('teams')
 
         return team_list

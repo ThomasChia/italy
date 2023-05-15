@@ -115,13 +115,13 @@ class PastMatches:
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:
-            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent'})
+            df = df.rename(columns={'pt1': 'team', 'pt2': 'opponent', 'score_pt1': 'team_goals_scored', 'score_pt2': 'opponent_goals_scored'})
         else:
-            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent'})
+            df = df.rename(columns={'pt2': 'team', 'pt1': 'opponent', 'score_pt2': 'team_goals_scored', 'score_pt1': 'opponent_goals_scored'})
         return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[['league', 'date', 'pt1', 'pt2', 'result']]
+        return df[['league', 'date', 'pt1', 'pt2', 'score_pt1', 'score_pt2', 'result']]
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['result'] = 1 - df['result']
