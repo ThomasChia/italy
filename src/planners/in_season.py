@@ -30,7 +30,7 @@ class InSeasonPlanner(Planner):
         """
         Run the in-season planner.
         """
-        print("Running in-season planner.")
+        logging.info("Running in-season planner.")
 
         logging.info("Loading data.")
         query = Query()
