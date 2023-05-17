@@ -3,9 +3,10 @@ import pandas as pd
 from preprocessing.preprocessors import Preprocessor
 from config import DEPENDENT_FEATURE, ID_FEATURES, FEATURES
 import logging
+from typing import List, Type
 
 class Builder:
-    def __init__(self, preprocessors: Preprocessor):
+    def __init__(self, preprocessors: List[Type[Preprocessor]]):
         self.preprocessed_matches = self.get_preprocessed_matches(preprocessors)
         self.data: pd.DataFrame = pd.DataFrame()
 
