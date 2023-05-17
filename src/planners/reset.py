@@ -83,7 +83,7 @@ class ResetPlanner(Planner):
         model = Model(builder.data)
         model.train()
 
-        logging.info(f"Predicting {builder.data.shape[0]} matches.") # TODO add in number of matches being predicted.
+        logging.info(f"Predicting {builder.data.shape[0]} past matches and {future_builder.preprocessed_future_matches.shape[0]} future matches.") # TODO add in number of matches being predicted.
         past_home_and_away_matches, past_team_and_opponent = model.predict(builder.data, config.FEATURES, config.ID_FEATURES)
         future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
 

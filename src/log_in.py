@@ -2,12 +2,6 @@ import pandas as pd
 import os
 from sqlalchemy import create_engine
 
-os.environ["API_DB_USER"] = "postgres"
-os.environ["API_DB_PASSWORD"] = "ywngtpwyBH0922"
-os.environ["API_DB_HOST"] = "localhost"
-os.environ["API_DB_PORT"] = "5431"
-os.environ["API_DB_DB"] = "rugby4cast"
-
 def get_connection():
     if "API_DB_USER" in os.environ:
         user = os.getenv("API_DB_USER")
