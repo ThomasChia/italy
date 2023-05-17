@@ -76,7 +76,7 @@ class InSeasonPlanner(Planner):
         model = Model(builder.data)
         model.train()
 
-        logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+        logging.info(f"Predicting {future_builder.preprocessed_future_matches.shape[0]} matches.") # TODO add in number of matches being predicted.
         future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
         # TODO add in something to tell which league we are looking at.
 

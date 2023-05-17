@@ -7,7 +7,7 @@ import logging
 class Builder:
     def __init__(self, preprocessors: Preprocessor):
         self.preprocessed_matches = self.get_preprocessed_matches(preprocessors)
-        self.data = None
+        self.data: pd.DataFrame = pd.DataFrame()
 
     def get_preprocessed_matches(self, preprocessors):
         matches = []

@@ -8,7 +8,7 @@ class FutureBuilder:
     def __init__(self, future_matches: pd.DataFrame, past_matches: Builder) -> None:
         self.past_matches = past_matches
         self.future_matches = future_matches
-        self.preprocessed_future_matches = None
+        self.preprocessed_future_matches: pd.DataFrame = pd.DataFrame()
 
     def build_future_matches(self):
         self.add_past_stats_to_future_matches()

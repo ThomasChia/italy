@@ -75,19 +75,15 @@ class ResetPlanner(Planner):
         builder = Builder([elos, goals])
         builder.build_dataset()
 
-        logging.info("Building prediction set.")
-        # future_builder = FutureBuilder(future_matches.scraped_matches, builder)
-        # future_builder.build_future_matches()
+        logging.info("Training model.")
+        model = Model(builder.data)
+        model.train()
 
-        # logging.info("Training model.")
-        # model = Model(builder.data)
-        # model.train()
-
-        # logging.info("Predicting matches.") # TODO add in number of matches being predicted.
+        logging.info(f"Predicting {builder.data.shape[0]} matches.") # TODO add in number of matches being predicted.
         # future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
         # # TODO add in something to tell which league we are looking at.
 
-        # logging.info("Running simulations.")
+        logging.info("Running simulations.")
         # simulator = MonteCarloSimulator(future_home_and_away_matches)
         # simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
