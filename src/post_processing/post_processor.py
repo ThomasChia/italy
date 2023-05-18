@@ -71,3 +71,22 @@ class InSeasonPostProcessor(PostProcessor):
     def process_opponent_analysis(self):
         pass
         # if not self.opponent_analysis.empty:
+
+
+class ResetPostProcessor(PostProcessor):
+    def __init__(self, 
+                 results: PastMatches = PastMatches(), 
+                 past_predictions=pd.DataFrame(),
+                 future_predictions=pd.DataFrame()
+                 ):
+        super().__init__()
+        self.results: PastMatches = results
+        self.past_predictions = past_predictions
+        self.future_predictions = future_predictions
+
+    def run(self):
+        pass
+
+    def process_results(self):
+        if self.results:
+            self.results.get_team_and_opp_matches()

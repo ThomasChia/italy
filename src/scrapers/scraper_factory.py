@@ -6,17 +6,17 @@ from matches.matches import Matches, EnglishMatches, ItalianMatches
 from scrapers.scrapers import FlashScoreScraper
 # from scrapers import FlashScoreScraper
 
-class MatchScraperFactory:
-    @staticmethod
-    def create_scraper(countries):
-        matches = Matches([])
-        for country in countries:
-            if country == "England":
-                matches.add_league(EnglishMatches())
-            elif country == "Italy":
-                matches.add_league(ItalianMatches())
-            # add more countries as necessary
-        return FlashScoreScraper(matches)
+# class MatchScraperFactory:
+#     @staticmethod
+#     def create_scraper(countries):
+#         matches = Matches([])
+#         for country in countries:
+#             if country == "England":
+#                 matches.add_league(EnglishMatches())
+#             elif country == "Italy":
+#                 matches.add_league(ItalianMatches())
+#             # add more countries as necessary
+#         return FlashScoreScraper(matches)
 
 class ScraperFactory:
     @staticmethod
@@ -48,9 +48,13 @@ class MultiScraper:
                 self.scraped_matches = pd.concat([self.scraped_matches, scraper.matches.matches_df])
 
         self.clean_team_names()
+        self.add_match_id()
 
     def clean_team_names(self):
         self.scraped_matches['league'] = self.scraped_matches['league'].replace(SCRAPED_LEAGUES_MAPPING)
+
+    def add_match_id(self):
+        self.scraped_matches['match_id'] = self.scraped_matches['pt1'] + '_' + self.scraped_matches['pt2'] + '_' + self.scraped_matches['date'].astype(str)
 
 
 if __name__=="__main__":

@@ -95,8 +95,8 @@ class ResetPlanner(Planner):
         # results = MonteCarloResults(simulation_results=simulation_results, past_results=deepcopy(past_matches), season_start=config.SEASON_START)
         # results.get_finishing_positions()
 
-        # logging.info("Uploading output.")
-        # post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
+        logging.info("Uploading predictions.")
+        # post_processor = ResetProcessor(league_targets=results.league_targets,
         #                                        results=past_matches,
         #                                        past_predictions=pd.DataFrame(),
         #                                        future_predictions=future_team_and_opponent,
