@@ -45,7 +45,7 @@ class ResetPlanner(Planner):
         loader = DBConnector()
         loader.run_query(query)
         if debug:
-            loader.data = loader.data[loader.data['date']>='2021-08-01']
+            loader.data = loader.data[loader.data['date']>='2015-08-01']
 
         logging.info("Scraping future matches.")
         future_matches = MultiScraper(config.COUNTRIES)

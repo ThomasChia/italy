@@ -43,8 +43,8 @@
             "program": "${workspaceFolder}/src/app.py",
             "cwd": "${workspaceFolder}/src",
             "console": "integratedTerminal",
-            // "args": ["--debug", "--plan", "reset"]
-            "args": ["--plan", "reset"]
+            "args": ["--debug", "--plan", "reset"]
+            // "args": ["--plan", "reset"]
         }
     ]
 }

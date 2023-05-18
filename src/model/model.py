@@ -36,6 +36,7 @@ class Model:
     def fill_and_sort(self, df):
         df.fillna(0, inplace=True)
         df.sort_values(by='date', inplace=True)
+        df.reset_index(drop=True, inplace=True)
         return df
 
     def scale_features(self):
@@ -46,7 +47,9 @@ class Model:
 
     def train_model(self, x_train, y_train):
         logging.info("Fitting model to training data.")
-        self.model.fit(x_train, y_train.ravel())
+        self.model.fit(x_train, y_train)
+        # y_pred = self.model.predict(x_train)
+        # cm = confusion_matrix(y_train, y_pred)
 
     def prepare_future_data(self, df, scaler, features_list):
         features_ = features_list
