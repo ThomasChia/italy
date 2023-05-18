@@ -1,6 +1,6 @@
 import pandas as pd
 from loaders.connector import Connector
-from loaders.query import Query
+from loaders.query import Query, SaveQuery
 import logging
 from sqlalchemy.engine import Engine
 
@@ -9,7 +9,7 @@ class Loader:
     def __init__(self,):
         self.data: pd.DataFrame = pd.DataFrame()
 
-class DBLoader(Loader):
+class DBConnector(Loader):
     def __init__(self):
         super().__init__()
         self.connection = Connector()
@@ -18,3 +18,6 @@ class DBLoader(Loader):
         logging.info("Pulling data from DB.")
         engine = self.connection.get_connection()
         self.data = pd.read_sql_query(query.query, engine)
+
+    def run_save_query(self, query: SaveQuery):
+

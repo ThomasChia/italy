@@ -1,7 +1,7 @@
 from copy import deepcopy
 import config
 from loaders.query import Query
-from loaders.loader import DBLoader
+from loaders.loader import DBConnector
 import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
@@ -35,7 +35,7 @@ class InSeasonPlanner(Planner):
         logging.info("Loading data.")
         query = Query()
         query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES, config.COUNTRIES)
-        loader = DBLoader()
+        loader = DBConnector()
         loader.run_query(query)
         if debug:
             loader.data = loader.data[loader.data['date']>='2020-08-01']

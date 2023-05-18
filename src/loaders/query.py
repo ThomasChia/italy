@@ -37,10 +37,21 @@ class Query:
 
 class SaveQuery:
     def __init__(self):
+        self.create_query: str = ""
         self.query: str = ""
 
     def save_past_predictions(self, table_name, matches):
-        pass
+        self.create_query = f'''
+            CREATE TABLE IF NOT EXISTS {table_name} (
+                date DATE,
+                home_team VARCHAR(255),
+                away_team VARCHAR(255),
+                league VARCHAR(255),
+                match_id VARCHAR(255),
+                home_win FLOAT,
+                draw FLOAT,
+                away_win FLOAT
+                );'''
 
     def save_future_predictions(self, table_name, matches):
         pass

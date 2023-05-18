@@ -2,7 +2,7 @@ import argparse
 import code
 import config
 from loaders.query import Query
-from loaders.loader import DBLoader
+from loaders.loader import DBConnector
 import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model

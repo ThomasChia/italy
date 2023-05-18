@@ -1,6 +1,6 @@
 import config
 from loaders.query import Query
-from loaders.loader import DBLoader
+from loaders.loader import DBConnector
 import logging
 from matches.config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
@@ -28,7 +28,7 @@ class FullSeasonPlanner(Planner):
         logging.info("Loading data.")
         query = Query()
         query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES, config.COUNTRIES)
-        loader = DBLoader()
+        loader = DBConnector()
         loader.run_query(query)
         if debug:
             loader.data = loader.data[loader.data['date']>='2021-08-01']

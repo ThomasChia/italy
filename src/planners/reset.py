@@ -1,12 +1,12 @@
 from copy import deepcopy
 import config
 from loaders.query import Query
-from loaders.loader import DBLoader
+from loaders.loader import DBConnector
 import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from planners.planner import Planner
-from post_processing.post_processor import InSeasonPostProcessor
+from post_processing.post_processor import ResetPostProcessor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -42,7 +42,7 @@ class ResetPlanner(Planner):
         logging.info("Loading data.")
         query = Query()
         query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES, config.COUNTRIES)
-        loader = DBLoader()
+        loader = DBConnector()
         loader.run_query(query)
         if debug:
             loader.data = loader.data[loader.data['date']>='2021-08-01']
@@ -87,21 +87,10 @@ class ResetPlanner(Planner):
         past_home_and_away_matches, past_team_and_opponent = model.predict(builder.data, config.FEATURES, config.ID_FEATURES)
         future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
 
-        logging.info("Running simulations.")
-        # simulator = MonteCarloSimulator(future_home_and_away_matches)
-        # simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
-
-        # logging.info("Creating output.")
-        # results = MonteCarloResults(simulation_results=simulation_results, past_results=deepcopy(past_matches), season_start=config.SEASON_START)
-        # results.get_finishing_positions()
-
+        logging.info("Running postprocessor.")
+        post_processor = ResetPostProcessor(results=past_matches,
+                                            past_predictions=past_team_and_opponent,
+                                            future_predictions=future_team_and_opponent)
+        post_processor.run()
+        
         logging.info("Saving past and future predictions to db.")
-        # post_processor = ResetProcessor(league_targets=results.league_targets,
-        #                                        results=past_matches,
-        #                                        past_predictions=pd.DataFrame(),
-        #                                        future_predictions=future_team_and_opponent,
-        #                                        match_importance=results.match_importance,
-        #                                        finishing_positions=results.finishing_positions,
-        #                                        opponent_analysis=pd.DataFrame())
-        # post_processor.run()
-        # TODO upload output to gsheets.
