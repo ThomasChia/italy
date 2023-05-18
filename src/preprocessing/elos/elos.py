@@ -127,12 +127,12 @@ class Elo:
         return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[['league', 'date', 'pt1', 'pt2', 'result', 'elo_home', 'elo_away', 'elo_diff']]
+        return df[['league', 'date', 'pt1', 'pt2', 'match_id', 'result', 'elo_home', 'elo_away', 'elo_diff']]
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['elo_diff'] = df['elo_diff'] * -1
         df['result'] = 1 - df['result']
-        df = df[['league', 'date', 'team', 'opponent', 'result', 'elo_team', 'elo_opponent', 'elo_diff']]
+        df = df[['league', 'date', 'team', 'opponent', 'match_id', 'result', 'elo_team', 'elo_opponent', 'elo_diff']]
         df.loc[:, 'home'] = 0
         return df
 

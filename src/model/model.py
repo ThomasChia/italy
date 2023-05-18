@@ -78,14 +78,14 @@ class Model:
                                                                                    'loss': 'home_win'}).drop('home', axis=1)
         home_and_away_matches = pd.concat([home_matches, away_matches])
         # TODO losing matches at this point, and above home matches and away matches are not the same shape.
-        home_and_away_average_matches = home_and_away_matches.groupby(['date', 'home_team', 'away_team', 'league']).mean().reset_index()
+        home_and_away_average_matches = home_and_away_matches.groupby(['date', 'home_team', 'away_team', 'league', 'match_id']).mean().reset_index()
 
-        team_matches = home_and_away_average_matches[['date', 'home_team', 'away_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
+        team_matches = home_and_away_average_matches[['date', 'home_team', 'away_team', 'league', 'match_id', 'home_win', 'draw', 'away_win']].rename(columns={'home_team': 'team',
                                                                                                                                                    'away_team': 'opponent',
                                                                                                                                                    'home_win': 'win',
                                                                                                                                                    'away_win': 'loss'})
         team_matches['home'] = 1
-        opponent_matches = home_and_away_average_matches[['date', 'away_team', 'home_team', 'league', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
+        opponent_matches = home_and_away_average_matches[['date', 'away_team', 'home_team', 'league', 'match_id', 'home_win', 'draw', 'away_win']].rename(columns={'away_team': 'team',
                                                                                                                                                        'home_team': 'opponent',
                                                                                                                                                        'home_win': 'loss',
                                                                                                                                                        'away_win': 'win'})

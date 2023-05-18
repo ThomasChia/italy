@@ -52,11 +52,11 @@ class GoalsPreprocessor(Preprocessor):
         return df
     
     def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        return df[['league', 'date', 'pt1', 'pt2', 'result', 'score_pt1', 'score_pt2']]
+        return df[['league', 'date', 'pt1', 'pt2', 'match_id', 'result', 'score_pt1', 'score_pt2']]
     
     def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         df['result'] = 1 - df['result']
-        df = df[['league', 'date', 'team', 'opponent', 'result',
+        df = df[['league', 'date', 'team', 'opponent', 'match_id', 'result',
                  'team_goals_scored',
                  'opponent_goals_scored',
                  'team_goals_conceded',

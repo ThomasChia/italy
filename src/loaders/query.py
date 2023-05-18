@@ -3,7 +3,7 @@
 
 class Query:
     def __init__(self):
-        self.query: str = None
+        self.query: str = ""
         
     def all_matches(self, table_name):
         self.query = f'''
@@ -33,3 +33,14 @@ class Query:
             return "('" + "', '".join(str_list) + "')"
         else:
             return ''
+        
+
+class SaveQuery:
+    def __init__(self):
+        self.query: str = ""
+
+    def save_past_predictions(self, table_name, matches):
+        pass
+
+    def save_future_predictions(self, table_name, matches):
+        pass
