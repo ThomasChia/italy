@@ -86,13 +86,15 @@ class ResetPostProcessor(PostProcessor):
 
     def run(self):
         self.process_results()
+        self.process_past_predictions()
+        self.process_future_predictions()
 
     def process_results(self):
         if self.results:
             self.results.get_team_and_opp_matches()
 
     def process_past_predictions(self):
-        pass
+        self.past_predictions = self.past_predictions.reset_index(drop=True)
 
     def process_future_predictions(self):
-        pass
+        self.future_predictions = self.future_predictions.reset_index(drop=True)

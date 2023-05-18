@@ -2,7 +2,9 @@ import pandas as pd
 from loaders.connector import Connector
 from loaders.query import Query, SaveQuery
 import logging
+from sqlalchemy import text
 from sqlalchemy.engine import Engine
+from sqlalchemy.orm import sessionmaker
 
 
 class Loader:
@@ -20,8 +22,13 @@ class DBConnector(Loader):
         self.data = pd.read_sql_query(query.query, engine)
 
     def run_save_query(self, query: SaveQuery, data: pd.DataFrame):
-        logging.info("Writing data from DB.")
+        logging.info("Writing data to DB.")
         engine = self.connection.get_connection()
-        pd.read_sql_query(query.create_query, engine)
+        session_made = sessionmaker(bind=engine)
+        session = session_made()
+        session.execute(text(query.create_query))
+        session.commit()
+        session.close()
+
         data.to_sql(query.table_name, engine, if_exists='replace', index=False)
 
