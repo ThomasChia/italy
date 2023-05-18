@@ -54,7 +54,7 @@ class MultiScraper:
         self.scraped_matches['league'] = self.scraped_matches['league'].replace(SCRAPED_LEAGUES_MAPPING)
 
     def add_match_id(self):
-        self.scraped_matches['match_id'] = self.scraped_matches['pt1'] + '_' + self.scraped_matches['pt2'] + '_' + self.scraped_matches['date'].astype(str)
+        self.scraped_matches['match_id'] = self.scraped_matches['pt1'] + '_' + self.scraped_matches['pt2'] + '_' + self.scraped_matches['date'].astype(str).str.replace('.', '-')
 
 
 if __name__=="__main__":
