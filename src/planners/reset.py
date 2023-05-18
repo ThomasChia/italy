@@ -1,6 +1,6 @@
 from copy import deepcopy
 import config
-from loaders.query import Query
+from loaders.query import Query, SaveQuery
 from loaders.loader import DBConnector
 import logging
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
@@ -94,3 +94,12 @@ class ResetPlanner(Planner):
         post_processor.run()
         
         logging.info("Saving past and future predictions to db.")
+        past_predictions_query = SaveQuery('football_dashboard_past_predictions')
+        past_predictions_query.get_past_predictions_query()
+        past_predictions_writer = DBConnector()
+        past_predictions_writer.run_save_query(past_predictions_query, post_processor.past_predictions)
+
+        future_predictions_query = SaveQuery('football_dashboard_future_predictions')
+        future_predictions_query.get_future_predictions_query()
+        future_predictions_writer = DBConnector()
+        future_predictions_writer.run_save_query(future_predictions_query, post_processor.future_predictions)

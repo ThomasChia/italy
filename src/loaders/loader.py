@@ -15,9 +15,13 @@ class DBConnector(Loader):
         self.connection = Connector()
 
     def run_query(self, query: Query):
-        logging.info("Pulling data from DB.")
+        logging.info("Reading data from DB.")
         engine = self.connection.get_connection()
         self.data = pd.read_sql_query(query.query, engine)
 
-    def run_save_query(self, query: SaveQuery):
+    def run_save_query(self, query: SaveQuery, data: pd.DataFrame):
+        logging.info("Writing data from DB.")
+        engine = self.connection.get_connection()
+        pd.read_sql_query(query.create_query, engine)
+        data.to_sql(query.table_name, engine, if_exists='replace', index=False)
 
