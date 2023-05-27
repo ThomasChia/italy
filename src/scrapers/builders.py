@@ -13,6 +13,7 @@ class SeasonBuilder:
             teams = self.get_teams_in_league(league)
             matches = self.get_all_matches_in_league(league, teams)
             self.matches = pd.concat([self.matches, matches])
+        self.set_match_id()
 
     def get_all_matches_in_league(self, league, teams):
         matches = list(itertools.permutations(teams, 2))
@@ -23,3 +24,6 @@ class SeasonBuilder:
 
     def get_teams_in_league(self, league):
         return self.leagues_mapping[league]
+    
+    def set_match_id(self):
+        self.matches['match_id'] = self.matches['pt1'] + '_' + self.matches['pt2'] + '_' + self.matches['date']

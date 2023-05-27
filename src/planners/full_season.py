@@ -80,4 +80,7 @@ class FullSeasonPlanner(Planner):
         results.get_finishing_positions()
         # TODO update league targets output to ds_data; add in elos to team and opponent, home, rest days, goals; 538 scraper; opponent analysis
 
+        logging.info("Uploading to gsheets.")
+        
+
         logging.info("Finished full-season planner.")
