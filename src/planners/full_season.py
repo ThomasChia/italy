@@ -1,6 +1,7 @@
 import config
-from loaders.query import Query
+from loaders.gsheets.writer import GsheetsWriter
 from loaders.loader import DBConnector
+from loaders.query import Query
 import logging
 from matches.config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
@@ -81,6 +82,7 @@ class FullSeasonPlanner(Planner):
         # TODO update league targets output to ds_data; add in elos to team and opponent, home, rest days, goals; 538 scraper; opponent analysis
 
         logging.info("Uploading to gsheets.")
-        
+        gsheets_writer = GsheetsWriter([results.league_targets, future_team_and_opponent, results.match_importance, results.finishing_positions])
+        gsheets_writer.write_all_to_gsheets()
 
         logging.info("Finished full-season planner.")
