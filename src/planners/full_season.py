@@ -7,6 +7,7 @@ from matches.config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner
+from post_processing.post_processor import FullSeasonPostProcessor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -81,8 +82,16 @@ class FullSeasonPlanner(Planner):
         results.get_finishing_positions()
         # TODO update league targets output to ds_data; add in elos to team and opponent, home, rest days, goals; 538 scraper; opponent analysis
 
+        logging.info("Processing output for gsheets.")
+        post_processor = FullSeasonPostProcessor(league_targets=results.league_targets,
+                                                 future_predictions=future_team_and_opponent,
+                                                 match_importance=results.match_importance,
+                                                 finishing_positions=results.finishing_positions
+                                                 )
+        post_processor.run()
+        
         logging.info("Uploading to gsheets.")
-        gsheets_writer = GsheetsWriter([results.league_targets, future_team_and_opponent, results.match_importance, results.finishing_positions])
+        gsheets_writer = GsheetsWriter([post_processor.league_targets, post_processor.future_predictions, post_processor.match_importance, post_processor.finishing_positions])
         gsheets_writer.write_all_to_gsheets()
 
         logging.info("Finished full-season planner.")
