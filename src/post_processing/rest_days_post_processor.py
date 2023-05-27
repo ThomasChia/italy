@@ -8,7 +8,7 @@ class RestDaysPostProcessor:
 
     def calculate_rest_days(self):
         self.df['rest_days'] = 0
-        self.df['date'] = pd.to_datetime(self.df['date'])
+        self.df['date'] = pd.to_datetime(self.df['date'], dayfirst=True)
         self.df = self.sort_dates(self.df)
 
         for index, row in self.df.iterrows():

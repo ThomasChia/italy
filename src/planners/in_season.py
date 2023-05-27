@@ -69,6 +69,7 @@ class InSeasonPlanner(Planner):
         builder.build_dataset()
 
         logging.info("Building prediction set.")
+        # TODO add in a check to see if we have all possible matches between past and future.
         future_builder = FutureBuilder(future_matches.scraped_matches, builder)
         future_builder.build_future_matches()
 
@@ -88,7 +89,15 @@ class InSeasonPlanner(Planner):
         results = MonteCarloResults(simulation_results=simulation_results, past_results=deepcopy(past_matches), season_start=config.SEASON_START)
         results.get_finishing_positions()
 
-        logging.info("Uploading output.")
+        logging.info("Writing output to db.")
+        query = Query()
+        query.read_last_future_predictions()
+        loader = DBConnector()
+        loader.run_query(query)
+        merged = pd.merge(loader.data, future_team_and_opponent, on=['match_id', 'team'], how='outer', suffixes=('_left', '_right'))
+        diff = merged[merged['league_left'] != merged['league_right']]
+
+        logging.info("Postprocessing output for gsheets.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
                                                results=past_matches,
                                                past_predictions=pd.DataFrame(),
@@ -98,3 +107,7 @@ class InSeasonPlanner(Planner):
                                                opponent_analysis=pd.DataFrame())
         post_processor.run()
         # TODO upload output to gsheets.
+
+        
+
+        logging.info("In-season planner complete.")

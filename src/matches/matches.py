@@ -90,7 +90,7 @@ class PastMatches:
                                                           'score_pt2': 'away_score'})
         
     def filter_by_date(self, filter_date):
-        self.matches_df = self.matches_df[self.matches_df['date'] > pd.to_datetime(filter_date)]
+        self.matches_df = self.matches_df[pd.to_datetime(self.matches_df['date']) > pd.to_datetime(filter_date)]
 
     def remove_in_season_duplicates(self):
         self.matches_df = self.matches_df.drop_duplicates(subset=['pt1', 'pt2'], keep='last')
@@ -134,7 +134,7 @@ class PastMatches:
         return df
     
     def cut_from_date(self, df, date):
-        df = df[df['date'] > pd.to_datetime(date)]
+        df = df[pd.to_datetime(df['date']) > pd.to_datetime(date)]
         return df
 
 

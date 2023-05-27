@@ -1,5 +1,8 @@
 from abc import ABC
 from config import SEASON_START
+from loaders.loader import DBConnector
+from loaders.query import Query
+from loaders.writer import DBWriter
 from matches.matches import PastMatches
 import pandas as pd
 from post_processing.rest_days_post_processor import RestDaysPostProcessor
@@ -52,25 +55,39 @@ class InSeasonPostProcessor(PostProcessor):
         if not self.future_predictions.empty:
             self.future_predictions['team'] = self.future_predictions['team'].str.replace('_', ' ')
             self.future_predictions['team'] = self.future_predictions['team'].str.title()
+            self.future_predictions['opponent'] = self.future_predictions['opponent'].str.replace('_', ' ')
+            self.future_predictions['opponent'] = self.future_predictions['opponent'].str.title()
             calculator = RestDaysPostProcessor(self.future_predictions)
             self.future_predictions = calculator.calculate_rest_days()
 
     def process_match_importance(self):
         if not self.match_importance.empty:
-            self.match_importance = self.match_importance.reset_index()
+            self.match_importance = self.match_importance.reset_index().rename(columns={'index': 'team'})
             self.match_importance['team'] = self.match_importance['team'].str.replace('_', ' ')
             self.match_importance['team'] = self.match_importance['team'].str.title()
             self.match_importance = self.match_importance.fillna(0)
 
     def process_finishing_positions(self):
         if not self.finishing_positions.empty:
-            self.finishing_positions = self.finishing_positions.reset_index()
+            self.finishing_positions = self.finishing_positions.reset_index().rename(columns={'index': 'team'})
             self.finishing_positions['team'] = self.finishing_positions['team'].str.replace('_', ' ')
             self.finishing_positions['team'] = self.finishing_positions['team'].str.title()
 
     def process_opponent_analysis(self):
         pass
         # if not self.opponent_analysis.empty:
+
+    def split_old_new_predictions(self):
+        query = Query()
+        query.read_last_future_predictions()
+        loader = DBConnector()
+        loader.run_query(query)
+        old_future_predictions = loader.data.copy(deep=True)
+        merged = pd.merge(old_future_predictions, self.future_predictions, on=['match_id', 'team'], how='outer', suffixes=('_left', '_right'))
+        new_past_predictions = merged[merged['opponent_left'] != merged['opponent_right']]
+
+        writer = DBWriter()
+        writer.run_update_query(new_past_predictions)
 
 
 class ResetPostProcessor(PostProcessor):
@@ -98,3 +115,7 @@ class ResetPostProcessor(PostProcessor):
 
     def process_future_predictions(self):
         self.future_predictions = self.future_predictions.reset_index(drop=True)
+        calculator = RestDaysPostProcessor(self.future_predictions)
+        self.future_predictions = calculator.calculate_rest_days()
+
+
