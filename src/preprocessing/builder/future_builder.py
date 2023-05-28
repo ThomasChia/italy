@@ -1,4 +1,5 @@
 from matches.matches import Matches
+from config import DASHBOARD_LEAGUES
 import pandas as pd
 from preprocessing.builder.builder import Builder
 from scrapers.scrapers import Scraper
@@ -35,7 +36,9 @@ class FutureBuilder:
         return self.past_matches.data.sort_values(by='date', ascending=True)
     
     def get_final_team_entry(self, df):
-        return df.groupby('team').last().reset_index()
+        df = df.groupby(['team', 'league']).last().reset_index()
+        df = df[df['league'].isin(DASHBOARD_LEAGUES)]
+        return df
     
     def remove_columns_containing_string(self, df, string):
         cols_to_drop = [col for col in df.columns if string in col]

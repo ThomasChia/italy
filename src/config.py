@@ -74,18 +74,244 @@ LEAGUES = [
     'English League Championship',
 ]
 
+####################################################################################################
+# TEAMS FOR FULL SEASON SIMULATION
+####################################################################################################
 
-DASHBOARD_LEAGUES = [
-    # 'Serie A',
-    'Serie B',
-    # 'Serie C, Girone A',
-    # 'Serie C, Girone B',
-    # 'Serie C, Girone C',
-    'Premier League',
-    # 'Championship',
-    # 'League One',
-    # 'League Two'
+PREMIER_LEAGUE_TEAMS = [
+    'Arsenal',
+    'Aston Villa',
+    'Bournemouth',
+    'Brentford',
+    'Brighton',
+    'Chelsea',
+    'Crystal Palace',
+    'Everton',
+    'Fulham',
+    'Leeds',
+    'Leicester',
+    'Liverpool',
+    'Manchester City',
+    'Manchester United',
+    'Newcastle',
+    'Nottingham Forest',
+    'Southampton',
+    'Tottenham',
+    'West Ham',
+    'Wolves'
 ]
+
+CHAMPIONSHIP_TEAMS = [
+    'Birmingham City',
+    'Blackburn Rovers',
+    'Blackpool',
+    'Bristol City',
+    'Burnley',
+    'Cardiff City',
+    'Coventry City',
+    'Huddersfield Town',
+    'Hull City',
+    'Luton Town',
+    'Middlesbrough',
+    'Millwall',
+    'Norwich City',
+    'Preston North End',
+    'Queens Park Rangers',
+    'Reading',
+    'Rotherham United',
+    'Sheffield United',
+    'Stoke City',
+    'Sunderland',
+    'Swansea City',
+    'West Bromwich Albion',
+    'Watford',
+    'Wigan Athletic'
+]
+
+LEAGUE_ONE_TEAMS = [
+    'Accrington',
+    'Barnsley',
+    'Bolton',
+    'Bristol Rovers',
+    'Burton',
+    'Cambridge',
+    'Charlton',
+    'Cheltenham',
+    'Derby',
+    'Exeter',
+    'Fleetwood Town',
+    'Forest Green',
+    'Ipswich',
+    'Lincoln',
+    'Milton Keynes Dons',
+    'Morecambe',
+    'Oxford',
+    'Peterborough',
+    'Plymouth',
+    'Portsmouth',
+    'Port Vale',
+    'Sheffield Wednesday',
+    'Shrewsbury',
+    'Wycombe'
+]
+
+LEAGUE_TWO_TEAMS = [
+    'AFC Wimbledon',
+    'Barrow',
+    'Bradford',
+    'Carlisle',
+    'Colchester',
+    'Crawley',
+    'Crewe',
+    'Doncaster',
+    'Gillingham',
+    'Grimsby',
+    'Harrogate',
+    'Hartlepool',
+    'Leyton Orient',
+    'Mansfield',
+    'Newport',
+    'Northampton',
+    'Rochdale',
+    'Salford',
+    'Stevenage',
+    'Stockport',
+    'Sutton',
+    'Swindon',
+    'Tranmere',
+    'Walsall'
+]
+
+SERIE_A_TEAMS = [
+    'AC Milan',
+    'Atalanta',
+    'Bologna',
+    'Cremonese',
+    'Empoli',
+    'Fiorentina',
+    'Hella Verona',
+    'Inter Milan',
+    'Juventus',
+    'Lazio',
+    'Lecce',
+    'Monza',
+    'Napoli',
+    'Roma',
+    'Salernitana',
+    'Sampdoria',
+    'Sassuolo',
+    'Spezia',
+    'Torino',
+    'Udinese'
+]
+
+SERIE_B_TEAMS = [
+    'Ascoli',
+    'Bari',
+    'Benevento',
+    'Brescia',
+    'Cagliari',
+    'Cittadella',
+    'Como',
+    'Cosenza',
+    'Frosinone',
+    'Genoa',
+    'Modena',
+    'Palermo',
+    'Parma',
+    'Perugia',
+    'Pisa',
+    'Reggina',
+    'SPAL',
+    'Sudtirol',
+    'Ternana',
+    'Venezia',
+]
+
+SERIE_C_GIRONE_A_TEAMS = [
+    'Albinoleffe',
+    'Arzignano',
+    'Feralpisalo',
+    'Juventus U23',
+    'Lecco',
+    'Mantova',
+    'Novara',
+    'Padova',
+    'Pergolettese',
+    'Piacenza',
+    'Pordenone',
+    'Pro Patria',
+    'Pro Sesto',
+    'Pro Vercelli',
+    'Renate',
+    'Sangiuliano',
+    'Trento',
+    'Triestina',
+    'Vicenza',
+    'Virtus Verona'
+]
+
+SERIE_C_GIRONE_B_TEAMS = [
+    'Alessandria',
+    'Ancona',
+    'Aquilla Montevarchi',
+    'Carrarese',
+    'Cesena',
+    'Entella',
+    'Fermana',
+    'Fiorenzuola',
+    'Gubbio',
+    'Imolese',
+    'Lucchese',
+    'Olbia',
+    'Pontedera',
+    'Recanatese',
+    'Reggiana',
+    'Rimini',
+    'San Donato',
+    'Siena',
+    'Torres',
+    'Vis Pesaro'
+]
+
+SERIE_C_GIRONE_C_TEAMS = [
+    'Audace Cerignola',
+    'Avellino',
+    'AZ Picerno',
+    'Catanzaro',
+    'Crotone',
+    'Fidelis Andria',
+    'Foggia',
+    'Gelbison',
+    'Giugliano',
+    'Juve Stabia',
+    'Latina',
+    'Messina',
+    'Monopoli',
+    'Monterosi',
+    'Pescara',
+    'Potenza',
+    'Taranto',
+    'Turris',
+    'Virtus Francavilla',
+    'Viterbese'
+]
+
+LEAGUE_TEAMS_MAPPING = {
+    'Premier League': PREMIER_LEAGUE_TEAMS,
+    'Championship': CHAMPIONSHIP_TEAMS,
+    # 'League One': LEAGUE_ONE_TEAMS,
+    # 'League Two': LEAGUE_TWO_TEAMS,
+    # 'Serie A': SERIE_A_TEAMS,
+    'Serie B': SERIE_B_TEAMS,
+    # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
+}
+
+########################################################################################################################
+
+DASHBOARD_LEAGUES = [LEAGUE for LEAGUE in LEAGUE_TEAMS_MAPPING.keys()]
 
 SCRAPED_LEAGUES_MAPPING = {
     'serie-a': 'Serie A',

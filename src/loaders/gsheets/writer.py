@@ -17,8 +17,6 @@ class GsheetsWriter(Writer):
 
     def write_df_to_gsheets(self, tab_name, df):
         upload_data = df.copy(deep=True)
-        upload_data = upload_data.apply(lambda x: x.astype(str).str.title())
-        upload_data = upload_data.apply(lambda x: x.astype(str).str.replace('_', ' '))
         upload_data = upload_data.apply(lambda x: x.astype(str).str.replace('Nan', ''))
         gc = gspread.service_account(filename=GSHEETSCREDS)
         sh = gc.open(self.gsheet_name) 

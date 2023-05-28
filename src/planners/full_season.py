@@ -3,7 +3,7 @@ from loaders.gsheets.writer import GsheetsWriter
 from loaders.loader import DBConnector
 from loaders.query import Query
 import logging
-from matches.config import LEAGUE_TEAMS_MAPPING
+from config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner

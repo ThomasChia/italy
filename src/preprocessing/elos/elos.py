@@ -165,8 +165,7 @@ class EloTracker():
         return tracker
     
     def get_unique_teams(self) -> pd.DataFrame:
-        unique_teams = pd.concat([self.matches['pt1'],
-                                self.matches['pt2']], axis=0).unique()
+        unique_teams = pd.concat([self.matches['pt1'], self.matches['pt2']], axis=0).unique()
         return pd.DataFrame(unique_teams, columns=['team'])
     
     def set_up_stats(self, tracker) -> pd.DataFrame:

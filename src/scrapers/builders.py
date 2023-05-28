@@ -26,4 +26,4 @@ class SeasonBuilder:
         return self.leagues_mapping[league]
     
     def set_match_id(self):
-        self.matches['match_id'] = self.matches['pt1'] + '_' + self.matches['pt2'] + '_' + self.matches['date']
+        self.matches['match_id'] = self.matches['pt1'].str.lower() + '_' + self.matches['pt2'].str.lower() + '_' + self.matches['date']
