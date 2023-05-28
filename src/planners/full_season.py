@@ -99,10 +99,8 @@ class FullSeasonPlanner(Planner):
                                              post_processor.finishing_positions
                                              ])
         gsheets_writer.write_all_to_gsheets()
-        gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
-                                             post_processor.future_predictions,
-                                             post_processor.match_importance,
-                                             post_processor.finishing_positions
+        gsheets_writer = GsheetsWriter(data=[post_processor.elo_tracker,
+                                             post_processor.elo_over_time
                                              ],
                                         elos=True)
         gsheets_writer.write_all_to_gsheets()

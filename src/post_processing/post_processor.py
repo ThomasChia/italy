@@ -162,6 +162,8 @@ class FullSeasonPostProcessor(PostProcessor):
         self.process_future_predictions()
         self.process_match_importance()
         self.process_finishing_positions()
+        self.process_elo_tracker()
+        self.process_elo_over_time()
 
     def process_league_targets(self):
         if not self.league_targets.empty:
@@ -218,5 +220,6 @@ class FullSeasonPostProcessor(PostProcessor):
             self.elo_over_time['league'] = self.elo_over_time['league'].str.replace('_', ' ')
             self.elo_over_time['league'] = self.elo_over_time['league'].str.title()
             self.elo_over_time = self.elo_over_time[self.elo_over_time['league'].isin(DASHBOARD_LEAGUES)]
+            self.elo_over_time = self.elo_over_time[ELO_OVER_TIME_COLUMNS]
 
 
