@@ -1,14 +1,14 @@
 import gspread
 from gspread_dataframe import set_with_dataframe
-from loaders.gsheets.config import GSHEET_NAME, GSHEETSCREDS, TABS
+from loaders.gsheets.config import GSHEET_NAME, ELOS_NAME, GSHEETSCREDS, TABS, ELO_TABS
 from loaders.writer import Writer
 import logging
 
 
 class GsheetsWriter(Writer):
-    def __init__(self, data):
-        self.gsheet_name = GSHEET_NAME
-        self.tabs = TABS
+    def __init__(self, data, elos=False):
+        self.gsheet_name = GSHEET_NAME if not elos else ELOS_NAME
+        self.tabs = TABS if not elos else ELO_TABS
         self.data = data
 
     def write_all_to_gsheets(self):

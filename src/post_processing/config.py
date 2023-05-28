@@ -38,10 +38,23 @@ MATCH_IMPORTANCE_COLUMNS = [
     'team'
 ] + ['{}_{}'.format(i, j) for i in range(1, 25) for j in [0, 1, 3]] 
 
-
 FINISHING_POSITIONS_COLUMNS = [
     'league',
     'team'
 ] + [str(i) for i in range(1, 25)]
 
 OPPONENT_ANALYSIS_COLUMNS = []
+
+ELO_TRACKER_COLUMNS = [
+    'team',
+    'pts',
+    'last_played',
+    'league'
+]
+
+ELO_OVER_TIME_COLUMNS = [
+    'team',
+    'date',
+    'elo',
+    'league'
+]

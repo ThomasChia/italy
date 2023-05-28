@@ -86,12 +86,25 @@ class FullSeasonPlanner(Planner):
         post_processor = FullSeasonPostProcessor(league_targets=results.league_targets,
                                                  future_predictions=future_team_and_opponent,
                                                  match_importance=results.match_importance,
-                                                 finishing_positions=results.finishing_positions
+                                                 finishing_positions=results.finishing_positions,
+                                                 elo_tracker=elos.elo.elo_tracker.tracker,
+                                                 elo_over_time=elos.preprocessed_matches
                                                  )
         post_processor.run()
         
         logging.info("Uploading to gsheets.")
-        gsheets_writer = GsheetsWriter([post_processor.league_targets, post_processor.future_predictions, post_processor.match_importance, post_processor.finishing_positions])
+        gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
+                                             post_processor.future_predictions,
+                                             post_processor.match_importance,
+                                             post_processor.finishing_positions
+                                             ])
+        gsheets_writer.write_all_to_gsheets()
+        gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
+                                             post_processor.future_predictions,
+                                             post_processor.match_importance,
+                                             post_processor.finishing_positions
+                                             ],
+                                        elos=True)
         gsheets_writer.write_all_to_gsheets()
 
         logging.info("Finished full-season planner.")

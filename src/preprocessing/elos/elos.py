@@ -8,7 +8,7 @@ class Elo:
     def __init__(self, matches):
         self.matches: pd.DataFrame = matches
         self.elo_tracker = EloTracker(matches)
-        self.team_and_opp_matches = None
+        self.team_and_opp_matches = pd.DataFrame()
 
     def calculate(self):
         self.calc_all_elos()

@@ -1,11 +1,20 @@
 from abc import ABC, abstractmethod
-from config import SEASON_START
+from config import SEASON_START, DASHBOARD_LEAGUES
 from loaders.loader import DBConnector
 from loaders.query import Query
 from loaders.writer import DBWriter
 from matches.matches import PastMatches
 import pandas as pd
-from post_processing.config import LEAGUE_TARGETS_COLUMNS, RESULTS_COLUMNS, PAST_PREDICTIONS_COLUMNS, FUTURE_PREDICTIONS_COLUMNS, MATCH_IMPORTANCE_COLUMNS, FINISHING_POSITIONS_COLUMNS, OPPONENT_ANALYSIS_COLUMNS
+from post_processing.config import (ELO_TRACKER_COLUMNS,
+                                    ELO_OVER_TIME_COLUMNS,
+                                    FINISHING_POSITIONS_COLUMNS,
+                                    FUTURE_PREDICTIONS_COLUMNS,
+                                    LEAGUE_TARGETS_COLUMNS, 
+                                    MATCH_IMPORTANCE_COLUMNS,
+                                    OPPONENT_ANALYSIS_COLUMNS,
+                                    PAST_PREDICTIONS_COLUMNS,
+                                    RESULTS_COLUMNS
+                                    )
 from post_processing.rest_days_post_processor import RestDaysPostProcessor
 
 class PostProcessor(ABC):
@@ -137,12 +146,16 @@ class FullSeasonPostProcessor(PostProcessor):
                  league_targets=pd.DataFrame(),  
                  future_predictions=pd.DataFrame(),
                  match_importance=pd.DataFrame(),
-                 finishing_positions=pd.DataFrame()
+                 finishing_positions=pd.DataFrame(),
+                 elo_tracker=pd.DataFrame(),
+                 elo_over_time=pd.DataFrame()
                  ):
         self.league_targets: pd.DataFrame = league_targets
         self.future_predictions = future_predictions
         self.match_importance = match_importance
         self.finishing_positions = finishing_positions
+        self.elo_tracker = elo_tracker
+        self.elo_over_time = elo_over_time
 
     def run(self):
         self.process_league_targets()
@@ -185,5 +198,25 @@ class FullSeasonPostProcessor(PostProcessor):
             self.finishing_positions['league'] = self.finishing_positions['league'].str.replace('_', ' ')
             self.finishing_positions['league'] = self.finishing_positions['league'].str.title()
             self.finishing_positions = self.finishing_positions[FINISHING_POSITIONS_COLUMNS]
+
+    def process_elo_tracker(self):
+        if not self.elo_tracker:
+            self.elo_tracker = self.elo_tracker.reset_index()
+            self.elo_tracker['team'] = self.elo_tracker['team'].str.replace('_', ' ')
+            self.elo_tracker['team'] = self.elo_tracker['team'].str.title()
+            self.elo_tracker['league'] = self.elo_tracker['league'].str.replace('_', ' ')
+            self.elo_tracker['league'] = self.elo_tracker['league'].str.title()
+            self.elo_tracker = self.elo_tracker[self.elo_tracker['league'].isin(DASHBOARD_LEAGUES)]
+            self.elo_tracker = self.elo_tracker[ELO_TRACKER_COLUMNS]
+
+    def process_elo_over_time(self):
+        if not self.elo_over_time:
+            self.elo_over_time = self.elo_over_time.sort_values(['team', 'date'])
+            self.elo_over_time = self.elo_over_time.reset_index()
+            self.elo_over_time['team'] = self.elo_over_time['team'].str.replace('_', ' ')
+            self.elo_over_time['team'] = self.elo_over_time['team'].str.title()
+            self.elo_over_time['league'] = self.elo_over_time['league'].str.replace('_', ' ')
+            self.elo_over_time['league'] = self.elo_over_time['league'].str.title()
+            self.elo_over_time = self.elo_over_time[self.elo_over_time['league'].isin(DASHBOARD_LEAGUES)]
 
 

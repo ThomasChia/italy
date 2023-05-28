@@ -8,10 +8,10 @@ class Preprocessor:
         self.preprocessed_matches = None
 
 class EloPreprocessor(Preprocessor):
-    def __init__(self, matches: pd.DataFrame) -> None:
+    def __init__(self, matches: pd.DataFrame):
         super().__init__()
         self.elo = Elo(matches)
-        self.preprocessed_matches = None
+        self.preprocessed_matches: pd.DataFrame = pd.DataFrame()
 
     def calculate_elos(self):
         self.elo.calculate()
