@@ -165,7 +165,7 @@ class FullSeasonPostProcessor(PostProcessor):
             self.future_predictions['league'] = self.future_predictions['league'].str.title()
             calculator = RestDaysPostProcessor(self.future_predictions)
             self.future_predictions = calculator.calculate_rest_days()
-            self.finishing_positions = self.future_predictions[FUTURE_PREDICTIONS_COLUMNS]
+            self.future_predictions = self.future_predictions[FUTURE_PREDICTIONS_COLUMNS]
 
     def process_match_importance(self):
         if not self.match_importance.empty:
@@ -184,6 +184,6 @@ class FullSeasonPostProcessor(PostProcessor):
             self.finishing_positions['team'] = self.finishing_positions['team'].str.title()
             self.finishing_positions['league'] = self.finishing_positions['league'].str.replace('_', ' ')
             self.finishing_positions['league'] = self.finishing_positions['league'].str.title()
-            self.finishing_positions = self.finishing_positions[FUTURE_PREDICTIONS_COLUMNS]
+            self.finishing_positions = self.finishing_positions[FINISHING_POSITIONS_COLUMNS]
 
 

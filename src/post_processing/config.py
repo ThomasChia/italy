@@ -42,6 +42,6 @@ MATCH_IMPORTANCE_COLUMNS = [
 FINISHING_POSITIONS_COLUMNS = [
     'league',
     'team'
-] + [i for i in range(1, 25)]
+] + [str(i) for i in range(1, 25)]
 
 OPPONENT_ANALYSIS_COLUMNS = []
