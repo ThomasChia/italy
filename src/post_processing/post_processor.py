@@ -202,7 +202,7 @@ class FullSeasonPostProcessor(PostProcessor):
             self.finishing_positions = self.finishing_positions[FINISHING_POSITIONS_COLUMNS]
 
     def process_elo_tracker(self):
-        if not self.elo_tracker:
+        if not self.elo_tracker.empty:
             self.elo_tracker = self.elo_tracker.reset_index()
             self.elo_tracker['team'] = self.elo_tracker['team'].str.replace('_', ' ')
             self.elo_tracker['team'] = self.elo_tracker['team'].str.title()
@@ -212,9 +212,10 @@ class FullSeasonPostProcessor(PostProcessor):
             self.elo_tracker = self.elo_tracker[ELO_TRACKER_COLUMNS]
 
     def process_elo_over_time(self):
-        if not self.elo_over_time:
+        if not self.elo_over_time.empty:
             self.elo_over_time = self.elo_over_time.sort_values(['team', 'date'])
-            self.elo_over_time = self.elo_over_time.reset_index()
+            self.elo_over_time = self.elo_over_time.reset_index(drop=True)
+            self.elo_over_time = self.elo_over_time.rename(columns={'elo_team': 'elo'})
             self.elo_over_time['team'] = self.elo_over_time['team'].str.replace('_', ' ')
             self.elo_over_time['team'] = self.elo_over_time['team'].str.title()
             self.elo_over_time['league'] = self.elo_over_time['league'].str.replace('_', ' ')
