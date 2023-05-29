@@ -104,7 +104,7 @@ PREMIER_LEAGUE_TEAMS = [
     'Nottingham Forest',
     'Sheffield United',
     'Tottenham',
-    'West Ham',
+    'West Ham United',
     'Wolves'
 ]
 
@@ -336,18 +336,18 @@ LEAGUE_TEAMS_MAPPING = {
     'League One': LEAGUE_ONE_TEAMS,
     'League Two': LEAGUE_TWO_TEAMS,
     'National League': NATIONAL_LEAGUE_TEAMS,
-    'Serie A': SERIE_A_TEAMS,
-    'Serie B': SERIE_B_TEAMS,
-    'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
-    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
-    'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
+    # 'Serie A': SERIE_A_TEAMS,
+    # 'Serie B': SERIE_B_TEAMS,
+    # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
 }
 
 PROMOTED_TEAMS = [
     'Barnsley',
     'Burnley',
     'Carlisle United',
-    'Ipwich Town',
+    'Ipswich Town',
     'Leyton Orient',
     'Luton Town',
     'Northampton Town',
@@ -405,18 +405,18 @@ TEAM_NAMES_DICT = {
     'internazionale': 'inter_milan',
     'inter': 'inter_milan',
     'internazionale': 'inter_milan',
-    'leeds_united': 'leeds',
-    'leicester_city': 'leicester',
-    'manchester_united': 'manchester_utd',
-    'newcastle_united': 'newcastle',
-    'nottingham_forest': 'nottingham',
+    'leeds': 'leeds_united',
+    'leicester': 'leicester_city',
+    'manchester_utd': 'manchester_united',
+    'newcastle_utd': 'newcastle_united',
+    'nottingham': 'nottingham_forest',
     'san_donato': 'san_donato_tavarnelle',
     'sassari_torres': 'torres',
     'suditrol': 'sudtirol',
     'südtirol': 'sudtirol',
     'us_ancona': 'ancona',
     'verona': 'hellas_verona',
-    'west_ham_united': 'west_ham',
+    'west_ham': 'west_ham_united',
     'wolverhampton': 'wolves',
 }
 
@@ -486,12 +486,16 @@ SEASON_START = '2022-07-20'
 
 # ELO settings
 STARTING_ELO = 1500
-PROMOTION_ELO_ADJUSTMENT = -50
-RELEGATION_ELO_ADJUSTMENT = 50
+PROMOTION_ELO_ADJUSTMENT = -600
+RELEGATION_ELO_ADJUSTMENT = 500
 KFACTOR_QUICK = 40
 KFACTOR_SLOW = 30
 HOME_AD = 50
 new_team_rating = 1500
+
+# Poisson settings
+PROMOTION_GOAL_ADJUSTMENT = 0.5
+RELEGATION_GOAL_ADJUSTMENT = 1.5
 
 # Simulation settings
 NUM_SIMULATIONS = 1000

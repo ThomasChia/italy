@@ -35,6 +35,17 @@
             "args": ["--debug", "--plan", "full_season"]
         },
 
+        // Full Season Plan - No Debug
+        {
+            "name": "Full Season Plan - No Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/app.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "args": ["--plan", "full_season"]
+        },
+
         // Reset Plan
         {
             "name": "Reset Plan",
