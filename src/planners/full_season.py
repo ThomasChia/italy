@@ -8,6 +8,7 @@ from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner
 from post_processing.post_processor import FullSeasonPostProcessor
+from preprocessing.adjustor import ManualAdjustor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -64,6 +65,10 @@ class FullSeasonPlanner(Planner):
         logging.info("Building prediction set.")
         future_builder = FutureBuilder(future_matches.matches_df, builder)
         future_builder.build_future_matches()
+
+        logging.info("Manual adjustments.")
+        adjustor = ManualAdjustor()
+        future_builder.preprocessed_future_matches = adjustor.run(future_builder.preprocessed_future_matches)
 
         logging.info("Training model.")
         model = Model(builder.data)

@@ -1,5 +1,5 @@
 from matches.matches import Matches
-from config import DASHBOARD_LEAGUES
+from config import DASHBOARD_LEAGUES, PROMOTED_TEAMS, RELEGATED_TEAMS
 import pandas as pd
 from preprocessing.builder.builder import Builder
 from scrapers.scrapers import Scraper
@@ -17,9 +17,9 @@ class FutureBuilder:
     def add_past_stats_to_future_matches(self):
         most_recent_team_df = self.get_latest_past_stats()
         most_recent_opponent_df = self.get_latest_opponent_stats(most_recent_team_df)
-        future_matches_pt1 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt1', 'league'], right_on=['team', 'league'], how='left').rename(columns={'pt2': 'opponent'}).drop('pt1', axis=1)
+        future_matches_pt1 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt1'], right_on=['team'], how='left').rename(columns={'pt2': 'opponent'}).drop('pt1', axis=1)
         future_matches_pt1['home'] = 1
-        future_matches_pt2 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt2', 'league'], right_on=['team', 'league'], how='left').rename(columns={'pt1': 'opponent'}).drop('pt2', axis=1)
+        future_matches_pt2 = pd.merge(self.future_matches, most_recent_team_df, left_on=['pt2'], right_on=['team'], how='left').rename(columns={'pt1': 'opponent'}).drop('pt2', axis=1)
         future_matches_pt2['home'] = 0
         future_matches_team_and_league = pd.concat([future_matches_pt1, future_matches_pt2]).reset_index(drop=True)
         self.preprocessed_future_matches = pd.merge(future_matches_team_and_league, most_recent_opponent_df, on=['opponent'], how='left')
@@ -36,8 +36,9 @@ class FutureBuilder:
         return self.past_matches.data.sort_values(by='date', ascending=True)
     
     def get_final_team_entry(self, df):
-        df = df.groupby(['team', 'league']).last().reset_index()
+        df = df.groupby(['team' ]).last().reset_index()
         df = df[df['league'].isin(DASHBOARD_LEAGUES)]
+        df = df.drop('league', axis=1)
         return df
     
     def remove_columns_containing_string(self, df, string):
