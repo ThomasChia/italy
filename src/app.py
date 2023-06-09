@@ -4,6 +4,7 @@ import config
 from loaders.query import Query
 from loaders.loader import DBConnector
 import logging
+from logs import setup_logs
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 import pandas as pd
@@ -19,10 +20,11 @@ from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloRes
 import time
 pd.options.mode.chained_assignment = None # default='warn'
 
+setup_logs()
+logger = logging.getLogger(__name__)
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
     start_time = time.time()
 
     parser = argparse.ArgumentParser(
@@ -43,7 +45,7 @@ if __name__ == "__main__":
     """)
 
     if parser.parse_args().debug:
-        logging.info("Running in debug mode.")
+        logger.info("Running in debug mode.")
         DEBUG = True
     else:
         DEBUG = False
@@ -52,5 +54,5 @@ if __name__ == "__main__":
     planner.run(debug=DEBUG)
 
     elapsed_time = time.time() - start_time
-    logging.info(f"Programme completed in {elapsed_time:.2f} seconds.")
+    logger.info(f"Programme completed in {elapsed_time:.2f} seconds.")
     code.interact(local=locals())

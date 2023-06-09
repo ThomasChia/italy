@@ -20,15 +20,16 @@ from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloRes
 import time
 pd.options.mode.chained_assignment = None
 
+logger = logging.getLogger(__name__)
 
 class FullSeasonPlanner(Planner):
     def run(self, debug=False):
         """
         Run the full-season planner.
         """
-        logging.info("Running full-season planner.")
+        logger.info("Running full-season planner.")
 
-        logging.info("Loading data.")
+        logger.info("Loading data.")
         query = Query()
         query.leagues_specific(config.TABLE_NAME_PAST, config.LEAGUES, config.COUNTRIES)
         loader = DBConnector()
@@ -36,60 +37,60 @@ class FullSeasonPlanner(Planner):
         if debug:
             loader.data = loader.data[loader.data['date']>='2021-08-01']
 
-        logging.info("Building full season.")
+        logger.info("Building full season.")
         season_builder = SeasonBuilder(LEAGUE_TEAMS_MAPPING)
         season_builder.get_all_matches()
         future_matches = FullSeasonMatches(season_builder.matches)
         future_matches.clean()
 
-        logging.info("Cleaning data.")
+        logger.info("Cleaning data.")
         cleaner = Cleaner(loader)
         cleaner.clean()
 
-        logging.info("Storing past matches.")
+        logger.info("Storing past matches.")
         past_matches = PastMatches(cleaner.data)
 
         # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
-        logging.info("Calculating elo statistics.")
+        logger.info("Calculating elo statistics.")
         elos = EloPreprocessor(cleaner.data)
         elos.calculate_elos()
 
-        logging.info("Calculating goals statistics.")
+        logger.info("Calculating goals statistics.")
         goals = GoalsPreprocessor(cleaner.data)
         goals.calculate_goals_statistics()
 
-        logging.info("Building training set.")
+        logger.info("Building training set.")
         builder = Builder([elos, goals])
         builder.build_dataset()
 
-        logging.info("Building prediction set.")
+        logger.info("Building prediction set.")
         future_builder = FutureBuilder(future_matches.matches_df, builder)
         future_builder.build_future_matches()
 
-        logging.info("Manual adjustments.")
+        logger.info("Manual adjustments.")
         adjustor = ManualAdjustor()
         future_builder.preprocessed_future_matches = adjustor.run(future_builder.preprocessed_future_matches)
 
-        logging.info("Training model.")
+        logger.info("Training model.")
         model = Model(builder.data)
         model.train()
 
-        logging.info(f"Predicting {future_builder.preprocessed_future_matches.shape[0]} matches.") # TODO add in number of matches being predicted.
+        logger.info(f"Predicting {future_builder.preprocessed_future_matches.shape[0]} matches.") # TODO add in number of matches being predicted.
         future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
         # TODO add in something to tell which league we are looking at.
 
         if debug:
             config.NUM_SIMULATIONS = 1000
-        logging.info(f"Running {config.NUM_SIMULATIONS} simulations.")
+        logger.info(f"Running {config.NUM_SIMULATIONS} simulations.")
         simulator = MonteCarloSimulator(future_home_and_away_matches)
         simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
 
-        logging.info("Creating output.")
+        logger.info("Creating output.")
         results = MonteCarloResults(simulation_results=simulation_results, season_start=config.SEASON_START)
         results.get_finishing_positions()
         # TODO update league targets output to ds_data; add in elos to team and opponent, home, rest days, goals; 538 scraper; opponent analysis
 
-        logging.info("Processing output for gsheets.")
+        logger.info("Processing output for gsheets.")
         post_processor = FullSeasonPostProcessor(league_targets=results.league_targets,
                                                  future_predictions=future_team_and_opponent,
                                                  match_importance=results.match_importance,
@@ -101,7 +102,7 @@ class FullSeasonPlanner(Planner):
         
         
         if not debug:
-            logging.info("Uploading to gsheets.")
+            logger.info("Uploading to gsheets.")
             gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
                                                 post_processor.future_predictions,
                                                 post_processor.match_importance,
@@ -114,4 +115,4 @@ class FullSeasonPlanner(Planner):
                                             elos=True)
             gsheets_writer.write_all_to_gsheets()
 
-        logging.info("Finished full-season planner.")
+        logger.info("Finished full-season planner.")

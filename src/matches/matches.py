@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from config import SEASON_START, TEAM_NAMES_DICT
+from config import SEASON_START, TEAM_NAMES_DICT, LEAGUE_TEAMS_COUNT
 from dataclasses import dataclass, field
 import logging
 from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES
@@ -145,6 +145,7 @@ class FullSeasonMatches:
     def clean(self):
         self.remove_spaces_in_teams()
         self.clean_team_names()
+        self.check_number_of_teams()
 
     def remove_spaces_in_teams(self):
         self.matches_df['pt1'] = self.matches_df['pt1'].replace(' ', '_', regex=True).str.lower()
@@ -154,3 +155,14 @@ class FullSeasonMatches:
         logging.info(f"Cleaning team names")
         self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)
         self.matches_df['pt2'] = self.matches_df['pt2'].replace(TEAM_NAMES_DICT)
+
+    def check_number_of_teams(self):
+        for league in LEAGUE_TEAMS_COUNT.keys():
+            num_teams = self.matches_df[self.matches_df['league']==league][['pt1', 'pt2']].values.ravel('K')
+            num_teams = len(pd.unique(num_teams))
+            self.compare_league_teams_to_actual(num_teams, LEAGUE_TEAMS_COUNT[league], league)
+            
+    def compare_league_teams_to_actual(self, num_teams, actual_num_teams, league):
+        if num_teams != actual_num_teams:
+                logging.error(f"Number of teams is {num_teams} instead of {actual_num_teams} in {league}")
+                raise ValueError(f"Number of teams is {num_teams} instead of {actual_num_teams} in {league}")

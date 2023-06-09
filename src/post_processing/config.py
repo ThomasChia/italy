@@ -39,9 +39,8 @@ MATCH_IMPORTANCE_COLUMNS = [
 ] + ['{}_{}'.format(i, j) for i in range(1, 25) for j in [0, 1, 3]] 
 
 FINISHING_POSITIONS_COLUMNS = [
-    'league',
     'team'
-] + [str(i) for i in range(1, 25)]
+] + [str(i) for i in range(1, 25)] + ['league']
 
 OPPONENT_ANALYSIS_COLUMNS = []
 

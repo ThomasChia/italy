@@ -208,6 +208,7 @@ NATIONAL_LEAGUE_TEAMS = [
     'Maidehead United',
     'Oldham Athletic',
     'Oxford City',
+    'Rochdale',
     'Solihull Moors',
     'Southend United',
     'Wealdstone',
@@ -341,6 +342,19 @@ LEAGUE_TEAMS_MAPPING = {
     # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
     # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
     # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
+}
+
+LEAGUE_TEAMS_COUNT = {
+    'Premier League': 20,
+    'Championship': 24,
+    'League One': 24,
+    'League Two': 24,
+    'National League': 24,
+    # 'Serie A': 20,
+    # 'Serie B': 20,
+    # 'Serie C, Girone A': 20,
+    # 'Serie C, Girone B': 20,
+    # 'Serie C, Girone C': 20
 }
 
 PROMOTED_TEAMS = [
@@ -494,7 +508,7 @@ SEASON_START = '2022-07-20'
 STARTING_ELO = 1500
 PROMOTION_ELO_ADJUSTMENT = -600
 RELEGATION_ELO_ADJUSTMENT = 500
-MANUAL_TEAM_ELO_ADJUSTMENT = 600
+MANUAL_TEAM_ELO_ADJUSTMENT = 400
 KFACTOR_QUICK = 40
 KFACTOR_SLOW = 30
 HOME_AD = 50
