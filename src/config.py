@@ -100,7 +100,7 @@ PREMIER_LEAGUE_TEAMS = [
     'Luton Town',
     'Manchester City',
     'Manchester United',
-    'Newcastle',
+    'Newcastle United',
     'Nottingham Forest',
     'Sheffield United',
     'Tottenham',
@@ -109,7 +109,6 @@ PREMIER_LEAGUE_TEAMS = [
 ]
 
 CHAMPIONSHIP_TEAMS = [
-    'Barnsley',
     'Birmingham City',
     'Blackburn Rovers',
     'Bristol City',
@@ -127,6 +126,7 @@ CHAMPIONSHIP_TEAMS = [
     'Preston North End',
     'Queens Park Rangers',
     'Rotherham United',
+    'Sheffield Wednesday',
     'Southampton',
     'Stoke City',
     'Sunderland',
@@ -136,6 +136,7 @@ CHAMPIONSHIP_TEAMS = [
 ]
 
 LEAGUE_ONE_TEAMS = [
+    'Barnsley',
     'Blackpool',
     'Bolton Wanderers',
     'Bristol Rovers',
@@ -155,7 +156,6 @@ LEAGUE_ONE_TEAMS = [
     'Portsmouth',
     'Port Vale',
     'Reading',
-    'Sheffield Wednesday',
     'Shrewsbury Town',
     'Stevenage',
     'Wigan Athletic',
@@ -344,7 +344,6 @@ LEAGUE_TEAMS_MAPPING = {
 }
 
 PROMOTED_TEAMS = [
-    'Barnsley',
     'Burnley',
     'Carlisle United',
     'Ipswich Town',
@@ -354,6 +353,7 @@ PROMOTED_TEAMS = [
     'Notts County',
     'Plymouth Argyle',
     'Sheffield United',
+    'Sheffield Wednesday',
     'Stevenage',
     'Wrexham'
 ]
@@ -371,6 +371,12 @@ RELEGATED_TEAMS = [
     'Rochdale',
     'Southampton',
     'Wigan Athletic',
+]
+
+MANUAL_TEAM_ADJUSTMENT = [
+    'Chelsea',
+    'Leciester City',
+    'Southampton'
 ]
 
 ########################################################################################################################
@@ -488,6 +494,7 @@ SEASON_START = '2022-07-20'
 STARTING_ELO = 1500
 PROMOTION_ELO_ADJUSTMENT = -600
 RELEGATION_ELO_ADJUSTMENT = 500
+MANUAL_TEAM_ELO_ADJUSTMENT = 600
 KFACTOR_QUICK = 40
 KFACTOR_SLOW = 30
 HOME_AD = 50
@@ -496,6 +503,7 @@ new_team_rating = 1500
 # Poisson settings
 PROMOTION_GOAL_ADJUSTMENT = 0.5
 RELEGATION_GOAL_ADJUSTMENT = 1.5
+MANUAL_TEAM_GOAL_ADJUSTMENT = 1.5
 
 # Simulation settings
-NUM_SIMULATIONS = 1000
+NUM_SIMULATIONS = 10000
