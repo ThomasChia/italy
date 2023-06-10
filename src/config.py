@@ -357,6 +357,32 @@ LEAGUE_TEAMS_COUNT = {
     # 'Serie C, Girone C': 20
 }
 
+LEAGUE_COUNTRY_MAPPING = {
+    'Premier League': 'England',
+    'Championship': 'England',
+    'League One': 'England',
+    'League Two': 'England',
+    'National League': 'England',
+    # 'Serie A': 'Italy',
+    # 'Serie B': 'Italy',
+    # 'Serie C, Girone A': 'Italy',
+    # 'Serie C, Girone B': 'Italy',
+    # 'Serie C, Girone C': 'Italy'
+}
+
+LEAGUE_SCALING_MAPPING = {
+    'Premier League': 2050,
+    'Championship': 1750,
+    'League One': 1500,
+    'League Two': 1250,
+    'National League': 1000,
+    # 'Serie A': 1,
+    # 'Serie B': 2,
+    # 'Serie C, Girone A': 3,
+    # 'Serie C, Girone B': 3,
+    # 'Serie C, Girone C': 3
+}
+
 PROMOTED_TEAMS = [
     'Burnley',
     'Carlisle United',
@@ -396,6 +422,8 @@ MANUAL_TEAM_ADJUSTMENT = [
 ########################################################################################################################
 
 DASHBOARD_LEAGUES = [LEAGUE for LEAGUE in LEAGUE_TEAMS_MAPPING.keys()]
+
+DASHBOARD_TEAMS = [team for league in list(LEAGUE_TEAMS_MAPPING.values()) for team in league]
 
 SCRAPED_LEAGUES_MAPPING = {
     'serie-a': 'Serie A',

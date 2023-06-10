@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from config import SEASON_START, DASHBOARD_LEAGUES
+from config import SEASON_START, DASHBOARD_LEAGUES, DASHBOARD_TEAMS, LEAGUE_SCALING_MAPPING
 from loaders.loader import DBConnector
 from loaders.query import Query
 from loaders.writer import DBWriter
@@ -208,8 +208,38 @@ class FullSeasonPostProcessor(PostProcessor):
             self.elo_tracker['team'] = self.elo_tracker['team'].str.title()
             self.elo_tracker['league'] = self.elo_tracker['league'].str.replace('_', ' ')
             self.elo_tracker['league'] = self.elo_tracker['league'].str.title()
-            self.elo_tracker = self.elo_tracker[self.elo_tracker['league'].isin(DASHBOARD_LEAGUES)]
+            self.elo_tracker = self.elo_tracker[self.elo_tracker['team'].isin(DASHBOARD_TEAMS)]
+            self.elo_tracker = self.normalize_elos_by_league(self.elo_tracker)
             self.elo_tracker = self.elo_tracker[ELO_TRACKER_COLUMNS]
+
+    def normalize_elos_by_league(self, df: pd.DataFrame):
+        league_stats = df.groupby('league')['pts'].agg(['mean', 'std'])
+        normalize_elos = lambda group: (group['pts'] - league_stats.loc[group.name, 'mean']) / league_stats.loc[group.name, 'std']
+        df['pts'] = df.groupby('league').apply(normalize_elos).reset_index(level=0, drop=True)
+        df = df.apply(lambda x: self.scale_elos_by_league(x), axis=1)
+        return df
+    
+    def scale_elos_by_league(self, row: pd.DataFrame):
+        scaling_factor = LEAGUE_SCALING_MAPPING[str(row['league'])]
+        row['pts'] = row['pts'] * 100 + scaling_factor
+        return row
+    
+    # def normalize_elos_by_league(self, df: pd.DataFrame, league_scaling_mapping: dict):
+    #     df = df.sort_values(['league', 'pts'], ascending=[True, False])
+    #     df['rank'] = df.groupby('league')['pts'].rank(method='dense', ascending=False)
+        
+    #     # Define a function to normalize the pts values within each league based on the rank of each team
+    #     def normalize_pts(group: pd.DataFrame):
+    #         league = group['league'].iloc[0]
+    #         max_rank = group['rank'].max()
+    #         scaling_factor = league_scaling_mapping[league]
+    #         group['pts'] = (max_rank - group['rank'] + 1) / max_rank * scaling_factor
+    #         return group
+        
+    #     # Apply the normalization function to each group
+    #     df = df.groupby('league').apply(normalize_pts)
+        
+    #     return df
 
     def process_elo_over_time(self):
         if not self.elo_over_time.empty:
