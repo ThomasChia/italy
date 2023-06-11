@@ -8,6 +8,7 @@ from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from planners.planner import Planner
 from post_processing.post_processor import InSeasonPostProcessor
+from preprocessing.adjustor import ManualAdjustor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
@@ -77,9 +78,12 @@ class InSeasonPlanner(Planner):
         builder.build_dataset()
 
         logging.info("Building prediction set.")
-        # TODO add in a check to see if we have all possible matches between past and future.
         future_builder = FutureBuilder(future_matches.scraped_matches, builder)
         future_builder.build_future_matches()
+
+        logger.info("Manual adjustments.")
+        adjustor = ManualAdjustor()
+        future_builder.preprocessed_future_matches = adjustor.run(future_builder.preprocessed_future_matches)
 
         logging.info("Training model.")
         model = Model(builder.data)
