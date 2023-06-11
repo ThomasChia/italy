@@ -56,7 +56,7 @@ class ValidateMatches:
     def _get_actual_matches(self, league) -> pd.DataFrame:
         teams = [team.lower().replace(' ', '_') for team in LEAGUE_TEAMS_MAPPING[league]]
         actual_matches = self.full_season[(self.full_season['league'] == league) & ((self.full_season['pt1'].isin(teams)) | (self.full_season['pt2'].isin(teams)))]
-        actual_matches = actual_matches[actual_matches['pt1'] != 'arsenal'].reset_index(drop=True)
+        # actual_matches = actual_matches[actual_matches['pt1'] != 'arsenal'].reset_index(drop=True)
         return actual_matches.drop_duplicates(subset=['pt1', 'pt2'])
     
     def _add_missing_matches_to_future(self, league_expected_matches: pd.DataFrame, actual_matches: pd.DataFrame):
