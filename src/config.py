@@ -530,7 +530,8 @@ FEATURES = [
     # 'opponent_lambda'
 ]
 
-SEASON_START = '2022-07-20'
+SEASON_START = '2023-07-20'
+SEASON_END = '2024-05-31'
 
 # ELO settings
 STARTING_ELO = 1500
@@ -549,3 +550,10 @@ MANUAL_TEAM_GOAL_ADJUSTMENT = 1.5
 
 # Simulation settings
 NUM_SIMULATIONS = 10000
+
+# Assertions
+assert len(PREMIER_LEAGUE_TEAMS) == 20
+assert len(CHAMPIONSHIP_TEAMS) == 24
+assert len(LEAGUE_ONE_TEAMS) == 24
+assert len(LEAGUE_TWO_TEAMS) == 24
+assert len(NATIONAL_LEAGUE_TEAMS) == 24

@@ -3,6 +3,7 @@ import config
 from loaders.query import Query
 from loaders.loader import DBConnector
 import logging
+from logs import setup_logs
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from planners.planner import Planner
@@ -12,6 +13,7 @@ from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
+from preprocessing.validators.validate_matches import ValidateMatches
 import pandas as pd
 from scrapers.scraper_factory import MultiScraper
 from scrapers.scrapers import FiveThirtyEightScraper 
@@ -19,6 +21,8 @@ from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloRes
 import time
 pd.options.mode.chained_assignment = None
 
+setup_logs()
+logger = logging.getLogger(__name__)
 
 class InSeasonPlanner(Planner):
     """
@@ -51,6 +55,10 @@ class InSeasonPlanner(Planner):
         logging.info("Cleaning data.")
         cleaner = Cleaner(loader)
         cleaner.clean()
+
+        logger.info("Validating the number of matches in each league.")
+        validator = ValidateMatches(past_matches = cleaner.data, future_matches = future_matches.scraped_matches, season_start=config.SEASON_START, season_end=config.SEASON_END)
+        validator.run()
 
         logging.info("Storing past matches.")
         past_matches = PastMatches(cleaner.data)

@@ -3,7 +3,6 @@ from loaders.gsheets.writer import GsheetsWriter
 from loaders.loader import DBConnector
 from loaders.query import Query
 import logging
-from config import LEAGUE_TEAMS_MAPPING
 from matches.matches import PastMatches, FullSeasonMatches
 from model.model import Model
 from planners.planner import Planner
@@ -14,6 +13,7 @@ from preprocessing.builder.future_builder import FutureBuilder
 from preprocessing.cleaners.cleaner import Cleaner
 from preprocessing.preprocessors import EloPreprocessor
 from preprocessing.preprocessors import GoalsPreprocessor
+from preprocessing.validators.validate_matches import ValidateMatches
 import pandas as pd
 from scrapers.builders import SeasonBuilder
 from simulations.monte_carlo_simulator import MonteCarloSimulator, MonteCarloResults
@@ -38,7 +38,7 @@ class FullSeasonPlanner(Planner):
             loader.data = loader.data[loader.data['date']>='2021-08-01']
 
         logger.info("Building full season.")
-        season_builder = SeasonBuilder(LEAGUE_TEAMS_MAPPING)
+        season_builder = SeasonBuilder(config.LEAGUE_TEAMS_MAPPING)
         season_builder.get_all_matches()
         future_matches = FullSeasonMatches(season_builder.matches)
         future_matches.clean()
@@ -46,6 +46,10 @@ class FullSeasonPlanner(Planner):
         logger.info("Cleaning data.")
         cleaner = Cleaner(loader)
         cleaner.clean()
+
+        logger.info("Validating the number of matches in each league.")
+        validator = ValidateMatches(past_matches = cleaner.data, future_matches = future_matches.matches_df, season_start=config.SEASON_START, season_end=config.SEASON_END)
+        validator.run()
 
         logger.info("Storing past matches.")
         past_matches = PastMatches(cleaner.data)
