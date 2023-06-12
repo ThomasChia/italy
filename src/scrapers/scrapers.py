@@ -4,6 +4,7 @@ import logging
 from matches.matches import Matches
 import pandas as pd 
 from selenium import webdriver
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -44,8 +45,12 @@ class FlashScoreScraper(Scraper):
             self.site_active = False
 
     def get_fixture_data(self, league):
-        times, years, home_teams, away_teams = self.get_fixture_elements()
-        self.store_future_matches(times, years, home_teams, away_teams, league)
+        if self.check_if_matches_exist():
+            times, years, home_teams, away_teams = self.get_fixture_elements()
+            self.store_future_matches(times, years, home_teams, away_teams, league)
+        else:
+            logging.warning(f"No matches found for {league} in {self.matches.country}")
+            self.matches.matches_df = pd.DataFrame(columns=['date', 'league', 'pt1', 'pt2'])
 
     def get_fixture_elements(self):
         body = self.driver.find_element(By.XPATH, '//*[@id="live-table"]/div[1]/div/div')
@@ -75,6 +80,13 @@ class FlashScoreScraper(Scraper):
             return f"{day_month}{first_year}"
         else:
             return f"{day_month}{second_year}"
+        
+    def check_if_matches_exist(self):
+        try:
+            no_matches = self.driver.find_element(By.XPATH, '/html/body/div[4]/div[1]/div/div/main/div[4]/div[2]/div[1]/div[1]/div')
+            return False
+        except NoSuchElementException:
+            return True
         
 
 class FiveThirtyEightScraper(Scraper):

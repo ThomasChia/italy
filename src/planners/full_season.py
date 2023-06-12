@@ -68,7 +68,7 @@ class FullSeasonPlanner(Planner):
         builder.build_dataset()
 
         logger.info("Building prediction set.")
-        future_builder = FutureBuilder(future_matches.matches_df, builder)
+        future_builder = FutureBuilder(validator.future_matches, builder)
         future_builder.build_future_matches()
 
         logger.info("Manual adjustments.")

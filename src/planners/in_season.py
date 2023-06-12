@@ -1,5 +1,6 @@
 from copy import deepcopy
 import config
+from loaders.gsheets.writer import GsheetsWriter
 from loaders.query import Query
 from loaders.loader import DBConnector
 import logging
@@ -58,7 +59,10 @@ class InSeasonPlanner(Planner):
         cleaner.clean()
 
         logger.info("Validating the number of matches in each league.")
-        validator = ValidateMatches(past_matches = cleaner.data, future_matches = future_matches.scraped_matches, season_start=config.SEASON_START, season_end=config.SEASON_END)
+        validator = ValidateMatches(past_matches=cleaner.data,
+                                    future_matches=future_matches.scraped_matches,
+                                    season_start=config.SEASON_START,
+                                    season_end=config.SEASON_END)
         validator.run()
 
         logger.info("Storing past matches.")
@@ -78,7 +82,7 @@ class InSeasonPlanner(Planner):
         builder.build_dataset()
 
         logger.info("Building prediction set.")
-        future_builder = FutureBuilder(future_matches.scraped_matches, builder)
+        future_builder = FutureBuilder(validator.future_matches, builder)
         future_builder.build_future_matches()
 
         logger.info("Manual adjustments.")
@@ -116,10 +120,24 @@ class InSeasonPlanner(Planner):
                                                future_predictions=future_team_and_opponent,
                                                match_importance=results.match_importance,
                                                finishing_positions=results.finishing_positions,
-                                               opponent_analysis=pd.DataFrame())
+                                               opponent_analysis=pd.DataFrame(),
+                                               elo_tracker=elos.elo.elo_tracker.tracker,
+                                               elo_over_time=elos.preprocessed_matches)
         post_processor.run()
-        # TODO upload output to gsheets.
-
+        
+        if not debug:
+            logger.info("Uploading to gsheets.")
+            gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
+                                                post_processor.future_predictions,
+                                                post_processor.match_importance,
+                                                post_processor.finishing_positions
+                                                ])
+            gsheets_writer.write_all_to_gsheets()
+            gsheets_writer = GsheetsWriter(data=[post_processor.elo_tracker,
+                                                post_processor.elo_over_time
+                                                ],
+                                            elos=True)
+            gsheets_writer.write_all_to_gsheets()
         
 
         logger.info("In-season planner complete.")
