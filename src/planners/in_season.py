@@ -1,7 +1,7 @@
 from copy import deepcopy
 import config
 from loaders.gsheets.writer import GsheetsWriter
-from loaders.query import Query
+from loaders.query import Query, SaveQuery
 from loaders.loader import DBConnector
 import logging
 from logs import setup_logs
@@ -138,6 +138,19 @@ class InSeasonPlanner(Planner):
                                                 ],
                                             elos=True)
             gsheets_writer.write_all_to_gsheets()
+
+        logging.info("Saving past and future predictions to db.")
+        past_predictions_query = SaveQuery('football_dashboard_past_predictions')
+        past_predictions_query.get_past_predictions_query()
+        past_predictions_writer = DBConnector()
+        if not debug:
+            past_predictions_writer.run_save_query(past_predictions_query, post_processor.past_predictions)
+
+        future_predictions_query = SaveQuery('football_dashboard_future_predictions')
+        future_predictions_query.get_future_predictions_query()
+        future_predictions_writer = DBConnector()
+        if not debug:
+            future_predictions_writer.run_save_query(future_predictions_query, post_processor.future_predictions)
         
 
         logger.info("In-season planner complete.")
