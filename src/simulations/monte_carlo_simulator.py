@@ -16,20 +16,34 @@ class MonteCarloSimulator:
     def run_simulations(self, num_simulations):
         self.matches_df['match_id'] = np.arange(1, len(self.matches_df)+1)
         simulation_results = []
-        for i in tqdm(range(len(self.matches_df))):
-            match = self.matches_df.iloc[i]
-            result = np.random.choice([3, 1, 0], size=num_simulations, p=[match['home_win'], match['draw'], match['away_win']])
-            match_results = pd.DataFrame({
-                'match_id': [match['match_id']] * num_simulations,
-                'league': [match['league']] * num_simulations,
-                'home_team': [match['home_team']] * num_simulations,
-                'away_team': [match['away_team']] * num_simulations,
-                'result': result,
-                'season': np.arange(1, num_simulations+1)
-            }).pivot_table(index=['match_id', 'home_team', 'away_team', 'league'],
-                          columns='season', values='result',
-                          aggfunc='sum', fill_value=0).reset_index()
-            simulation_results.append(match_results)
+        # for i in tqdm(range(len(self.matches_df))):
+            # match = self.matches_df.iloc[i]
+            # result = np.random.choice([3, 1, 0], size=num_simulations, p=[match['home_win'], match['draw'], match['away_win']])
+            # match_results = pd.DataFrame({
+            #     'match_id': [match['match_id']] * num_simulations,
+            #     'league': [match['league']] * num_simulations,
+            #     'home_team': [match['home_team']] * num_simulations,
+            #     'away_team': [match['away_team']] * num_simulations,
+            #     'result': result,
+            #     'season': np.arange(1, num_simulations+1)
+            # }).pivot_table(index=['match_id', 'home_team', 'away_team', 'league'],
+            #               columns='season', values='result',
+            #               aggfunc='sum', fill_value=0).reset_index()
+            # simulation_results.append(match_results)
+
+        matches_df = self.matches_df
+        result = matches_df[['home_win', 'draw', 'away_win']].apply(lambda x: np.random.choice([3, 1, 0], size=num_simulations, p=x), axis=1)
+        match_results = pd.DataFrame({
+            'match_id': np.repeat(matches_df['match_id'].values, num_simulations),
+            'league': np.repeat(matches_df['league'].values, num_simulations),
+            'home_team': np.repeat(matches_df['home_team'].values, num_simulations),
+            'away_team': np.repeat(matches_df['away_team'].values, num_simulations),
+            'result': np.concatenate(result),
+            'season': np.tile(np.arange(1, num_simulations+1), len(matches_df))
+        }).pivot_table(index=['match_id', 'home_team', 'away_team', 'league'],
+                    columns='season', values='result',
+                    aggfunc='sum', fill_value=0).reset_index()
+        simulation_results.append(match_results)
         return pd.concat(simulation_results)
 
 

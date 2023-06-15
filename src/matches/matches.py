@@ -35,8 +35,8 @@ class ItalianMatches(Matches):
         self.correct_teams()
 
     def correct_teams(self):
-        self.matches_df['pt1'] = self.matches_df['pt1'].replace(ITALIAN_CORRECT_NAMES)
-        self.matches_df['pt2'] = self.matches_df['pt2'].replace(ITALIAN_CORRECT_NAMES)
+        self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)
+        self.matches_df['pt2'] = self.matches_df['pt2'].replace(TEAM_NAMES_DICT)
 
 
 
@@ -46,8 +46,8 @@ class EnglishMatches(Matches):
     leagues: List = field(default_factory=lambda: ENGLISH_LEAGUES)
 
     def correct_teams(self):
-        self.matches_df['pt1'] = self.matches_df['pt1'].replace(ENGLISH_CORRECT_NAMES)
-        self.matches_df['pt2'] = self.matches_df['pt2'].replace(ENGLISH_CORRECT_NAMES)
+        self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)
+        self.matches_df['pt2'] = self.matches_df['pt2'].replace(TEAM_NAMES_DICT)
 
     def clean_future_matches(self):
         self.remove_spaces_in_teams()

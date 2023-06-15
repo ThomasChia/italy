@@ -54,6 +54,8 @@ class InSeasonPostProcessor(PostProcessor):
         self.process_match_importance()
         self.process_finishing_positions()
         self.process_opponent_analysis()
+        self.process_elo_tracker()
+        self.process_elo_over_time()
 
     def process_league_targets(self):
         if not self.league_targets.empty:
@@ -61,8 +63,9 @@ class InSeasonPostProcessor(PostProcessor):
             self.league_targets = self.league_targets[LEAGUE_TARGETS_COLUMNS]
 
     def process_results(self):
-        if self.results:
-            self.results.get_team_and_opp_matches()
+        pass
+        # if self.results:
+        #     self.results.get_team_and_opp_matches()
 
     def process_past_predictions(self):
         pass
@@ -141,7 +144,7 @@ class InSeasonPostProcessor(PostProcessor):
     def process_elo_over_time(self):
         if not self.elo_over_time.empty:
             self.elo_over_time = self.elo_over_time.sort_values(['team', 'date'])
-            self.elo_over_time = self.elo_over_time.reset_index(drop=True)
+            self.elo_over_time = self.elo_over_time.reset_index(drop=False)
             self.elo_over_time = self.elo_over_time.rename(columns={'elo_team': 'elo'})
             self.elo_over_time['team'] = self.elo_over_time['team'].str.replace('_', ' ')
             self.elo_over_time['team'] = self.elo_over_time['team'].str.title()

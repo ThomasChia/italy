@@ -455,11 +455,13 @@ TEAM_NAMES_DICT = {
     'internazionale': 'inter_milan',
     'leeds': 'leeds_united',
     'leicester': 'leicester_city',
+    'luton': 'luton_town',
     'manchester_utd': 'manchester_united',
     'newcastle_utd': 'newcastle_united',
     'nottingham': 'nottingham_forest',
     'san_donato': 'san_donato_tavarnelle',
     'sassari_torres': 'torres',
+    'sheffield_utd': 'sheffield_united',
     'suditrol': 'sudtirol',
     'südtirol': 'sudtirol',
     'us_ancona': 'ancona',
@@ -549,7 +551,7 @@ RELEGATION_GOAL_ADJUSTMENT = 1.5
 MANUAL_TEAM_GOAL_ADJUSTMENT = 1.5
 
 # Simulation settings
-NUM_SIMULATIONS = 100
+NUM_SIMULATIONS = 10000
 
 # Assertions
 assert len(PREMIER_LEAGUE_TEAMS) == 20

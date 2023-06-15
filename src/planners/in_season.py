@@ -97,6 +97,8 @@ class InSeasonPlanner(Planner):
         future_home_and_away_matches, future_team_and_opponent = model.predict(future_builder.preprocessed_future_matches, config.FEATURES, config.ID_FEATURES)
         # TODO add in something to tell which league we are looking at.
 
+        if debug:
+            config.NUM_SIMULATIONS = 100
         logger.info(f"Running {config.NUM_SIMULATIONS} simulations.")
         simulator = MonteCarloSimulator(future_home_and_away_matches)
         simulation_results = simulator.run_simulations(num_simulations=config.NUM_SIMULATIONS)
@@ -130,8 +132,8 @@ class InSeasonPlanner(Planner):
             gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
                                                 post_processor.future_predictions,
                                                 post_processor.match_importance,
-                                                post_processor.finishing_positions,
-                                                post_processor.results
+                                                post_processor.finishing_positions
+                                                # post_processor.results
                                                 ])
             gsheets_writer.write_all_to_gsheets()
             gsheets_writer = GsheetsWriter(data=[post_processor.elo_tracker,
