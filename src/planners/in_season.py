@@ -130,7 +130,8 @@ class InSeasonPlanner(Planner):
             gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
                                                 post_processor.future_predictions,
                                                 post_processor.match_importance,
-                                                post_processor.finishing_positions
+                                                post_processor.finishing_positions,
+                                                post_processor.results
                                                 ])
             gsheets_writer.write_all_to_gsheets()
             gsheets_writer = GsheetsWriter(data=[post_processor.elo_tracker,

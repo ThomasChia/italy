@@ -4,7 +4,8 @@ import logging
 from matches.matches import Matches
 import pandas as pd 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
@@ -50,9 +51,10 @@ class FlashScoreScraper(Scraper):
             self.store_future_matches(times, years, home_teams, away_teams, league)
         else:
             logging.warning(f"No matches found for {league} in {self.matches.country}")
-            self.matches.matches_df = pd.DataFrame(columns=['date', 'league', 'pt1', 'pt2'])
+            self.matches.matches_df = self.set_up_df_if_empty(self.matches.matches_df)
 
     def get_fixture_elements(self):
+        self.expand_page()
         body = self.driver.find_element(By.XPATH, '//*[@id="live-table"]/div[1]/div/div')
         years = body.find_elements(By.XPATH, '//*[@id="mc"]/div[4]/div[1]/div[2]/div[2]')[0].text
         times = body.find_elements(By.CSS_SELECTOR, "div.event__time")
@@ -69,7 +71,24 @@ class FlashScoreScraper(Scraper):
             self.matches.matches_dict['pt1'].append(home_teams[ind].text)
             self.matches.matches_dict['pt2'].append(away_teams[ind].text)
 
-        self.matches.matches_df = pd.DataFrame(self.matches.matches_dict)
+        self.matches.matches_df = pd.concat([self.matches.matches_df, pd.DataFrame(self.matches.matches_dict)])
+
+    def set_up_df_if_empty(self, df: pd.DataFrame):
+        if df.empty:
+            return pd.DataFrame(columns=['date', 'league', 'pt1', 'pt2'])
+        else:
+            return df
+        
+    def expand_page(self):
+        while True:
+            try:
+                load_more_button = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, 'event__more')))
+                actions = ActionChains(self.driver)
+                actions.move_to_element(load_more_button).perform()
+                load_more_button.click()
+            except (NoSuchElementException, StaleElementReferenceException):
+                break
+
 
     def get_date(self, times, years, ind):
         first_year = years.split('/')[0]
@@ -83,8 +102,8 @@ class FlashScoreScraper(Scraper):
         
     def check_if_matches_exist(self):
         try:
-            no_matches = self.driver.find_element(By.XPATH, '/html/body/div[4]/div[1]/div/div/main/div[4]/div[2]/div[1]/div[1]/div')
-            return False
+            no_matches = self.driver.find_element(By.CLASS_NAME, 'nmf__title')
+            return False 
         except NoSuchElementException:
             return True
         
