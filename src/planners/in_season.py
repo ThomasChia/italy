@@ -9,6 +9,7 @@ from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
 from planners.planner import Planner
 from post_processing.post_processor import InSeasonPostProcessor
+from post_processing.past_prediction_processor import PastPredictionProcessor
 from preprocessing.adjustor import ManualAdjustor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
@@ -107,11 +108,13 @@ class InSeasonPlanner(Planner):
         results = MonteCarloResults(simulation_results=simulation_results, past_results=deepcopy(past_matches), season_start=config.SEASON_START)
         results.get_finishing_positions()
 
-        logger.info("Writing output to db.")
+        logger.info("Reading past predictions from db.")
         query = Query()
         query.read_last_future_predictions()
         loader = DBConnector()
         loader.run_query(query)
+
+        logger.info("Updating past predictions.")
         merged = pd.merge(loader.data, future_team_and_opponent, on=['match_id', 'team'], how='outer', suffixes=('_left', '_right'))
         diff = merged[merged['league_left'] != merged['league_right']]
 
