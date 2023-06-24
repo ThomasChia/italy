@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from config import SEASON_START, DASHBOARD_LEAGUES, DASHBOARD_TEAMS, LEAGUE_SCALING_MAPPING
+from datetime import datetime
 from loaders.loader import DBConnector
 from loaders.query import Query
 from loaders.writer import DBWriter
@@ -63,9 +64,66 @@ class InSeasonPostProcessor(PostProcessor):
             self.league_targets = self.league_targets[LEAGUE_TARGETS_COLUMNS]
 
     def process_results(self):
-        pass
-        # if self.results:
-        #     self.results.get_team_and_opp_matches()
+        if not self.results.matches_df.empty:
+            self.results = self.get_team_and_opp_matches(self.results.matches_df)
+            self.results = self.cut_to_season(self.results)
+
+    def get_team_and_opp_matches(self, matches: pd.DataFrame):
+        matches_cut = self.cut_columns(matches)
+        matches_cut['result'] = matches_cut.apply(lambda x: self.get_result(x), axis=1)
+        team_matches = matches_cut.copy(deep=True)
+        opponent_matches = team_matches.copy(deep=True)
+
+        team_matches = self.rename_columns_to_team_and_opp(team_matches, team=True)
+        opponent_matches = self.rename_columns_to_team_and_opp(opponent_matches, team=False)
+
+        opponent_matches = self.adjust_away_columns(opponent_matches)
+
+        team_matches.loc[:, 'home'] = 1
+
+        team_and_opp_matches = pd.concat([team_matches, opponent_matches])
+        team_and_opp_matches = self.sort_by_date(team_and_opp_matches)
+
+        return team_and_opp_matches
+    
+    def get_result(self, row):
+        if row['score_pt1'] > row['score_pt2']:
+            return 1
+        elif row['score_pt1'] < row['score_pt2']:
+            return 0
+        else:
+            return 0.5
+    
+    def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
+        if team:
+            df = df.rename(columns={'pt1': 'team',
+                                    'pt2': 'opponent',
+                                    'score_pt1': 'team_goals_scored',
+                                    'score_pt2': 'opponent_goals_scored'})
+        else:
+            df = df.rename(columns={'pt2': 'team',
+                                    'pt1': 'opponent',
+                                    'score_pt2': 'team_goals_scored',
+                                    'score_pt1': 'opponent_goals_scored'})
+        return df
+    
+    def cut_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        return df[['league', 'date', 'pt1', 'pt2', 'score_pt1', 'score_pt2']]
+    
+    def adjust_away_columns(self, df: pd.DataFrame) -> pd.DataFrame:
+        df['result'] = 1 - df['result']
+        df = df[['league', 'date', 'team', 'opponent', 'result', 'team_goals_scored', 'opponent_goals_scored']]
+        df.loc[:, 'home'] = 0
+        return df
+    
+    def sort_by_date(self, df: pd.DataFrame) -> pd.DataFrame:
+        df = df.sort_values(by='date')
+        df = df.reset_index(drop=True)
+        return df
+    
+    def cut_to_season(self, results: pd.DataFrame) -> pd.DataFrame:
+        season_start_datetime = datetime.strptime(SEASON_START, '%Y-%m-%d')
+        return results.loc[results['date'] >= season_start_datetime.date()]
 
     def process_past_predictions(self):
         pass

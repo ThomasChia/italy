@@ -1,5 +1,6 @@
 import code
 from config import DASHBOARD_LEAGUES
+import logging
 import pandas as pd
 import numpy as np
 from matches.matches import PastMatches
@@ -7,6 +8,7 @@ from simulations.config import MATCH_IMPORTANCE_COLUMN_NAMES
 import time
 from tqdm import tqdm
 
+logger = logging.getLogger(__name__)
 
 class MonteCarloSimulator:
     def __init__(self, matches_df):
@@ -79,12 +81,13 @@ class MonteCarloResults:
     def get_finishing_positions(self):
         self.get_next_match_simulated_result()
         for league in DASHBOARD_LEAGUES:
+            logger.info(f'Getting finishing positions for {league}.')
             league_full_season = self.full_season[self.full_season['league']==league]
             league_full_season = self.remove_duplicates_in_season(league_full_season)
             team_counts = {}
             position_counts = {}
             away_results = league_full_season.copy(deep=True).replace({3:0, 0:3})
-            for simulation in range(1, self.num_simulations+1):
+            for simulation in tqdm(range(1, self.num_simulations+1)):
                 home_points = league_full_season.groupby(by='home_team')[simulation].sum()
                 away_points = away_results.groupby(by='away_team')[simulation].sum()
                 total_points = pd.concat([home_points, away_points]).groupby(level=0).sum().sort_values(ascending=False)

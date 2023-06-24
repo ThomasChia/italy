@@ -5,7 +5,7 @@ import os
 
 COUNTRIES = [
     'England',
-    'Italy',
+    # 'Italy',
     ''
 ]
 
@@ -448,7 +448,14 @@ os.environ["API_DB_DB"] = "rugby4cast"
 # Cleaning
 TEAM_NAMES_DICT = {
     'afc_bournemouth': 'bournemouth',
+    'birmingham': 'birmingham_city',
+    'blackburn': 'blackburn_rovers',
     'brighton_and_hove_albion': 'brighton',
+    'cardiff': 'cardiff_city',
+    'coventry': 'coventry_city',
+    'huddersfield': 'huddersfield_town',
+    'hull': 'hull_city',
+    'ipswich': 'ipswich_town',
     'Inter Milan': 'inter_milan',
     'internazionale': 'inter_milan',
     'inter': 'inter_milan',
@@ -457,15 +464,27 @@ TEAM_NAMES_DICT = {
     'leicester': 'leicester_city',
     'luton': 'luton_town',
     'manchester_utd': 'manchester_united',
+    'newcastle': 'newcastle_united',
     'newcastle_utd': 'newcastle_united',
+    'norwich': 'norwich_city',
     'nottingham': 'nottingham_forest',
+    'plymouth': 'plymouth_argyle',
+    'preston': 'preston_north_end',
+    'qpr': 'queens_park_rangers',
+    'queens_park': 'queens_park_rangers',
+    'rotherham': 'rotherham_united',
     'san_donato': 'san_donato_tavarnelle',
     'sassari_torres': 'torres',
     'sheffield_utd': 'sheffield_united',
+    'sheffield_wed': 'sheffield_wednesday',
+    'sheffield_weds': 'sheffield_wednesday',
+    'stoke': 'stoke_city',
     'suditrol': 'sudtirol',
     'südtirol': 'sudtirol',
+    'swansea': 'swansea_city',
     'us_ancona': 'ancona',
     'verona': 'hellas_verona',
+    'west_brom': 'west_bromwich_albion',
     'west_ham': 'west_ham_united',
     'wolverhampton': 'wolves',
 }

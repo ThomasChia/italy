@@ -4,7 +4,7 @@ import logging
 from matches.matches import Matches
 import pandas as pd 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
@@ -86,7 +86,7 @@ class FlashScoreScraper(Scraper):
                 actions = ActionChains(self.driver)
                 actions.move_to_element(load_more_button).perform()
                 load_more_button.click()
-            except (NoSuchElementException, StaleElementReferenceException):
+            except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
                 break
 
 
