@@ -24,6 +24,17 @@
             "args": ["--debug", "--plan", "in_season"]
         },
 
+        // In Season Plan - No Debug
+        {
+            "name": "In Season Plan - No Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/app.py",
+            "cwd": "${workspaceFolder}/src",
+            "console": "integratedTerminal",
+            "args": ["--plan", "in_season"]
+        },
+
         // Full Season Plan
         {
             "name": "Full Season Plan",

@@ -5,70 +5,21 @@ import os
 
 COUNTRIES = [
     'England',
-    # 'Italy',
-    ''
+    'Italy',
+    'Scotland'
 ]
 
 LEAGUES = [
-    # 'Coppa Italia',
-    # 'Coppa Italia Serie C, Girone A',
-    # 'Coppa Italia Serie C, Girone B',
-    # 'Coppa Italia Serie C, Girone C',
-    # 'Coppa Italia Serie C, Girone D',
-    # 'Coppa Italia Serie C, Girone E',
-    # 'Coppa Italia Serie C, Girone F',
-    # 'Coppa Italia Serie C, Girone G',
-    # 'Coppa Italia Serie C, Girone H',
-    # 'Coppa Italia Serie C, Girone I',
-    # 'Coppa Italia Serie C, Girone L',
-    # 'Coppa Italia Serie C, Girone M',
-    # 'Coppa Italia Serie C, Knockout stage',
-    # 'Coppa Italia Serie D',
-    # 'Italian Coppa Italia',
     'Italian Serie A',
     'Italian Serie B',
-    # 'Italian Supercoppa',
-    # 'Primavera Cup, Knockout stage',
     'Serie A',
     'Serie B',
-    # 'Serie B, Promotion Playoffs',
-    # 'Serie B, Relegation Playoffs',
     'Serie C, Girone A',
     'Serie C Grp. A',
-    # 'Serie C, Girone A, Relegation Playoffs',
     'Serie C, Girone B',
     'Serie C Grp. B',
-    # 'Serie C, Girone B, Relegation Playoffs',
     'Serie C, Girone C',
     'Serie C Grp. C',
-    # 'Serie C, Girone C, Relegation Playoffs',
-    # 'Serie C, Promotion Playoffs',
-    # 'Serie C, Relegation Playoffs',
-    # 'Serie D, Girone A',
-    # 'Serie D, Girone A, Playoffs',
-    # 'Serie D, Girone B',
-    # 'Serie D, Girone B, Playoffs',
-    # 'Serie D, Girone C',
-    # 'Serie D, Girone C, Playoffs',
-    # 'Serie D, Girone D',
-    # 'Serie D, Girone D, Playoffs',
-    # 'Serie D, Girone E',
-    # 'Serie D, Girone E, Playoffs',
-    # 'Serie D, Girone F',
-    # 'Serie D, Girone F, Playoffs',
-    # 'Serie D, Girone G',
-    # 'Serie D, Girone G, Playoffs',
-    # 'Serie D, Girone H',
-    # 'Serie D, Girone H, Playoffs',
-    # 'Serie D, Girone H, Playout',
-    # 'Serie D, Girone I',
-    # 'Serie D, Girone I, Playoffs',
-    # 'Serie D, Girone I, Playout',
-    # 'Serie D, Poule Scudetto, Group 2',
-    # 'Serie D, Poule Scudetto, Group 3',
-    # 'Serie D, Poule Scudetto, Knockout stage',
-    # 'Supercoppa',
-    # 'Supercoppa Serie',
     'Premier League',
     'English Premier League',
     'Championship',
@@ -79,6 +30,12 @@ LEAGUES = [
     'English League Two',
     'National League',
     'English National League',
+    'Premiership',
+    'Scottish Premiership',
+    'Championship',
+    'Scottish Championship',
+    'League One',
+    'Scottish League One',
 ]
 
 ####################################################################################################
@@ -331,17 +288,61 @@ SERIE_C_GIRONE_C_TEAMS = [
     'Viterbese'
 ]
 
+SCOTTISH_PREMIERSHIP_TEAMS = [
+    'Aberdeen',
+    'Celtic',
+    'Dundee',
+    'Hearts',
+    'Hibernian',
+    'Kilmarnock',
+    'Livingston',
+    'Motherwell',
+    'Rangers',
+    'Ross County',
+    'St Johnstone',
+    'St Mirren'
+]
+
+SCOTTISH_CHAMPIONSHIP_TEAMS = [
+    'Airdrieonians',
+    'Arbroath',
+    'Ayr United',
+    'Dundee United',
+    'Dunfermline Athletic',
+    'Morton',
+    'Inverness Caledonian Thistle',
+    'Partick Thistle',
+    'Queen\'s Park',
+    'Raith Rovers',
+]
+
+SCOTTISH_LEAGUE_ONE_TEAMS = [
+    'Alloa Athletic',
+    'Annan Athletic',
+    'Cove Rangers',
+    'Edinburgh City',
+    'Falkirk',
+    'Hamilton Academical',
+    'Kelty Hearts',
+    'Montrose',
+    'Queen of the South',
+    'Stirling Albion',
+]
+
 LEAGUE_TEAMS_MAPPING = {
     'Premier League': PREMIER_LEAGUE_TEAMS,
     'Championship': CHAMPIONSHIP_TEAMS,
     'League One': LEAGUE_ONE_TEAMS,
     'League Two': LEAGUE_TWO_TEAMS,
     'National League': NATIONAL_LEAGUE_TEAMS,
-    # 'Serie A': SERIE_A_TEAMS,
-    # 'Serie B': SERIE_B_TEAMS,
-    # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
-    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
-    # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
+    'Serie A': SERIE_A_TEAMS,
+    'Serie B': SERIE_B_TEAMS,
+    'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS,
+    'Scottish Premiership': SCOTTISH_PREMIERSHIP_TEAMS,
+    'Scottish Championship': SCOTTISH_CHAMPIONSHIP_TEAMS,
+    'Scottish League One': SCOTTISH_LEAGUE_ONE_TEAMS
 }
 
 LEAGUE_TEAMS_COUNT = {
@@ -350,11 +351,14 @@ LEAGUE_TEAMS_COUNT = {
     'League One': 24,
     'League Two': 24,
     'National League': 24,
-    # 'Serie A': 20,
-    # 'Serie B': 20,
-    # 'Serie C, Girone A': 20,
-    # 'Serie C, Girone B': 20,
-    # 'Serie C, Girone C': 20
+    'Serie A': 20,
+    'Serie B': 20,
+    'Serie C, Girone A': 20,
+    'Serie C, Girone B': 20,
+    'Serie C, Girone C': 20,
+    'Scottish Premiership': 12,
+    'Scottish Championship': 10,
+    'Scottish League One': 10
 }
 
 LEAGUE_COUNTRY_MAPPING = {
@@ -363,11 +367,14 @@ LEAGUE_COUNTRY_MAPPING = {
     'League One': 'England',
     'League Two': 'England',
     'National League': 'England',
-    # 'Serie A': 'Italy',
-    # 'Serie B': 'Italy',
-    # 'Serie C, Girone A': 'Italy',
-    # 'Serie C, Girone B': 'Italy',
-    # 'Serie C, Girone C': 'Italy'
+    'Serie A': 'Italy',
+    'Serie B': 'Italy',
+    'Serie C, Girone A': 'Italy',
+    'Serie C, Girone B': 'Italy',
+    'Serie C, Girone C': 'Italy',
+    'Scottish Premiership': 'Scotland',
+    'Scottish Championship': 'Scotland',
+    'Scottish League One': 'Scotland'
 }
 
 LEAGUE_SCALING_MAPPING = {
@@ -434,7 +441,11 @@ SCRAPED_LEAGUES_MAPPING = {
     'premier-league': 'Premier League',
     'championship': 'Championship',
     'league-one': 'League One',
-    'league-two': 'League Two'
+    'league-two': 'League Two',
+    'national-league': 'National League',
+    'premiership': 'Scottish Premiership',
+    'championship': 'Scottish Championship',
+    'league-one': 'Scottish League One'
 }
 
 TABLE_NAME_PAST = "football_matches"
@@ -500,6 +511,9 @@ LEAGUE_NAMES_MAPPING = {
     'English League One': 'League One',
     'English League Two': 'League Two',
     'English National League': 'National League',
+    'Premiership': 'Scottish Premiership',
+    # 'Championship': 'Scottish Championship',
+    # 'League One': 'Scottish League One'
 }
 
 DEPENDENT_FEATURE = [

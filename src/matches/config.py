@@ -1,9 +1,9 @@
 ITALIAN_LEAGUES = [
     'serie-a',
-    # 'serie-b',
-    # 'serie-c-group-a',
-    # 'serie-c-group-b',
-    # 'serie-c-group-c'
+    'serie-b',
+    'serie-c-group-a',
+    'serie-c-group-b',
+    'serie-c-group-c'
     ]
 
 ITALIAN_CORRECT_NAMES = {
@@ -20,10 +20,10 @@ ITALIAN_CORRECT_NAMES = {
 
 ENGLISH_LEAGUES = [
     'premier-league',
-    # 'championship',
-    # 'league-one',
-    # 'league-two',
-    # 'national-league'
+    'championship',
+    'league-one',
+    'league-two',
+    'national-league'
     ]
 
 ENGLISH_CORRECT_NAMES = {
@@ -102,6 +102,14 @@ ENGLISH_CORRECT_NAMES = {
     'Wolverhampton Wanderers': 'Wolves',
     'Wycombe Wanderers': 'Wycombe'
 }
+
+SCOTTISH_LEAGUES = [
+    'premiership',
+    'championship',
+    'league-one',
+]
+
+SCOTTISH_CORRECT_NAMES = {}
 
 
 ####################################################################################################
@@ -327,14 +335,58 @@ SERIE_C_GIRONE_C_TEAMS = [
     'Viterbese'
 ]
 
+SCOTTISH_PREMIERSHIP_TEAMS = [
+    'Aberdeen',
+    'Celtic',
+    'Dundee',
+    'Hearts',
+    'Hibernian',
+    'Kilmarnock',
+    'Livingston',
+    'Motherwell',
+    'Rangers',
+    'Ross County',
+    'St Johnstone',
+    'St Mirren'
+]
+
+SCOTTISH_CHAMPIONSHIP_TEAMS = [
+    'Airdrieonians',
+    'Arbroath',
+    'Ayr United',
+    'Dundee United',
+    'Dunfermline Athletic',
+    'Morton',
+    'Inverness Caledonian Thistle',
+    'Partick Thistle',
+    'Queen\'s Park',
+    'Raith Rovers',
+]
+
+SCOTTISH_LEAGUE_ONE_TEAMS = [
+    'Alloa Athletic',
+    'Annan Athletic',
+    'Cove Rangers',
+    'Edinburgh City',
+    'Falkirk',
+    'Hamilton Academical',
+    'Kelty Hearts',
+    'Montrose',
+    'Queen of the South',
+    'Stirling Albion',
+]
+
 LEAGUE_TEAMS_MAPPING = {
     'Premier League': PREMIER_LEAGUE_TEAMS,
     'Championship': CHAMPIONSHIP_TEAMS,
-    # 'League One': LEAGUE_ONE_TEAMS,
-    # 'League Two': LEAGUE_TWO_TEAMS,
-    # 'Serie A': SERIE_A_TEAMS,
+    'League One': LEAGUE_ONE_TEAMS,
+    'League Two': LEAGUE_TWO_TEAMS,
+    'Serie A': SERIE_A_TEAMS,
     'Serie B': SERIE_B_TEAMS,
-    # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
-    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
-    # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS
+    'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS,
+    'Scottish Premiership': SCOTTISH_PREMIERSHIP_TEAMS,
+    'Scottish Championship': SCOTTISH_CHAMPIONSHIP_TEAMS,
+    'Scottish League One': SCOTTISH_LEAGUE_ONE_TEAMS,
 }
