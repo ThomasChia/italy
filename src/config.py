@@ -459,6 +459,8 @@ os.environ["API_DB_DB"] = "rugby4cast"
 # Cleaning
 TEAM_NAMES_DICT = {
     'afc_bournemouth': 'bournemouth',
+    'alloa': 'alloa_athletic',
+    'annan': 'annan_athletic',
     'ayr': 'ayr_united',
     'birmingham': 'birmingham_city',
     'blackburn': 'blackburn_rovers',
@@ -468,6 +470,7 @@ TEAM_NAMES_DICT = {
     'dundee_fc': 'dundee',
     'dundee_utd': 'dundee_united',
     'dunfermline': 'dunfermline_athletic',
+    'hamilton': 'hamilton_academical',
     'huddersfield': 'huddersfield_town',
     'hull': 'hull_city',
     'ipswich': 'ipswich_town',
@@ -487,6 +490,7 @@ TEAM_NAMES_DICT = {
     'plymouth': 'plymouth_argyle',
     'preston': 'preston_north_end',
     'qpr': 'queens_park_rangers',
+    'queen_of_south': 'queen_of_the_south',
     'queens_park': 'queens_park_rangers',
     'raith': 'raith_rovers',
     'rotherham': 'rotherham_united',
@@ -495,6 +499,7 @@ TEAM_NAMES_DICT = {
     'sheffield_utd': 'sheffield_united',
     'sheffield_wed': 'sheffield_wednesday',
     'sheffield_weds': 'sheffield_wednesday',
+    'stirling': 'stirling_albion',
     'stoke': 'stoke_city',
     'st._mirren': 'st_mirren',
     'suditrol': 'sudtirol',
