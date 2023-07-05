@@ -3,7 +3,7 @@ from collections import defaultdict
 from config import SEASON_START, TEAM_NAMES_DICT, LEAGUE_TEAMS_COUNT
 from dataclasses import dataclass, field
 import logging
-from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES
+from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, SCOTTISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES, SCOTTISH_CORRECT_NAMES
 import pandas as pd
 from typing import List
 
@@ -44,6 +44,19 @@ class ItalianMatches(Matches):
 class EnglishMatches(Matches):
     country: str = 'england'
     leagues: List = field(default_factory=lambda: ENGLISH_LEAGUES)
+
+    def correct_teams(self):
+        self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)
+        self.matches_df['pt2'] = self.matches_df['pt2'].replace(TEAM_NAMES_DICT)
+
+    def clean_future_matches(self):
+        self.remove_spaces_in_teams()
+        self.correct_teams()
+
+@dataclass
+class ScottishMatches(Matches):
+    country: str = 'scotland'
+    leagues: List = field(default_factory=lambda: SCOTTISH_LEAGUES)
 
     def correct_teams(self):
         self.matches_df['pt1'] = self.matches_df['pt1'].replace(TEAM_NAMES_DICT)

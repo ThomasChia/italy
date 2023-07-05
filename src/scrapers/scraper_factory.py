@@ -2,7 +2,7 @@ import code
 from config import SCRAPED_LEAGUES_MAPPING
 import pandas as pd
 import numpy as np
-from matches.matches import Matches, EnglishMatches, ItalianMatches
+from matches.matches import Matches, EnglishMatches, ItalianMatches, ScottishMatches
 from scrapers.scrapers import FlashScoreScraper
 # from scrapers import FlashScoreScraper
 
@@ -31,10 +31,12 @@ class MultiScraper:
         self.scraped_matches = pd.DataFrame()
         self.matches_list = []
         for country in countries:
-            if country == 'England':
-                self.matches_list.append(EnglishMatches())
-            elif country == 'Italy':
-                self.matches_list.append(ItalianMatches())
+            # if country == 'England':
+            #     self.matches_list.append(EnglishMatches())
+            # elif country == 'Italy':
+            #     self.matches_list.append(ItalianMatches())
+            if country == 'Scotland':
+                self.matches_list.append(ScottishMatches())
             # Add more countries as necessary
         
     def scrape_all(self):
