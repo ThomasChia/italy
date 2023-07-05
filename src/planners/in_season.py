@@ -7,9 +7,10 @@ import logging
 from logs import setup_logs
 from matches.matches import ItalianMatches, EnglishMatches, PastMatches
 from model.model import Model
+import multiprocessing
 from planners.planner import Planner
 from post_processing.post_processor import InSeasonPostProcessor
-from post_processing.past_prediction_processor import PastPredictionProcessor
+from post_processing.past_predictions_processor import PastPredictionsProcessor
 from preprocessing.adjustor import ManualAdjustor
 from preprocessing.builder.builder import Builder
 from preprocessing.builder.future_builder import FutureBuilder
@@ -72,11 +73,18 @@ class InSeasonPlanner(Planner):
         # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
         logger.info("Calculating elo statistics.")
         elos = EloPreprocessor(cleaner.data)
-        elos.calculate_elos()
+        elos_process = multiprocessing.Process(target=elos.calculate_elos)
+        elos_process.start()
+        # elos.calculate_elos()
 
         logger.info("Calculating goals statistics.")
         goals = GoalsPreprocessor(cleaner.data)
-        goals.calculate_goals_statistics()
+        goals_process = multiprocessing.Process(target=goals.calculate_goals_statistics)
+        goals_process.start()
+        # goals.calculate_goals_statistics()
+
+        elos_process.join()
+        goals_process.join()
 
         logger.info("Building training set.")
         builder = Builder([elos, goals])
@@ -115,13 +123,12 @@ class InSeasonPlanner(Planner):
         loader.run_query(query)
 
         logger.info("Updating past predictions.")
-        merged = pd.merge(loader.data, future_team_and_opponent, on=['match_id', 'team'], how='outer', suffixes=('_left', '_right'))
-        diff = merged[merged['league_left'] != merged['league_right']]
+        past_prediction_processor = PastPredictionsProcessor(past_predictions=loader.data, future_predictions=future_team_and_opponent)
 
         logger.info("Postprocessing output for gsheets.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
                                                results=past_matches,
-                                               past_predictions=pd.DataFrame(),
+                                               past_predictions=past_prediction_processor.latest_past_predictions,
                                                future_predictions=future_team_and_opponent,
                                                match_importance=results.match_importance,
                                                finishing_positions=results.finishing_positions,
@@ -131,12 +138,17 @@ class InSeasonPlanner(Planner):
         post_processor.run()
         
         if not debug:
+            # logger.info("Adding latest past predictions to db.")
+
+            # logger.info("Uploading future predictions to db.")
+
             logger.info("Uploading to gsheets.")
             gsheets_writer = GsheetsWriter(data=[post_processor.league_targets,
                                                 post_processor.future_predictions,
                                                 post_processor.match_importance,
                                                 post_processor.finishing_positions,
-                                                post_processor.results
+                                                post_processor.results,
+                                                post_processor.past_predictions
                                                 ])
             gsheets_writer.write_all_to_gsheets()
             gsheets_writer = GsheetsWriter(data=[post_processor.elo_tracker,

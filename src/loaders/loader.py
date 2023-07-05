@@ -30,5 +30,5 @@ class DBConnector(Loader):
         session.commit()
         session.close()
 
-        data.to_sql(query.table_name, engine, if_exists='replace', index=False)
+        data.to_sql(query.table_name, engine, if_exists='append', index=False)
 

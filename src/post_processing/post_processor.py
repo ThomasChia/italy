@@ -126,8 +126,16 @@ class InSeasonPostProcessor(PostProcessor):
         return results.loc[results['date'] >= season_start_datetime.date()]
 
     def process_past_predictions(self):
-        pass
-        # if not self.past_predictions.empty:
+        if not self.past_predictions.empty:
+            self.past_predictions['team'] = self.past_predictions['team'].str.replace('_', ' ')
+            self.past_predictions['team'] = self.past_predictions['team'].str.title()
+            self.past_predictions['opponent'] = self.past_predictions['opponent'].str.replace('_', ' ')
+            self.past_predictions['opponent'] = self.past_predictions['opponent'].str.title()
+            self.past_predictions['league'] = self.past_predictions['league'].str.replace('_', ' ')
+            self.past_predictions['league'] = self.past_predictions['league'].str.title()
+            calculator = RestDaysPostProcessor(self.past_predictions)
+            self.past_predictions = calculator.calculate_rest_days()
+            self.past_predictions = self.past_predictions[PAST_PREDICTIONS_COLUMNS]
 
     def process_future_predictions(self):
         if not self.future_predictions.empty:
