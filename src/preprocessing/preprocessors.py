@@ -1,3 +1,4 @@
+from multiprocessing import Queue
 import pandas as pd
 from preprocessing.elos.elos import Elo
 from preprocessing.goals.goals import TeamGoals, LeagueGoals, PoissonGoals
@@ -13,9 +14,11 @@ class EloPreprocessor(Preprocessor):
         self.elo = Elo(matches)
         self.preprocessed_matches: pd.DataFrame = pd.DataFrame()
 
-    def calculate_elos(self):
+    def calculate_elos(self, queue: Queue):
         self.elo.calculate()
         self.preprocessed_matches = self.elo.team_and_opp_matches
+        elos_return = (self.preprocessed_matches, self.elo.elo_tracker.tracker)
+        queue.put(elos_return)
 
 class GoalsPreprocessor(Preprocessor):
     def __init__(self, matches: pd.DataFrame):
@@ -30,7 +33,7 @@ class GoalsPreprocessor(Preprocessor):
 
         # TODO update anything that is updating self.preprocessed_matches to self.team_preprocessed_matches, and then combine league and team preprocessed matches into self.preprocessed_matches.
 
-    def calculate_goals_statistics(self):
+    def calculate_goals_statistics(self, queue):
         self.goals = TeamGoals(self.team_and_opp_matches)
         self.goals.calculate_team_averages()
         self.team_matches = self.goals.team_and_opponent_rolling
@@ -42,6 +45,7 @@ class GoalsPreprocessor(Preprocessor):
 
         self.poisson_goals = PoissonGoals(team_matches=self.team_matches, league_matches=self.league_matches)
         self.preprocessed_matches = self.poisson_goals.calculate_poisson_goals()
+        queue.put(self.preprocessed_matches)
 
     def rename_columns_to_team_and_opp(self, df: pd.DataFrame, team=True):
         if team:

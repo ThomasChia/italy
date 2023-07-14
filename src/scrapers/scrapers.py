@@ -41,6 +41,7 @@ class FlashScoreScraper(Scraper):
             self.click_cookies()
             if self.site_active:
                 self.get_fixture_data(league=league)
+            self.driver.quit()
 
     def click_cookies(self):
         try:

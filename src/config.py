@@ -6,7 +6,7 @@ import os
 COUNTRIES = [
     'England',
     'Italy',
-    # 'Scotland'
+    'Scotland'
 ]
 
 LEAGUES = [
@@ -383,11 +383,14 @@ LEAGUE_SCALING_MAPPING = {
     'League One': 1500,
     'League Two': 1250,
     'National League': 1000,
-    # 'Serie A': 1,
-    # 'Serie B': 2,
-    # 'Serie C, Girone A': 3,
-    # 'Serie C, Girone B': 3,
-    # 'Serie C, Girone C': 3
+    'Serie A': 1750,
+    'Serie B': 1500,
+    'Serie C, Girone A': 1000,
+    'Serie C, Girone B': 1000,
+    'Serie C, Girone C': 1000,
+    'Scottish Premiership': 1500,
+    'Scottish Championship': 1000,
+    'Scottish League One': 1000,
 }
 
 PROMOTED_TEAMS = [

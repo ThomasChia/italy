@@ -105,8 +105,8 @@ ENGLISH_CORRECT_NAMES = {
 
 SCOTTISH_LEAGUES = [
     'premiership',
-    'championship',
-    'league-one',
+    # 'championship',
+    # 'league-one',
 ]
 
 SCOTTISH_CORRECT_NAMES = {}

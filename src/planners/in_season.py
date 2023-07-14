@@ -46,7 +46,7 @@ class InSeasonPlanner(Planner):
         loader = DBConnector()
         loader.run_query(query)
         if debug:
-            loader.data = loader.data[loader.data['date']>='2020-08-01']
+            loader.data = loader.data[loader.data['date']>='2021-08-01']
 
         logger.info("Scraping future matches.")
         future_matches = MultiScraper(config.COUNTRIES)
@@ -70,24 +70,37 @@ class InSeasonPlanner(Planner):
         logger.info("Storing past matches.")
         past_matches = PastMatches(cleaner.data)
 
+        queue = multiprocessing.Queue()
+
         # TODO remove duplicates at each stage of the data pipeline. Can add in match_id to help this, as can always just remove duplicates with the same match_id.
         logger.info("Calculating elo statistics.")
         elos = EloPreprocessor(cleaner.data)
-        elos_process = multiprocessing.Process(target=elos.calculate_elos)
+        elos_process = multiprocessing.Process(target=elos.calculate_elos, args=(queue, ))
         elos_process.start()
         # elos.calculate_elos()
 
         logger.info("Calculating goals statistics.")
         goals = GoalsPreprocessor(cleaner.data)
-        goals_process = multiprocessing.Process(target=goals.calculate_goals_statistics)
+        goals_process = multiprocessing.Process(target=goals.calculate_goals_statistics, args=(queue, ))
         goals_process.start()
         # goals.calculate_goals_statistics()
+
+        result_a = queue.get()
+        result_b = queue.get()
+
+        if isinstance(result_a, tuple):
+            elos_tuple = result_a
+            goals_data = result_b
+        else:
+            elos_tuple = result_b
+            goals_data = result_a
 
         elos_process.join()
         goals_process.join()
 
         logger.info("Building training set.")
-        builder = Builder([elos, goals])
+        elos_data, elo_tracker = elos_tuple
+        builder = Builder([elos_data, goals_data])
         builder.build_dataset()
 
         logger.info("Building prediction set.")
@@ -133,8 +146,8 @@ class InSeasonPlanner(Planner):
                                                match_importance=results.match_importance,
                                                finishing_positions=results.finishing_positions,
                                                opponent_analysis=pd.DataFrame(),
-                                               elo_tracker=elos.elo.elo_tracker.tracker,
-                                               elo_over_time=elos.preprocessed_matches)
+                                               elo_tracker=elo_tracker,
+                                               elo_over_time=elos_data)
         post_processor.run()
         
         if not debug:

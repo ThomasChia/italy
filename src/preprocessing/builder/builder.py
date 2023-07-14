@@ -6,14 +6,14 @@ import logging
 from typing import List, Type
 
 class Builder:
-    def __init__(self, preprocessors: List[Type[Preprocessor]]):
-        self.preprocessed_matches = self.get_preprocessed_matches(preprocessors)
+    def __init__(self, preprocessed_matches: List[pd.DataFrame]):
+        self.preprocessed_matches = self.get_preprocessed_matches(preprocessed_matches)
         self.data: pd.DataFrame = pd.DataFrame()
 
     def get_preprocessed_matches(self, preprocessors):
         matches = []
         for data in preprocessors:
-            matches.append(data.preprocessed_matches)
+            matches.append(data)
         return matches
 
     def build_dataset(self):
