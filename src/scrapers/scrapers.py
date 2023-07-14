@@ -4,11 +4,14 @@ import logging
 from matches.matches import Matches
 import pandas as pd 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import (NoSuchElementException,
+                                        StaleElementReferenceException,
+                                        TimeoutException,
+                                        ElementClickInterceptedException)
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 import time
 
 
@@ -86,6 +89,12 @@ class FlashScoreScraper(Scraper):
                 actions = ActionChains(self.driver)
                 actions.move_to_element(load_more_button).perform()
                 load_more_button.click()
+            except ElementClickInterceptedException:
+                time.sleep(5)
+                load_more_button = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'event__more')))
+                actions = ActionChains(self.driver)
+                actions.move_to_element(load_more_button).perform()
+                load_more_button.click()
             except (NoSuchElementException, StaleElementReferenceException, TimeoutException):
                 break
 
@@ -129,8 +138,8 @@ class FiveThirtyEightScraper(Scraper):
 
     def get_href_list(self, webpage):
         href_list = []
-        table = webpage.find('table')
-        rows = table.find_all('td')
+        tables = webpage.find_all('table')
+        rows = tables[1].find_all('td')
         for row in rows:
             a = row.find('a')
             link = a['href']
@@ -147,4 +156,4 @@ if __name__ == '__main__':
     scraper = FiveThirtyEightScraper()
     webpage = scraper.get_page(scraper.base_url)
     href_list = scraper.get_href_list(webpage)
-    scraper.read_links(href_list)
+    # scraper.read_links(href_list)

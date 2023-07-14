@@ -31,10 +31,10 @@ class MultiScraper:
         self.scraped_matches = pd.DataFrame()
         self.matches_list = []
         for country in countries:
-            # if country == 'England':
-            #     self.matches_list.append(EnglishMatches())
-            # elif country == 'Italy':
-            #     self.matches_list.append(ItalianMatches())
+            if country == 'England':
+                self.matches_list.append(EnglishMatches())
+            elif country == 'Italy':
+                self.matches_list.append(ItalianMatches())
             if country == 'Scotland':
                 self.matches_list.append(ScottishMatches())
             # Add more countries as necessary

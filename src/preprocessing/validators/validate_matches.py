@@ -42,7 +42,7 @@ class ValidateMatches:
                 no_missing_matches = len(league_expected_matches) - len(actual_matches)
                 logger.warning(f"Expected {len(league_expected_matches)} matches for {league}, but got {len(actual_matches)}.")
                 self._add_missing_matches_to_future(league_expected_matches, actual_matches)
-                assert no_missing_matches == self.added_matches, logger.error(f"Expected {no_missing_matches} missing matches, but added {self.added_matches}.")
+                assert no_missing_matches == self.added_matches, logger.error(f"Expected {no_missing_matches} missing matches in {league}, but added {self.added_matches}.")
                 
 
     def _get_expected_matches(self) -> pd.DataFrame:
