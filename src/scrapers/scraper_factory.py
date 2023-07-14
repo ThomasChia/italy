@@ -1,8 +1,10 @@
+import asyncio
 import code
 from config import SCRAPED_LEAGUES_MAPPING
 import pandas as pd
 import numpy as np
 from matches.matches import Matches, EnglishMatches, ItalianMatches, ScottishMatches
+from multiprocessing import Process, Queue
 from scrapers.scrapers import FlashScoreScraper
 # from scrapers import FlashScoreScraper
 
@@ -41,16 +43,25 @@ class MultiScraper:
         
     def scrape_all(self):
         scraper_list = ScraperFactory.from_matches_list(self.matches_list)
-        for scraper in scraper_list:
-            scraper.get_matches()
-            scraper.matches.clean_future_matches()
-            if self.scraped_matches.empty:
-                self.scraped_matches = scraper.matches.matches_df
-            else:
-                self.scraped_matches = pd.concat([self.scraped_matches, scraper.matches.matches_df])
+        q = Queue()
+        processes = [Process(target=self.scrape_all_country, args=(q, scraper,)) for scraper in scraper_list]
+        returns = []
+        for process in processes:
+            process.start()
+        for process in processes:
+            returns.append(q.get())
+        for process in processes:
+            process.join()
+
+        self.scraped_matches = pd.concat(returns)
 
         self.clean_team_names()
         self.add_match_id()
+
+    def scrape_all_country(self, queue: Queue, scraper: FlashScoreScraper):
+        scraper.get_matches()
+        scraper.matches.clean_future_matches()
+        queue.put(scraper.matches.matches_df)
 
     def clean_team_names(self):
         self.scraped_matches['league'] = self.scraped_matches['league'].replace(SCRAPED_LEAGUES_MAPPING)

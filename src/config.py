@@ -6,7 +6,7 @@ import os
 COUNTRIES = [
     'England',
     'Italy',
-    'Scotland'
+    # 'Scotland'
 ]
 
 LEAGUES = [
@@ -175,23 +175,23 @@ NATIONAL_LEAGUE_TEAMS = [
 
 SERIE_A_TEAMS = [
     'AC Milan',
+    'AS Roma',
     'Atalanta',
     'Bologna',
-    'Cremonese',
+    'Cagliari',
     'Empoli',
     'Fiorentina',
-    'Hella Verona',
+    'Frosinone',
+    'Genoa',
+    'Hellas Verona',
     'Inter Milan',
     'Juventus',
     'Lazio',
     'Lecce',
     'Monza',
     'Napoli',
-    'Roma',
     'Salernitana',
-    'Sampdoria',
     'Sassuolo',
-    'Spezia',
     'Torino',
     'Udinese'
 ]
@@ -199,21 +199,21 @@ SERIE_A_TEAMS = [
 SERIE_B_TEAMS = [
     'Ascoli',
     'Bari',
-    'Benevento',
-    'Brescia',
-    'Cagliari',
+    'Catanzaro',
     'Cittadella',
     'Como',
     'Cosenza',
-    'Frosinone',
-    'Genoa',
+    'Cremonese',
+    'Feralpisalò',
+    'Lecco',
     'Modena',
     'Palermo',
     'Parma',
-    'Perugia',
     'Pisa',
     'Reggina',
-    'SPAL',
+    'Reggiana',
+    'Sampdoria',
+    'Spezia',
     'Sudtirol',
     'Ternana',
     'Venezia',
@@ -222,9 +222,8 @@ SERIE_B_TEAMS = [
 SERIE_C_GIRONE_A_TEAMS = [
     'Albinoleffe',
     'Arzignano Valchiampo',
-    'Feralpisalò',
+    'Brescia',
     'Juventus U23',
-    'Lecco',
     'Mantova',
     'Novara',
     'Padova',
@@ -243,6 +242,7 @@ SERIE_C_GIRONE_A_TEAMS = [
 ]
 
 SERIE_C_GIRONE_B_TEAMS = [
+    'AC Perugia Calcio',
     'Alessandria',
     'Ancona',
     'Aquila Montevarchi',
@@ -256,10 +256,10 @@ SERIE_C_GIRONE_B_TEAMS = [
     'Olbia',
     'Pontedera',
     'Recanatese',
-    'Reggiana',
     'Rimini',
     'San Donato',
     'Siena',
+    'SPAL'
     'Torres',
     'Virtus Entella',
     'Vis Pesaro'
@@ -269,7 +269,7 @@ SERIE_C_GIRONE_C_TEAMS = [
     'Audace Cerignola',
     'Avellino',
     'AZ Picerno',
-    'Catanzaro',
+    'Benevento Calcio',
     'Crotone',
     'Fidelis Andria',
     'Foggia',
@@ -352,13 +352,13 @@ LEAGUE_TEAMS_COUNT = {
     'League Two': 24,
     'National League': 24,
     'Serie A': 20,
-    'Serie B': 20,
-    'Serie C, Girone A': 20,
-    'Serie C, Girone B': 20,
-    'Serie C, Girone C': 20,
-    'Scottish Premiership': 12,
-    'Scottish Championship': 10,
-    'Scottish League One': 10
+    # 'Serie B': 20,
+    # 'Serie C, Girone A': 20,
+    # 'Serie C, Girone B': 20,
+    # 'Serie C, Girone C': 20,
+    # 'Scottish Premiership': 12,
+    # 'Scottish Championship': 10,
+    # 'Scottish League One': 10
 }
 
 LEAGUE_COUNTRY_MAPPING = {
@@ -493,7 +493,7 @@ TEAM_NAMES_DICT = {
     'inter': 'inter_milan',
     'internazionale': 'inter_milan',
     'inverness': 'inverness_caledonian_thistle',
-    'kiddyminster': 'kidderminster_harriers',
+    'kidderminster': 'kiddyminster_harriers',
     'leeds': 'leeds_united',
     'leicester': 'leicester_city',
     'luton': 'luton_town',

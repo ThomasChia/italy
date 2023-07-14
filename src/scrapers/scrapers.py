@@ -1,7 +1,9 @@
+import asyncio
 import bs4 as bs
 from collections import defaultdict
 import logging
 from matches.matches import Matches
+import multiprocessing
 import pandas as pd 
 from selenium import webdriver
 from selenium.common.exceptions import (NoSuchElementException,
@@ -12,6 +14,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
+import threading
 import time
 
 
@@ -27,7 +30,7 @@ class FlashScoreScraper(Scraper):
         super().__init__()
         self.base_url = f'https://www.flashscore.com/football/'
         self.matches = matches
-        self.site_active = True
+        self.site_active = True 
 
     def get_matches(self):
         for league in self.matches.leagues:
@@ -37,7 +40,7 @@ class FlashScoreScraper(Scraper):
             self.driver.get(league_url)
             self.click_cookies()
             if self.site_active:
-                self.get_fixture_data(league=league)            
+                self.get_fixture_data(league=league)
 
     def click_cookies(self):
         try:
@@ -52,6 +55,8 @@ class FlashScoreScraper(Scraper):
         if self.check_if_matches_exist():
             times, years, home_teams, away_teams = self.get_fixture_elements()
             self.store_future_matches(times, years, home_teams, away_teams, league)
+            matches_scraped = self.matches.matches_df[self.matches.matches_df['league']==league]
+            logging.info(f"Successfully got {matches_scraped.shape[0]} matches for {league} in {self.matches.country}")
         else:
             logging.warning(f"No matches found for {league} in {self.matches.country}")
             self.matches.matches_df = self.set_up_df_if_empty(self.matches.matches_df)
@@ -91,7 +96,7 @@ class FlashScoreScraper(Scraper):
                 load_more_button.click()
             except ElementClickInterceptedException:
                 time.sleep(5)
-                load_more_button = WebDriverWait(self.driver, 5).until(EC.presence_of_element_located((By.CLASS_NAME, 'event__more')))
+                load_more_button = WebDriverWait(self.driver, 2).until(EC.presence_of_element_located((By.CLASS_NAME, 'event__more')))
                 actions = ActionChains(self.driver)
                 actions.move_to_element(load_more_button).perform()
                 load_more_button.click()
