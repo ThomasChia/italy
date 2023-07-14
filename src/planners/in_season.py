@@ -140,14 +140,14 @@ class InSeasonPlanner(Planner):
 
         logger.info("Postprocessing output for gsheets.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,
-                                               results=past_matches,
-                                               past_predictions=past_prediction_processor.latest_past_predictions,
-                                               future_predictions=future_team_and_opponent,
-                                               match_importance=results.match_importance,
-                                               finishing_positions=results.finishing_positions,
-                                               opponent_analysis=pd.DataFrame(),
-                                               elo_tracker=elo_tracker,
-                                               elo_over_time=elos_data)
+                                                results=past_matches,
+                                                past_predictions=past_prediction_processor.latest_past_predictions,
+                                                future_predictions=future_team_and_opponent,
+                                                match_importance=results.match_importance,
+                                                finishing_positions=results.finishing_positions,
+                                                opponent_analysis=pd.DataFrame(),
+                                                elo_tracker=elo_tracker,
+                                                elo_over_time=elos_data)
         post_processor.run()
         
         if not debug:
