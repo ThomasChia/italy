@@ -20,7 +20,7 @@ import time
 
 class Scraper:
     def __init__(self):
-        self.PATH = '../../tools/chromedriver'
+        self.PATH = '../tools/chromedriver'
         self.driver = None
         self.matches = None
 
@@ -73,6 +73,7 @@ class FlashScoreScraper(Scraper):
         return times, years, home_teams, away_teams
     
     def store_future_matches(self, times, years, home_teams, away_teams, league):
+        self.matches.matches_dict = defaultdict(list)
         for ind in range(len(times)):
             date = self.get_date(times, years, ind)
             self.matches.matches_dict['date'].append(date)

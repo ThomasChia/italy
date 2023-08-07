@@ -70,6 +70,8 @@ class InSeasonPostProcessor(PostProcessor):
 
     def get_team_and_opp_matches(self, matches: pd.DataFrame):
         matches_cut = self.cut_columns(matches)
+        matches_cut = self.proper_case(matches_cut)
+        matches_cut = self.filter_teams(matches_cut)
         matches_cut['result'] = matches_cut.apply(lambda x: self.get_result(x), axis=1)
         team_matches = matches_cut.copy(deep=True)
         opponent_matches = team_matches.copy(deep=True)
@@ -84,7 +86,21 @@ class InSeasonPostProcessor(PostProcessor):
         team_and_opp_matches = pd.concat([team_matches, opponent_matches])
         team_and_opp_matches = self.sort_by_date(team_and_opp_matches)
 
+
+
         return team_and_opp_matches
+    
+    def proper_case(self, df: pd.DataFrame):
+        df['pt1'] = df['pt1'].str.replace('_', ' ')
+        df['pt1'] = df['pt1'].str.title()
+        df['pt2'] = df['pt2'].str.replace('_', ' ')
+        df['pt2'] = df['pt2'].str.title()
+        return df
+    
+    def filter_teams(self, df: pd.DataFrame):
+        df = df[df['pt1'].isin(DASHBOARD_TEAMS)]
+        df = df[df['pt2'].isin(DASHBOARD_TEAMS)]
+        return df
     
     def get_result(self, row):
         if row['score_pt1'] > row['score_pt2']:
@@ -114,6 +130,10 @@ class InSeasonPostProcessor(PostProcessor):
         df['result'] = 1 - df['result']
         df = df[['league', 'date', 'team', 'opponent', 'result', 'team_goals_scored', 'opponent_goals_scored']]
         df.loc[:, 'home'] = 0
+        return df
+    
+    def adjust_result(self, df: pd.DataFrame) -> pd.DataFrame:
+        df['result'] = df['result'].replace({1: 'H', 0: 'A', 0.5: 'D'})
         return df
     
     def sort_by_date(self, df: pd.DataFrame) -> pd.DataFrame:

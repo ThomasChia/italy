@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from collections import defaultdict
-from config import SEASON_START, TEAM_NAMES_DICT, LEAGUE_TEAMS_COUNT
+from config import SEASON_START, TEAM_NAMES_DICT, LEAGUE_TEAMS_COUNT, DASHBOARD_TEAMS
 from dataclasses import dataclass, field
 import logging
 from matches.config import ITALIAN_LEAGUES, ENGLISH_LEAGUES, SCOTTISH_LEAGUES, ITALIAN_CORRECT_NAMES, ENGLISH_CORRECT_NAMES, SCOTTISH_CORRECT_NAMES
@@ -149,6 +149,10 @@ class PastMatches:
     def cut_from_date(self, df, date):
         df = df[pd.to_datetime(df['date']) > pd.to_datetime(date)]
         return df
+
+    def cut_to_teams(self, teams: dict):
+        teams_formatted = [team.lower().replace(' ', '_') for team in teams]
+        self.matches_df = self.matches_df[(self.matches_df['pt1'].isin(teams_formatted)) & (self.matches_df['pt2'].isin(teams_formatted))]
 
 
 @dataclass

@@ -6,7 +6,7 @@ import os
 COUNTRIES = [
     'England',
     'Italy',
-    'Scotland'
+    # 'Scotland'
 ]
 
 LEAGUES = [
@@ -30,12 +30,12 @@ LEAGUES = [
     'English League Two',
     'National League',
     'English National League',
-    'Premiership',
-    'Scottish Premiership',
-    'Championship',
-    'Scottish Championship',
-    'League One',
-    'Scottish League One',
+    # 'Premiership',
+    # 'Scottish Premiership',
+    # 'Championship',
+    # 'Scottish Championship',
+    # 'League One',
+    # 'Scottish League One',
 ]
 
 ####################################################################################################
@@ -60,9 +60,9 @@ PREMIER_LEAGUE_TEAMS = [
     'Newcastle United',
     'Nottingham Forest',
     'Sheffield United',
-    'Tottenham',
+    'Tottenham Hotspur',
     'West Ham United',
-    'Wolves'
+    'Wolverhampton Wanderers'
 ]
 
 CHAMPIONSHIP_TEAMS = [
@@ -116,7 +116,7 @@ LEAGUE_ONE_TEAMS = [
     'Shrewsbury Town',
     'Stevenage',
     'Wigan Athletic',
-    'Wycombe'
+    'Wycombe Wanderers'
 ]
 
 LEAGUE_TWO_TEAMS = [
@@ -154,7 +154,7 @@ NATIONAL_LEAGUE_TEAMS = [
     'Boreham Wood',
     'Bromley',
     'Chesterfield',
-    'Dagenham & Redbridge',
+    'Dagenham and Redbridge',
     'Dorking Wanderers',
     'Eastleigh',
     'Ebbsfleet United',
@@ -162,7 +162,7 @@ NATIONAL_LEAGUE_TEAMS = [
     'Gateshead',
     'Hartlepool United',
     'Kiddyminster Harriers',
-    'Maidehead United',
+    'Maidenhead United',
     'Oldham Athletic',
     'Oxford City',
     'Rochdale',
@@ -336,13 +336,13 @@ LEAGUE_TEAMS_MAPPING = {
     'League Two': LEAGUE_TWO_TEAMS,
     'National League': NATIONAL_LEAGUE_TEAMS,
     'Serie A': SERIE_A_TEAMS,
-    'Serie B': SERIE_B_TEAMS,
-    'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
-    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
-    'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS,
-    'Scottish Premiership': SCOTTISH_PREMIERSHIP_TEAMS,
-    'Scottish Championship': SCOTTISH_CHAMPIONSHIP_TEAMS,
-    'Scottish League One': SCOTTISH_LEAGUE_ONE_TEAMS
+    # 'Serie B': SERIE_B_TEAMS,
+    # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
+    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS,
+    # 'Scottish Premiership': SCOTTISH_PREMIERSHIP_TEAMS,
+    # 'Scottish Championship': SCOTTISH_CHAMPIONSHIP_TEAMS,
+    # 'Scottish League One': SCOTTISH_LEAGUE_ONE_TEAMS
 }
 
 LEAGUE_TEAMS_COUNT = {
@@ -368,13 +368,13 @@ LEAGUE_COUNTRY_MAPPING = {
     'League Two': 'England',
     'National League': 'England',
     'Serie A': 'Italy',
-    'Serie B': 'Italy',
-    'Serie C, Girone A': 'Italy',
-    'Serie C, Girone B': 'Italy',
-    'Serie C, Girone C': 'Italy',
-    'Scottish Premiership': 'Scotland',
-    'Scottish Championship': 'Scotland',
-    'Scottish League One': 'Scotland'
+    # 'Serie B': 'Italy',
+    # 'Serie C, Girone A': 'Italy',
+    # 'Serie C, Girone B': 'Italy',
+    # 'Serie C, Girone C': 'Italy',
+    # 'Scottish Premiership': 'Scotland',
+    # 'Scottish Championship': 'Scotland',
+    # 'Scottish League One': 'Scotland'
 }
 
 LEAGUE_SCALING_MAPPING = {
@@ -446,9 +446,9 @@ SCRAPED_LEAGUES_MAPPING = {
     'league-one': 'League One',
     'league-two': 'League Two',
     'national-league': 'National League',
-    'premiership': 'Scottish Premiership',
-    'championship': 'Scottish Championship',
-    'league-one': 'Scottish League One'
+    # 'premiership': 'Scottish Premiership',
+    # 'championship': 'Scottish Championship',
+    # 'league-one': 'Scottish League One'
 }
 
 TABLE_NAME_PAST = "football_matches"
@@ -468,21 +468,32 @@ TEAM_NAMES_DICT = {
     'annan': 'annan_athletic',
     'ayr': 'ayr_united',
     'birmingham': 'birmingham_city',
+    'bolton': 'bolton_wanderers',
     'blackburn': 'blackburn_rovers',
     'brighton_and_hove_albion': 'brighton',
+    'burton': 'burton_albion',
+    'cambridge': 'cambridge_united',
+    'cambridge_utd': 'cambridge_united',
     'cardiff': 'cardiff_city',
+    'carlisle': 'carlisle_united',
+    'charlton': 'charlton_athletic',
+    'cheltenham': 'cheltenham_town',
     'colchester': 'colchester_united',
     'coventry': 'coventry_city',
     'crawley': 'crawley_town',
     'crewe': 'crewe_alexandra',
-    'dag_&_red': 'dagenham_&_redbridge',
+    'dag_&_red': 'dagenham_and_redbridge',
+    'dagenham_&_redbridge': 'dagenham_and_redbridge',
+    'derby': 'derby_county',
     'doncaster': 'doncaster_rovers',
     'dorking': 'dorking_wanderers',
     'dundee_fc': 'dundee',
     'dundee_utd': 'dundee_united',
     'dunfermline': 'dunfermline_athletic',
     'ebbsfleet': 'ebbsfleet_united',
+    'exeter': 'exeter_city',
     'fc_halifax': 'fc_halifax_town',
+    'fleetwood': 'fleetwood_town',
     'forest_green': 'forest_green_rovers',
     'grimsby': 'grimsby_town',
     'hamilton': 'hamilton_academical',
@@ -497,8 +508,10 @@ TEAM_NAMES_DICT = {
     'internazionale': 'inter_milan',
     'inverness': 'inverness_caledonian_thistle',
     'kidderminster': 'kiddyminster_harriers',
+    'kidderminster_harriers': 'kiddyminster_harriers',
     'leeds': 'leeds_united',
     'leicester': 'leicester_city',
+    'lincoln': 'lincoln_city',
     'luton': 'luton_town',
     'maidenhead': 'maidenhead_united',
     'manchester_utd': 'manchester_united',
@@ -507,11 +520,14 @@ TEAM_NAMES_DICT = {
     'newcastle': 'newcastle_united',
     'newcastle_utd': 'newcastle_united',
     'newport': 'newport_county',
+    'northampton': 'northampton_town',
     'norwich': 'norwich_city',
     'notts_co': 'notts_county',
     'nottingham': 'nottingham_forest',
     'oldham': 'oldham_athletic',
     'oxford': 'oxford_united',
+    'oxford_utd': 'oxford_united',
+    'peterborough': 'peterborough_united',
     'plymouth': 'plymouth_argyle',
     'preston': 'preston_north_end',
     'qpr': 'queens_park_rangers',
@@ -525,6 +541,7 @@ TEAM_NAMES_DICT = {
     'sheffield_utd': 'sheffield_united',
     'sheffield_wed': 'sheffield_wednesday',
     'sheffield_weds': 'sheffield_wednesday',
+    'shrewsbury': 'shrewsbury_town',
     'southend': 'southend_united',
     'stirling': 'stirling_albion',
     'stoke': 'stoke_city',
@@ -533,12 +550,17 @@ TEAM_NAMES_DICT = {
     'südtirol': 'sudtirol',
     'sutton': 'sutton_united',
     'swansea': 'swansea_city',
+    'swindon': 'swindon_town',
+    'tottenham': 'tottenham_hotspur',
     'tranmere': 'tranmere_rovers',
     'us_ancona': 'ancona',
     'verona': 'hellas_verona',
     'west_brom': 'west_bromwich_albion',
     'west_ham': 'west_ham_united',
-    'wolverhampton': 'wolves',
+    'wigan': 'wigan_athletic',
+    'wolves': 'wolverhampton_wanderers',
+    'wolverhampton': 'wolverhampton_wanderers',
+    'wycombe': 'wycombe_wanderers',
 }
 
 LEAGUE_NAMES_MAPPING = {
@@ -552,6 +574,7 @@ LEAGUE_NAMES_MAPPING = {
     'English League One': 'League One',
     'English League Two': 'League Two',
     'English National League': 'National League',
+    'English League Championship': 'Championship',
     'Premiership': 'Scottish Premiership',
     # 'Championship': 'Scottish Championship',
     # 'League One': 'Scottish League One'

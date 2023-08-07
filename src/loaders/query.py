@@ -15,8 +15,9 @@ class Query:
         leagues_q = self.list_to_sql(leagues)
         leagues_q = f"league IN {leagues_q}" if leagues_q else None
 
-        countries_q = self.list_to_sql(countries)
-        countries_q = f"country IN {countries_q}" if countries_q else None
+        countries_q = None
+        # countries_q = self.list_to_sql(countries)
+        # countries_q = f"country IN {countries_q}" if countries_q else None
 
         filter = ' AND '.join([i for i in [leagues_q, countries_q] if i])
         filter = f'WHERE {filter}' if filter else ''

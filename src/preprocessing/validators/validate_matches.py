@@ -30,6 +30,8 @@ class ValidateMatches:
 
     def _cut_past_matches(self):
         self.past_matches = self.past_matches[self.past_matches['date'] >= self.season_start]
+        team_list = [item.lower().replace(' ', '_') for sublist in LEAGUE_TEAMS_MAPPING.values() for item in sublist]
+        self.past_matches = self.past_matches[(self.past_matches['pt1'].isin(team_list)) & (self.past_matches['pt2'].isin(team_list))]
 
     def _get_full_season(self):
         self.full_season = pd.concat([self.past_matches, self.future_matches]).reset_index(drop=True)

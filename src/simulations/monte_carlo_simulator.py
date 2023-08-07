@@ -1,5 +1,5 @@
 import code
-from config import DASHBOARD_LEAGUES
+from config import DASHBOARD_LEAGUES, DASHBOARD_TEAMS
 import logging
 import pandas as pd
 import numpy as np
@@ -12,8 +12,12 @@ logger = logging.getLogger(__name__)
 
 class MonteCarloSimulator:
     def __init__(self, matches_df):
-        self.matches_df = matches_df
+        self.matches_df = self.cut_to_teams(matches_df, DASHBOARD_TEAMS)
         self.simulation_results = None
+
+    def cut_to_teams(self, matches, teams):
+        teams_formatted = [team.lower().replace(' ', '_') for team in teams]
+        return matches[(matches['home_team'].isin(teams_formatted)) | (matches['away_team'].isin(teams_formatted))]
 
     def run_simulations(self, num_simulations):
         self.matches_df['match_id'] = np.arange(1, len(self.matches_df)+1)
@@ -63,6 +67,7 @@ class MonteCarloResults:
         self.next_match_simulations = None
 
         if self.past_results:
+            self.past_results.cut_to_teams(DASHBOARD_TEAMS)
             self.past_results.filter_by_date(self.season_start)
             self.past_results.remove_in_season_duplicates()
             self.past_results.align_to_simultions(num_simulations=self.num_simulations)
