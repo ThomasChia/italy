@@ -57,6 +57,7 @@ class InSeasonPostProcessor(PostProcessor):
         self.process_opponent_analysis()
         self.process_elo_tracker()
         self.process_elo_over_time()
+        self.join_results_to_past()
 
     def process_league_targets(self):
         if not self.league_targets.empty:
@@ -85,8 +86,6 @@ class InSeasonPostProcessor(PostProcessor):
 
         team_and_opp_matches = pd.concat([team_matches, opponent_matches])
         team_and_opp_matches = self.sort_by_date(team_and_opp_matches)
-
-
 
         return team_and_opp_matches
     
@@ -238,6 +237,16 @@ class InSeasonPostProcessor(PostProcessor):
             self.elo_over_time['league'] = self.elo_over_time['league'].str.title()
             self.elo_over_time = self.elo_over_time[self.elo_over_time['league'].isin(DASHBOARD_LEAGUES)]
             self.elo_over_time = self.elo_over_time[ELO_OVER_TIME_COLUMNS]
+
+    def join_results_to_past(self):
+        results = self.results.copy(deep=True)
+        results['date'] = pd.to_datetime(results['date'])
+        past_predictions = self.past_predictions.copy(deep=True)
+        future_predictions = self.future_predictions.copy(deep=True)
+        merged_df = pd.merge(results, past_predictions, on=['team', 'opponent', 'league', 'date', 'home'], how='left')
+        union_df = merged_df.append(future_predictions)
+        union_df = union_df.reset_index(drop=True)
+        self.all_predictions = union_df
 
 
 class ResetPostProcessor(PostProcessor):

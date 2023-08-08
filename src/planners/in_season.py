@@ -149,6 +149,8 @@ class InSeasonPlanner(Planner):
                                                 elo_tracker=elo_tracker,
                                                 elo_over_time=elos_data)
         post_processor.run()
+
+        post_processor.all_predictions.to_csv('all_predictions.csv')
         
         if not debug:
             # logger.info("Adding latest past predictions to db.")

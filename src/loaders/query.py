@@ -34,6 +34,12 @@ class Query:
             FROM football_dashboard_future_predictions
             '''
         
+    def read_last_past_predictions(self):
+        self.query = f'''
+            SELECT *
+            FROM football_dashboard_future_predictions
+            '''
+        
     def list_to_sql(self, list_):
         if len(list_) > 0:
             str_list = [str(i) for i in list_]
