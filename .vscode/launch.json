@@ -67,6 +67,15 @@
             "console": "integratedTerminal",
             "args": ["--debug", "--plan", "reset"]
             // "args": ["--plan", "reset"]
+        },
+
+        {
+            "name": "API Upload",
+            "type": "python",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/loaders/api_upload.py",
+            "cwd": "${workspaceFolder}/src/loaders",
+            "console": "integratedTerminal"
         }
     ]
 }
