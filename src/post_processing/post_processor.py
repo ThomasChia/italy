@@ -246,6 +246,11 @@ class InSeasonPostProcessor(PostProcessor):
         merged_df = pd.merge(results, past_predictions, on=['team', 'opponent', 'league', 'date', 'home'], how='left')
         union_df = merged_df.append(future_predictions)
         union_df = union_df.reset_index(drop=True)
+        calculator = RestDaysPostProcessor(union_df)
+        union_df = calculator.calculate_rest_days()
+        elo_df = self.elo_tracker.copy(deep=True)[['team', 'pts']]
+        union_df = pd.merge(union_df, elo_df, on=['team'], how='left').rename(columns={'pts': 'elo_team'})
+        union_df = pd.merge(union_df, elo_df, left_on=['opponent'], right_on=['team'], how='left', suffixes=('', '_elo')).rename(columns={'pts': 'elo_opponent'}).drop('team_elo', axis=1)
         self.all_predictions = union_df
 
 

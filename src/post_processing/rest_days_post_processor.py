@@ -13,7 +13,7 @@ class RestDaysPostProcessor:
 
         for index, row in self.df.iterrows():
             team = row['team']
-            self.df.loc[index, 'rest_days'] = (row['date'] - self.team_list.loc[team, 'last_played']).days
+            self.df.loc[index, 'rest_days'] = (row['date'] - self.team_list.loc[team, 'last_played']).days - 1
             self.team_list.loc[team, 'last_played'] = row['date']
 
         self.df.sort_values(by='date', inplace=True)

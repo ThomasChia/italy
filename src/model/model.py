@@ -2,6 +2,7 @@ from config import FEATURES
 import logging
 import numpy as np
 import pandas as pd
+import pickle
 from sklearn.metrics import brier_score_loss
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
@@ -48,6 +49,8 @@ class Model:
     def train_model(self, x_train, y_train):
         logging.info("Fitting model to training data.")
         self.model.fit(x_train, y_train)
+        with open('model.pkl', 'wb') as f:
+            pickle.dump(self.model, f)
         # y_pred = self.model.predict(x_train)
         # cm = confusion_matrix(y_train, y_pred)
 

@@ -32,3 +32,14 @@ class DBConnector(Loader):
 
         data.to_sql(query.table_name, engine, if_exists='replace', index=False)
 
+    def run_save_past_preds_query(self, query: SaveQuery, data: pd.DataFrame):
+        logging.info("Writing data to DB.")
+        engine = self.connection.get_connection()
+        session_made = sessionmaker(bind=engine)
+        session = session_made()
+        session.execute(text(query.create_query))
+        session.commit()
+        session.close()
+
+        data.to_sql(query.table_name, engine, if_exists='append', index=False)
+

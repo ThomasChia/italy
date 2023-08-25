@@ -338,7 +338,7 @@ LEAGUE_TEAMS_MAPPING = {
     'Serie A': SERIE_A_TEAMS,
     # 'Serie B': SERIE_B_TEAMS,
     # 'Serie C, Girone A': SERIE_C_GIRONE_A_TEAMS,
-    # 'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
+    'Serie C, Girone B': SERIE_C_GIRONE_B_TEAMS,
     # 'Serie C, Girone C': SERIE_C_GIRONE_C_TEAMS,
     # 'Scottish Premiership': SCOTTISH_PREMIERSHIP_TEAMS,
     # 'Scottish Championship': SCOTTISH_CHAMPIONSHIP_TEAMS,
@@ -354,7 +354,7 @@ LEAGUE_TEAMS_COUNT = {
     'Serie A': 20,
     # 'Serie B': 20,
     # 'Serie C, Girone A': 20,
-    # 'Serie C, Girone B': 20,
+    'Serie C, Girone B': 20,
     # 'Serie C, Girone C': 20,
     # 'Scottish Premiership': 12,
     # 'Scottish Championship': 10,
@@ -370,7 +370,7 @@ LEAGUE_COUNTRY_MAPPING = {
     'Serie A': 'Italy',
     # 'Serie B': 'Italy',
     # 'Serie C, Girone A': 'Italy',
-    # 'Serie C, Girone B': 'Italy',
+    'Serie C, Girone B': 'Italy',
     # 'Serie C, Girone C': 'Italy',
     # 'Scottish Premiership': 'Scotland',
     # 'Scottish Championship': 'Scotland',
@@ -613,14 +613,14 @@ FEATURES = [
     'opponent_goals_conceded_avg_home',
     'opponent_goals_scored_avg_away',
     'opponent_goals_conceded_avg_away',
-    'league_home_goals_scored',
-    'league_away_goals_scored',
-    'league_home_goals_scored_avg',
-    'league_away_goals_scored_avg',
-    'league_home_goals_conceded',
-    'league_away_goals_conceded',
-    'league_home_goals_conceded_avg',
-    'league_away_goals_conceded_avg',
+    # 'league_home_goals_scored',
+    # 'league_away_goals_scored',
+    # 'league_home_goals_scored_avg',
+    # 'league_away_goals_scored_avg',
+    # 'league_home_goals_conceded',
+    # 'league_away_goals_conceded',
+    # 'league_home_goals_conceded_avg',
+    # 'league_away_goals_conceded_avg',
     'team_attack_strength',
     'team_defense_strength',
     'opponent_attack_strength',
@@ -634,7 +634,7 @@ SEASON_END = '2024-05-31'
 
 # ELO settings
 STARTING_ELO = 1500
-PROMOTION_ELO_ADJUSTMENT = -600
+PROMOTION_ELO_ADJUSTMENT = -350
 RELEGATION_ELO_ADJUSTMENT = 500
 MANUAL_TEAM_ELO_ADJUSTMENT = 400
 KFACTOR_QUICK = 40
@@ -643,7 +643,7 @@ HOME_AD = 50
 new_team_rating = 1500
 
 # Poisson settings
-PROMOTION_GOAL_ADJUSTMENT = 0.5
+PROMOTION_GOAL_ADJUSTMENT = 0.8
 RELEGATION_GOAL_ADJUSTMENT = 1.5
 MANUAL_TEAM_GOAL_ADJUSTMENT = 1.5
 

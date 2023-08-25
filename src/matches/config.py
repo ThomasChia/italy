@@ -2,7 +2,7 @@ ITALIAN_LEAGUES = [
     'serie-a',
     # 'serie-b',
     # 'serie-c-group-a',
-    # 'serie-c-group-b',
+    'serie-c-group-b',
     # 'serie-c-group-c'
     ]
 

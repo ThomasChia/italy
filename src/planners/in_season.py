@@ -135,8 +135,16 @@ class InSeasonPlanner(Planner):
         loader = DBConnector()
         loader.run_query(query)
 
+        logger.info("Reading old past predictions from db.")
+        query = Query()
+        query.read_last_past_predictions()
+        past_preds_loader = DBConnector()
+        past_preds_loader.run_query(query)
+
         logger.info("Updating past predictions.")
-        past_prediction_processor = PastPredictionsProcessor(past_predictions=loader.data, future_predictions=future_team_and_opponent)
+        past_prediction_processor = PastPredictionsProcessor(past_predictions=past_preds_loader.data,
+                                                             past_future_predictions=loader.data,
+                                                             future_predictions=future_team_and_opponent)
 
         logger.info("Postprocessing output for gsheets.")
         post_processor = InSeasonPostProcessor(league_targets=results.league_targets,

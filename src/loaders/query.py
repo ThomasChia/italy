@@ -37,7 +37,7 @@ class Query:
     def read_last_past_predictions(self):
         self.query = f'''
             SELECT *
-            FROM football_dashboard_future_predictions
+            FROM football_dashboard_past_predictions
             '''
         
     def list_to_sql(self, list_):

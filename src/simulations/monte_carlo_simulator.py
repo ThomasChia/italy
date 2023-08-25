@@ -20,6 +20,7 @@ class MonteCarloSimulator:
         return matches[(matches['home_team'].isin(teams_formatted)) | (matches['away_team'].isin(teams_formatted))]
 
     def run_simulations(self, num_simulations):
+        self.matches_df = self.matches_df.reset_index(drop=True)
         self.matches_df['match_id'] = np.arange(1, len(self.matches_df)+1)
         simulation_results = []
         # for i in tqdm(range(len(self.matches_df))):
