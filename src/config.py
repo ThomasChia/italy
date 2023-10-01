@@ -529,6 +529,7 @@ TEAM_NAMES_DICT = {
     'oxford': 'oxford_united',
     'oxford_utd': 'oxford_united',
     'peterborough': 'peterborough_united',
+    'pineto': 'asd_pineto_calcio',
     'plymouth': 'plymouth_argyle',
     'preston': 'preston_north_end',
     'qpr': 'queens_park_rangers',
